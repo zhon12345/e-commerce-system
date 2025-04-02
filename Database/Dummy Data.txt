@@ -1,0 +1,118 @@
+INSERT INTO Customers (customer_id, username, email, password, home_address, payment_info, receiver_name) VALUES
+(1, 'Rextrum', 'john.doe@example.com', 'password123', '123 Main St, Anytown, USA', 'VISA ---4242', 'John Doe'),
+(2, 'Giant Rex', 'jane.smith@example.com', 'securepass', '456 Oak Ave, Somewhere, USA', 'MASTERCARD ---5555', 'Jane Smith'),
+(3, 'Huge Rex', 'mike.j@example.com', 'mikepass', '789 Pine Rd, Nowhere, USA', 'AMEX ---1001', 'Michael Johnson'),
+(4, 'sarah_williams', 'sarah.w@example.com', 'sarah123', '321 Elm St, Anycity, USA', 'VISA ---8888', 'Sarah Williams'),
+(5, 'david_brown', 'david.b@example.com', 'davidpass', '654 Maple Dr, Yourtown, USA', 'DISCOVER ---2020', 'David Brown'),
+(6, 'lisa_davis', 'lisa.d@example.com', 'lisapass', '987 Cedar Ln, Mytown, USA', 'VISA ---3030', 'Lisa Davis'),
+(7, 'robert_wilson', 'robert.w@example.com', 'robertpass', '135 Birch Blvd, Theirtown, USA', 'MASTERCARD ---4040', 'Robert Wilson'),
+(8, 'emily_moore', 'emily.m@example.com', 'emilypass', '246 Walnut Ct, Ourcity, USA', 'AMEX ---5050', 'Emily Moore'),
+(9, 'thomas_taylor', 'thomas.t@example.com', 'thomaspass', '369 Spruce Way, Yourcity, USA', 'VISA ---6060', 'Thomas Taylor'),
+(10, 'jennifer_anderson', 'jennifer.a@example.com', 'jenniferpass', '482 Ash St, Thiscity, USA', 'MASTERCARD ---7070', 'Jennifer Anderson');
+
+INSERT INTO Products (product_id, name, description, price, stock, category) VALUES
+(1, 'Smartphone X', 'Latest smartphone with advanced features', 799.99, 100, 'Electronics'),
+(2, 'Wireless Headphones', 'Noise-cancelling wireless headphones', 199.99, 50, 'Electronics'),
+(3, 'Laptop Pro', 'High-performance laptop for professionals', 1299.99, 30, 'Electronics'),
+(4, 'Cotton T-Shirt', 'Comfortable 100% cotton t-shirt', 24.99, 200, 'Clothing'),
+(5, 'Denim Jeans', 'Classic fit denim jeans', 59.99, 150, 'Clothing'),
+(6, 'Coffee Maker', 'Automatic drip coffee maker', 89.99, 40, 'Home'),
+(7, 'Blender', 'High-speed blender for smoothies', 49.99, 60, 'Home'),
+(8, 'Running Shoes', 'Lightweight running shoes', 79.99, 80, 'Footwear'),
+(9, 'Smart Watch', 'Fitness tracking smart watch', 149.99, 70, 'Electronics'),
+(10, 'Backpack', 'Durable everyday backpack', 39.99, 120, 'Accessories');
+
+CREATE TABLE IF NOT EXISTS OrderStatus (
+    status_id INT PRIMARY KEY,
+    status_name VARCHAR(20) NOT NULL
+);
+
+INSERT INTO OrderStatus VALUES 
+(1, 'pending'),
+(2, 'shipped'), 
+(3, 'delivered'), 
+(4, 'cancelled');
+
+
+INSERT INTO Orders (order_id, customer_id, order_date, total_price, status) VALUES
+(1, 1, '2023-01-15 10:30:00', 799.99, 3), -- delivered
+(2, 2, '2023-01-16 14:45:00', 279.98, 2), -- shipped
+(3, 3, '2023-01-17 09:15:00', 1299.99, 1), -- pending
+(4, 4, '2023-01-18 16:20:00', 84.98, 3),   -- delivered
+(5, 5, '2023-01-19 11:10:00', 199.99, 2),  -- shipped
+(6, 6, '2023-01-20 13:25:00', 149.99, 3),  -- delivered
+(7, 7, '2023-01-21 15:30:00', 239.97, 1),  -- pending
+(8, 8, '2023-01-22 10:45:00', 89.99, 3),   -- delivered
+(9, 9, '2023-01-23 12:00:00', 79.99, 2),  -- shipped
+(10, 10, '2023-01-24 14:15:00', 39.99, 3); -- delivered
+
+INSERT INTO OrderDetails (order_detail_id, order_id, product_id, quantity, price) VALUES
+(1, 1, 1, 1, 799.99),
+(2, 2, 2, 1, 199.99),
+(3, 2, 9, 1, 79.99),
+(4, 3, 3, 1, 1299.99),
+(5, 4, 4, 2, 24.99),
+(6, 4, 5, 1, 34.99),
+(7, 5, 2, 1, 199.99),
+(8, 6, 9, 1, 149.99),
+(9, 7, 4, 3, 24.99),
+(10, 7, 7, 1, 49.99),
+(11, 7, 10, 1, 39.99),
+(12, 8, 6, 1, 89.99),
+(13, 9, 8, 1, 79.99),
+(14, 10, 10, 1, 39.99);
+[1:18]Kyan: INSERT INTO Reviews (customer_id, product_id, rating, review_text) VALUES
+(1, 1, 5, 'Excellent phone with great battery life!'),
+(2, 2, 4, 'Good sound quality but a bit expensive'),
+(3, 3, 5, 'Perfect for my work needs, fast and reliable'),
+(4, 4, 3, 'Comfortable but shrunk after washing'),
+(5, 5, 4, 'Good quality jeans, fits well'),
+(6, 6, 5, 'Makes great coffee every morning'),
+(7, 7, 4, 'Powerful blender for the price'),
+(8, 8, 3, 'Comfortable but not very durable'),
+(9, 9, 5, 'Love all the fitness tracking features'),
+(10, 10, 4, 'Good backpack for everyday use');
+
+INSERT INTO Cart (customer_id, product_id, quantity) VALUES
+(1, 3, 1),
+(1, 7, 2),
+(2, 5, 1),
+(3, 1, 1),
+(4, 6, 1),
+(4, 8, 1),
+(5, 2, 1),
+(6, 4, 3),
+(7, 9, 1),
+(8, 10, 2);
+
+INSERT INTO Promotions (promo_code, discount, valid_from, valid_to) VALUES
+('WELCOME10', 10.00, '2023-01-01', '2023-12-31'),
+('SUMMER25', 25.00, '2023-06-01', '2023-08-31'),
+('FALL15', 15.00, '2023-09-01', '2023-11-30'),
+('WINTER20', 20.00, '2023-12-01', '2024-02-28'),
+('SPRING10', 10.00, '2023-03-01', '2023-05-31'),
+('FLASH30', 30.00, '2023-02-15', '2023-02-17'),
+('LOYALTY5', 5.00, '2023-01-01', '2023-12-31'),
+('BULK10', 10.00, '2023-01-01', '2023-12-31'),
+('NEWYEAR20', 20.00, '2023-01-01', '2023-01-07'),
+('BLACKFRIDAY40', 40.00, '2023-11-24', '2023-11-24');
+
+INSERT INTO Staff (username, email, password) VALUES
+('staff1', 'staff1@store.com', 'staffpass1'),
+('staff2', 'staff2@store.com', 'staffpass2'),
+('staff3', 'staff3@store.com', 'staffpass3');
+
+INSERT INTO Manager (username, email, password) VALUES
+('manager1', 'manager@store.com', 'managerpass1');
+
+INSERT INTO Reports (report_type, generated_date, details) VALUES
+('Sales Report', '2023-01-31 23:59:59', 'Monthly sales report for January 2023'),
+('Inventory Report', '2023-01-31 23:59:59', 'Current inventory levels as of January 2023'),
+('Customer Report', '2023-01-31 23:59:59', 'New customer acquisitions for January 2023'),
+('Revenue Report', '2023-01-31 23:59:59', 'Revenue breakdown by product category'),
+('Promo Usage Report', '2023-01-31 23:59:59', 'Promotion code usage statistics'),
+('Top Products Report', '2023-01-31 23:59:59', 'Best selling products for January'),
+('Customer Feedback', '2023-01-31 23:59:59', 'Summary of customer reviews and ratings'),
+('Return Report', '2023-01-31 23:59:59', 'Product return statistics'),
+('Staff Performance', '2023-01-31 23:59:59', 'Staff order processing metrics'),
+('Website Traffic', '2023-01-31 23:59:59', 'Monthly website visitor statistics');
