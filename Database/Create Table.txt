@@ -7,6 +7,16 @@ CREATE TABLE Customers (
     payment_info VARCHAR(255)
 );
 
+CREATE TABLE PaymentInfo (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    customer_id INT,
+    card_number VARCHAR(255) NOT NULL,
+    card_holder_name VARCHAR(255) NOT NULL,
+    expiration_date DATE NOT NULL,
+    cvv VARCHAR(255) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES Customers(id)
+);
+
 CREATE TABLE CustomerAddresses (
     id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT,
@@ -76,7 +86,7 @@ CREATE TABLE Staff (
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL
-    ISmanager BOOLEAN NOT NULL DEFAULT 0
+    is_manager BOOLEAN NOT NULL DEFAULT 0
 );
 
 
