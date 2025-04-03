@@ -98,7 +98,7 @@ INSERT INTO Promotions (promo_code, discount, valid_from, valid_to) VALUES
 ('ACCESSORY10', 10.00, '2025-04-01', '2025-04-15'),
 ('FREESHIP', 0.00, '2025-01-01', '2025-12-31'); -- Represents free shipping
 
-INSERT INTO Staff (username, email, password, is_manager) VALUES
+INSERT INTO Staff (username, email, password, ISmanager) VALUES
 ('admin_mgr', 'admin@shop.com', 'adminpass', 1),
 ('sarah_c', 'sarah.c@shop.com', 'staffpass1', 0),
 ('mike_l', 'mike.l@shop.com', 'staffpass2', 0),
