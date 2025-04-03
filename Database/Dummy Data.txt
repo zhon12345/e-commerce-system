@@ -1,14 +1,14 @@
-INSERT INTO Customers (username, email, password, payment_info) VALUES
-('john_doe', 'john.doe@email.com', 'pass123', 'Visa **** 1111'),
-('jane_smith', 'jane.smith@email.com', 'pass456', 'MC **** 2222'),
-('alice_jones', 'alice.j@email.com', 'pass789', 'Amex **** 3333'),
-('bob_brown', 'bob.b@email.com', 'pass101', 'Visa **** 4444'),
-('charlie_d', 'charlie.d@email.com', 'pass112', NULL),
-('diana_evans', 'diana.e@email.com', 'pass131', 'MC **** 5555'),
-('ethan_fox', 'ethan.f@email.com', 'pass415', 'Visa **** 6666'),
-('fiona_green', 'fiona.g@email.com', 'pass161', NULL),
-('george_hill', 'george.h@email.com', 'pass718', 'Amex **** 7777'),
-('hannah_irey', 'hannah.i@email.com', 'pass192', 'MC **** 8888');
+INSERT INTO Customers (username, email, password) VALUES
+('john_doe', 'john.doe@email.com', 'pass123'),
+('jane_smith', 'jane.smith@email.com', 'pass456'),
+('alice_jones', 'alice.j@email.com', 'pass789'),
+('bob_brown', 'bob.b@email.com', 'pass101'),
+('charlie_d', 'charlie.d@email.com', 'pass112'),
+('diana_evans', 'diana.e@email.com', 'pass131'),
+('ethan_fox', 'ethan.f@email.com', 'pass415'),
+('fiona_green', 'fiona.g@email.com', 'pass161'),
+('george_hill', 'george.h@email.com', 'pass718'),
+('hannah_irey', 'hannah.i@email.com', 'pass192');
 
 INSERT INTO CustomerAddresses (customer_id, receiver_name, phone_number, home_address) VALUES
 (1, 'John Doe', '111-222-3333', '1 Main St, Anytown'),
@@ -98,7 +98,7 @@ INSERT INTO Promotions (promo_code, discount, valid_from, valid_to) VALUES
 ('ACCESSORY10', 10.00, '2025-04-01', '2025-04-15'),
 ('FREESHIP', 0.00, '2025-01-01', '2025-12-31'); -- Represents free shipping
 
-INSERT INTO Staff (username, email, password, ISmanager) VALUES
+INSERT INTO Staff (username, email, password, is_manager) VALUES
 ('admin_mgr', 'admin@shop.com', 'adminpass', 1),
 ('sarah_c', 'sarah.c@shop.com', 'staffpass1', 0),
 ('mike_l', 'mike.l@shop.com', 'staffpass2', 0),
