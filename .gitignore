@@ -11,3 +11,10 @@
 *.zip
 *.tar.gz
 *.rar
+
+# NetBeans Files #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
