@@ -111,16 +111,16 @@ INSERT INTO Promotions (promo_code, discount, valid_from, valid_to) VALUES
 ('FREESHIP', 0.00, '2025-01-01', '2025-12-31'); -- Represents free shipping
 
 INSERT INTO Staff (username, email, password, is_manager) VALUES
-('admin_mgr', 'admin@shop.com', 'adminpass', 1),
-('sarah_c', 'sarah.c@shop.com', 'staffpass1', 0),
-('mike_l', 'mike.l@shop.com', 'staffpass2', 0),
-('lisa_r', 'lisa.r@shop.com', 'staffpass3', 0),
-('david_s', 'david.s@shop.com', 'staffpass4', 1), -- Shift Manager
-('emily_t', 'emily.t@shop.com', 'staffpass5', 0),
-('kevin_w', 'kevin.w@shop.com', 'staffpass6', 0),
-('olivia_p', 'olivia.p@shop.com', 'staffpass7', 0),
-('jason_m', 'jason.m@shop.com', 'staffpass8', 0),
-('natalie_b', 'natalie.b@shop.com', 'staffpass9', 0);
+('admin_mgr', 'admin@shop.com', 'adminpass', TRUE),
+('sarah_c', 'sarah.c@shop.com', 'staffpass1', FALSE),
+('mike_l', 'mike.l@shop.com', 'staffpass2',FALSE),
+('lisa_r', 'lisa.r@shop.com', 'staffpass3', FALSE),
+('david_s', 'david.s@shop.com', 'staffpass4', TRUE), -- Shift Manager
+('emily_t', 'emily.t@shop.com', 'staffpass5', FALSE),
+('kevin_w', 'kevin.w@shop.com', 'staffpass6', FALSE),
+('olivia_p', 'olivia.p@shop.com', 'staffpass7', FALSE),
+('jason_m', 'jason.m@shop.com', 'staffpass8', FALSE),
+('natalie_b', 'natalie.b@shop.com', 'staffpass9', FALSE);
 
 INSERT INTO Reports (report_type, details) VALUES
 ('Monthly Sales - Feb 2025', 'Total sales figures and analysis for February 2025.'),
