@@ -1,0 +1,23 @@
+Dimensions
+Height: 116.6 mm
+Width: 62.15 mm
+Depth: 38.2 mm
+Weight: 85 g, mouse only
+Cable length: 2.1 m
+Technical Specifications
+TRACKING
+Sensor: HERO 25K
+Resolution: 100 – 25,600 dpi
+Zero smoothing/acceleration/filtering
+Max. acceleration: >40 G 1Tested on Logitech G240 Gaming Mouse Pad
+Max. speed: >400 IPS 2Tested on Logitech G240 Gaming Mouse Pad
+RESPONSIVENESS
+USB data format: 16 bits/axis
+USB report rate: 1000Hz (1ms)
+Microprocessor: 32-bit ARM
+Durability
+PTFE Feet: 250-km range 3Tested on Logitech G240 Gaming Mouse Pad
+Other Features
+Onboard memory: 5 profiles
+LIGHTSYNC RGB: 1 zones
+Mechanical Button Tensioning System

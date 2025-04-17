@@ -1,0 +1,9 @@
+Product model: KZ-ZSN PRO 2
+Impedance:26Ω	
+Sensitivity:108dB
+Frequency:20-40000Hz
+Plug type:3.5mm
+Pin Type:0.75mm
+Cable Type:silver-plated cable	
+Cable length:120±5cm
+Wearing type: In-ear	
