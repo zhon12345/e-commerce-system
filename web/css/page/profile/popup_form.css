@@ -1,0 +1,107 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/*
+    Created on : 17 Apr 2025, 2:53:47 pm
+    Author     : yjee0
+*/
+
+:root {
+    --primary-color: #4C60DF;
+    --secondary-color: #f8f9fa;
+}
+
+/* Popup Form Styles */
+.edit-container, .add-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-content, .add-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #777;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.edit-info, .add-info {
+    margin-bottom: 20px;
+}
+
+.edit-info label, .add-info label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+}
+
+.edit-info input, .add-info input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.edit-info input:focus, .add-info input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: all 0.3s;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.btn:hover {
+    background: #fff;
+    color: #4C60DF;
+    border: 2px solid #4C60DF;
+    padding: 10px 20px;
+}
+
+.edit-info, .add-info {
+    margin-top: 15px;
+}
+
+.edit-content h2, .add-content h2 {
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+    font-size: 20px;
+}
