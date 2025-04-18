@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/footer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/footer.css">
         <title>footer</title>
     </head>
 

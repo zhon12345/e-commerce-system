@@ -10,13 +10,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Address</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/address.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/sidebar.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/empty_status.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/popup.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/popup_form.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/address.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/empty_status.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
     </head>
     <header>
         <%@include file="../components/navbar.jsp" %>

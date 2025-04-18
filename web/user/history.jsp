@@ -10,11 +10,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Order History</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/history.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/sidebar.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/empty_status.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/history.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/empty_status.css">
     </head>
     <header>
         <%@include file="../components/navbar.jsp"%>

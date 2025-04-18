@@ -11,9 +11,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Sign Up Page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/login_signup/signup.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/register.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
     </head>
     <header>
         <%@include file="components/navbar.jsp" %>

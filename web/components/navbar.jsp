@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Navbar</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/navbar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/navbar.css">
     </head>
     <body>
         <div class="navbar">

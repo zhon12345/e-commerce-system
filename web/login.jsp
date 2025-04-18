@@ -26,9 +26,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login Page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/login_signup/login.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
     </head>
     <header>
         <%@include file="components/navbar.jsp" %>

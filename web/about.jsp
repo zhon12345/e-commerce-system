@@ -13,9 +13,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" href="https://cdn.alsgp0.fds.api.mi-img.com/xiaomi-b2c-i18n-upload/i18n/micon/iconfont.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/aboutus.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/about.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
     </head>
 
     <header>

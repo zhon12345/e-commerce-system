@@ -11,12 +11,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Profile</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/profile.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/sidebar.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/popup.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/popup_form.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/profile.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
     </head>
     <header>
         <%@include file="../components/navbar.jsp" %>
