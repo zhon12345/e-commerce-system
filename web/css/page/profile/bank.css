@@ -1,0 +1,130 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/*
+    Created on : 16 Apr 2025, 11:44:41 pm
+    Author     : yjee0
+*/
+
+:root {
+    --primary-color: #4C60DF;
+    --secondary-color: #f8f9fa;
+    --danger-color: #e74c3c;
+}
+
+/* container */
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Card Content */
+.content {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.add-card {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.add-card:hover {
+    transform: none;
+    background: #fff;
+    color: #4C60DF;
+    border: #4C60DF 2px solid;
+}
+
+.add-card i {
+    margin-right: 8px;
+}
+
+/* card styles */
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    background: linear-gradient(135deg, #4C60DF, #3a4bb8);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card .number {
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin: 30px 0 15px;
+    font-family: 'Courier New', monospace;
+}
+
+.card .details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card .label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 5px;
+}
+
+.card .actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card .actions button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.card .actions button:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.card .actions button.delete {
+    background: rgba(231, 76, 60, 0.8);
+}
+
+.card .actions button.delete:hover {
+    background: rgba(231, 76, 60, 1);
+}
