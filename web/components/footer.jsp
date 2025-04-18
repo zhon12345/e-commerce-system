@@ -18,7 +18,7 @@
             <div class="footer_content">
                 <div class="column">
                     <div class="logo_name">
-                        <img src="${pageContext.request.contextPath}/pic/logo/logo_used.PNG" class="logo">
+                        <img src="${pageContext.request.contextPath}/assets/logo/textless.PNG" class="logo">
                         <h3>Giant Rex Tech Store</h3>
                     </div>
                     <p>Founded by six friends united by a shared passion for technology.

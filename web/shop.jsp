@@ -77,7 +77,7 @@
                     <a href="${pageContext.request.contextPath}/page/products.jsp">
                         <div class="card">
                             <div class="image">
-                                <img src="${pageContext.request.contextPath}/pic/pic_products/iem/Aful Explorer 3.png">
+                                <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png">
                             </div>
                             <div class="name">Aful Explorer 1</div>
                             <div class="price">RM 199.00</div>
@@ -94,7 +94,7 @@
 
                     <div class="card">
                         <div class="image">
-                            <img src="${pageContext.request.contextPath}/pic/pic_products/mouse/G pro hero 4.png">
+                            <img src="${pageContext.request.contextPath}/assets/products/mouse/G pro hero 4.png">
                         </div>
                         <div class="name">Logitech G Pro Hero</div>
                         <div class="price">RM 299.00</div>

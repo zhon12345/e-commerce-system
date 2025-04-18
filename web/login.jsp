@@ -45,7 +45,7 @@
             <div class="box">
                 <!-- image -->
                 <div class="image">
-                    <img src="${pageContext.request.contextPath}/pic/logo/logo_use.png">
+                    <img src="${pageContext.request.contextPath}/assets/logo/text.png">
                 </div>
 
                 <!-- form -->

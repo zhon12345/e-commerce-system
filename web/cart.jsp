@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="item">
-                        <img src="${pageContext.request.contextPath}/pic/pic_products/iem/Aful Explorer 3.png" alt="Product" class="item-image">
+                        <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png" alt="Product" class="item-image">
                         <div class="item-details">
                             <div class="item-title">Premium Wireless Headphones</div>
                             <div class="item-price">$129.99</div>

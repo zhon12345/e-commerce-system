@@ -10,7 +10,7 @@
     <body>
         <div class="navbar">
             <a href="${pageContext.request.contextPath}/index.jsp">
-                <img src="${pageContext.request.contextPath}/pic/logo/logo_use.png" class="logo">
+                <img src="${pageContext.request.contextPath}/assets/logo/text.png" class="logo">
             </a>
 
             <div class="in-navbar">

@@ -46,7 +46,7 @@ Document   : index
         </div>
             <% } %>
 
-        <img src="pic/pic_homepage/web_image.jpg" class="web_img">
+        <img src="assets/home/hero.jpg" class="web_img">
 
         <!--Categories-->
         <div class="category-section">
@@ -54,17 +54,17 @@ Document   : index
 
             <div class="categories">
                 <div class="category-item">
-                    <img src="pic/pic_homepage/iem.jpg">
+                    <img src="assets/home/iem.jpg">
                     <span class="category-name">IEM</span>
                 </div>
 
                 <div class="category-item">
-                    <img src="pic/pic_homepage/mouse.png">
+                    <img src="assets/home/mouse.png">
                     <span class="category-name">Mouse</span>
                 </div>
 
                 <div class="category-item">
-                    <img src="pic/pic_homepage/keyboard.png">
+                    <img src="assets/home/keyboard.png">
                     <span class="category-name">Keyboard</span>
                 </div>
             </div>

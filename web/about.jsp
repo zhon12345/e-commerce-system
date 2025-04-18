@@ -55,42 +55,42 @@
                     <div class="grid">
                         <div class="card">
                             <div class="avatar">
-                                <img src="${pageContext.request.contextPath}/pic/pic_about/nzo.jpg" alt="Founder 1">
+                                <img src="${pageContext.request.contextPath}/assets/about/nzo.jpg" alt="Founder 1">
                             </div>
                             <h3>Ng Zhun Onn</h3>
                             <p>Co-Founder & CEO</p>
                         </div>
                         <div class="card">
                             <div class="avatar">
-                                <img src="${pageContext.request.contextPath}/pic/pic_about/jeremy.png" alt="Founder 2">
+                                <img src="${pageContext.request.contextPath}/assets/about/jeremy.png" alt="Founder 2">
                             </div>
                             <h3>Jeremy Lim Jia Xuan</h3>
                             <p>Co-Founder & CTO</p>
                         </div>
                         <div class="card">
                             <div class="avatar">
-                                <img src="${pageContext.request.contextPath}/pic/pic_about/kyan.jpg" alt="Founder 3">
+                                <img src="${pageContext.request.contextPath}/assets/about/kyan.jpg" alt="Founder 3">
                             </div>
                             <h3>Lee Guan Heng</h3>
                             <p>Co-Founder & COO</p>
                         </div>
                         <div class="card">
                             <div class="avatar">
-                                <img src="${pageContext.request.contextPath}/pic/pic_about/nene.png" alt="Founder 4">
+                                <img src="${pageContext.request.contextPath}/assets/about/nene.png" alt="Founder 4">
                             </div>
                             <h3>Yap Sheng Jin</h3>
                             <p>Co-Founder & CFO</p>
                         </div>
                         <div class="card">
                             <div class="avatar">
-                                <img src="${pageContext.request.contextPath}/pic/pic_about/yjj.png" alt="Founder 5">
+                                <img src="${pageContext.request.contextPath}/assets/about/yjj.png" alt="Founder 5">
                             </div>
                             <h3>Yeong Jia Jun</h3>
                             <p>Co-Founder & CMO</p>
                         </div>
                         <div class="card">
                             <div class="avatar">
-                                <img src="${pageContext.request.contextPath}/pic/pic_about/rex.jpg" alt="Founder 6">
+                                <img src="${pageContext.request.contextPath}/assets/about/rex.jpg" alt="Founder 6">
                             </div>
                             <h3>Lee Jee Yang</h3>
                             <p>Co-Founder & CPO</p>
