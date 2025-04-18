@@ -56,7 +56,7 @@ Document   : index
                 confirmButtonColor: '#4C60DF',
                 allowOutsideClick: false,
                 showConfirmButton: true
-            }).then((result) => {
+            }).then() => {
                 window.location.href = 'index.jsp';
             });
         </script>

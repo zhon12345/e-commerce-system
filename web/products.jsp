@@ -13,6 +13,25 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/products.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+        <script>
+            function switchTab(tabName) {
+                // Hide all content sections
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Show the selected content section
+                document.getElementById(tabName + '-content').style.display = 'block';
+
+                // Add active class to the clicked tab
+                event.currentTarget.classList.add('active');
+            }
+        </script>
     </head>
     <header>
         <%@include file="components/navbar.jsp" %>
@@ -33,7 +52,7 @@
                 <div class="right-box">
                     <div class="product-header">AFUL Explorer 3</div>
                     <div class="product-subheader">High-resolution in-ear monitors for professional audio</div>
-                    <div class="product-price">$199.99</div>
+                    <div class="product-price">PM 199.99</div>
 
                     <div class="quantity">
                         <span class="quantity-label">Quantity:</span>
@@ -53,13 +72,22 @@
             <!-- Bottom Box (Description/Review) -->
             <div class="bottom-box">
                 <div class="tab-container">
-                    <div class="tab active">Description</div>
-                    <div class="tab">Reviews</div>
+                    <div class="tab active" onclick="switchTab('description')">Description</div>
+                    <div class="tab" onclick="switchTab('reviews')">Reviews</div>
                 </div>
 
-                <div class="product-description">
-                    <h3>Product Description</h3>
-                    <p>The AFUL Explorer 3 in-ear monitors deliver professional-grade audio quality with a triple driver hybrid design. These IEMs combine dynamic drivers with balanced armatures to produce a rich, detailed soundstage with exceptional clarity across all frequencies.</p>
+                <div id="description-content" class="content-section" style="display: block;">
+                    <div class="product-description">
+                        <h3>Product Description</h3>
+                        <p>The AFUL Explorer 3 in-ear monitors deliver professional-grade audio quality with a triple driver hybrid design. These IEMs combine dynamic drivers with balanced armatures to produce a rich, detailed soundstage with exceptional clarity across all frequencies.</p>
+                    </div>
+                </div>
+
+                <div id="reviews-content" class="content-section" style="display: none;">
+                    <div class="review-section">
+                        <h3>Your Review</h3>
+                        <textarea class="review-textarea" placeholder="Your Review...."></textarea>
+                    </div>
                 </div>
             </div>
         </div>
