@@ -74,23 +74,23 @@
             <!--Products-->
             <div class="products-section">
                 <div class="products-grid">
-                    <a href="${pageContext.request.contextPath}/page/products.jsp">
-                        <div class="card">
+                    <div class="card">
+                        <a href="${pageContext.request.contextPath}/products.jsp" class="link">
                             <div class="image">
-                                <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png">
-                            </div>
-                            <div class="name">Aful Explorer 1</div>
-                            <div class="price">RM 199.00</div>
-                            <div class="product-rating">
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                            </div>
+                                    <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png">
+                                </div>
+                                <div class="name">Aful Explorer 1</div>
+                                <div class="price">RM 199.00</div>
+                                <div class="product-rating">
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                </div>
+                            </a>
                             <button class="add-to-cart">Add to Cart</button>
                         </div>
-                    </a>
 
                     <div class="card">
                         <div class="image">

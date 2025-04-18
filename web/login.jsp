@@ -5,21 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
-    if ("POST".equalsIgnoreCase(request.getMethod())) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
-            session.setAttribute("user", username);
-            session.setAttribute("loginSuccess", "true");
-            response.sendRedirect("index.jsp");
-            return;
-        } else {
-            request.setAttribute("error", "Username and password cannot be empty");
-        }
-    }
-%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -29,11 +14,50 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <header>
         <%@include file="components/navbar.jsp" %>
     </header>
-    <body>
+        <body>
+            <%
+            if ("POST".equalsIgnoreCase(request.getMethod())) {
+                String username = request.getParameter("username");
+                String password = request.getParameter("password");
+
+                if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+                    // Successful login
+                    session.setAttribute("user", username);
+                    session.setAttribute("successful", "true");
+                    response.sendRedirect("index.jsp");
+                    return;
+                } else {
+                    // Failed login
+                    session.setAttribute("unsuccessful", "false");
+                    response.sendRedirect("login.jsp");
+                    return;
+                }
+            }
+
+            if (session.getAttribute("unsuccessful") != null) {
+                String errorType = (String) session.getAttribute("unsuccessful");
+                session.removeAttribute("unsuccessful");
+
+                if ("false".equals(errorType)) {
+            %>
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: 'Username and password Invalid',
+                    confirmButtonColor: '#4C60DF'
+                });
+            </script>
+            <%
+                }
+            }
+            %>
+
         <!-- title -->
         <div class="title">
             <h2>Login</h2>

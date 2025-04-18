@@ -16,35 +16,53 @@ Document   : index
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <header>
         <%@include file="components/navbar.jsp" %>
     </header>
     <body>
-        <!-- success message popup -->
-        <% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
-        <div class="overlay show" id="overlay"></div>
-        <div class="popup show" id="popup">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="success-title">Login Successful!</div>
-            <button class="close" onclick="closePopup()">OK</button>
-            <% session.removeAttribute("loginSuccess"); %>
-        </div>
-            <% } %>
+        <!-- popup successful -->
+        <%
+        if (session.getAttribute("successful") != null) {
+            String username = (String) session.getAttribute("user");
+    session.removeAttribute("successful");
+        %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful!',
+                text: 'Welcome back, <%= username %>!',
+                confirmButtonColor: '#4C60DF',
+                allowOutsideClick: false,
+                showConfirmButton: true
+            });
+        </script>
+        <%
+        }
+        %>
 
-        <% if (session.getAttribute("logoutSuccess") != null && session.getAttribute("logoutSuccess").equals("true")) { %>
-        <div class="overlay show" id="overlay"></div>
-        <div class="popup show" id="popup">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="success-title">Logout Successful!</div>
-            <button class="close" onclick="closePopup()">OK</button>
-            <% session.removeAttribute("logoutSuccess"); %>
-        </div>
-            <% } %>
+        <!-- logout -->
+        <%
+        if (request.getParameter("logout") != null && request.getParameter("logout").equals("true")) {
+            String username = (String) session.getAttribute("user");
+    session.invalidate();
+        %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Logout Successful!',
+                text: 'Goodbye, <%= username %>!',
+                confirmButtonColor: '#4C60DF',
+                allowOutsideClick: false,
+                showConfirmButton: true
+            }).then((result) => {
+                window.location.href = 'index.jsp';
+            });
+        </script>
+        <%
+        }
+        %>
 
         <img src="assets/home/hero.jpg" class="web_img">
 

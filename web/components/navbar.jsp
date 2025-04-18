@@ -27,7 +27,7 @@
 
                 <% if (session.getAttribute("user") != null) { %>
                 <div class="icon-container">
-                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='${pageContext.request.contextPath}/cart.jsp'"></i>
+                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href = '${pageContext.request.contextPath}/cart.jsp'"></i>
                     <div class="user-dropdown">
                         <i class="fas fa-user-circle nav-icon"></i>
                         <div class="dropdown-content">
@@ -42,17 +42,6 @@
                 <% } %>
             </div>
         </div>
-
-        <%
-            if (request.getParameter("logout") != null) {
-                session.setAttribute("logoutSuccess", "true");
-                session.invalidate();
-                HttpSession newSession = request.getSession(true);
-                newSession.setAttribute("logoutSuccess", "true");
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
-                return;
-            }
-        %>
 
         <script>
             function toggleSearch() {
