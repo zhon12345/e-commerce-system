@@ -47,18 +47,14 @@
                 </div>
 
                 <!-- address display sample -->
-                <div class="card">
-                    <div class="card-left">
+                <div class="list">
+                    <div class="card">
                         <p>Jeramy</p>
                         <p>+60 123456789</p>
                         <p>123 Main Street</p>
                         <p>Apartment 4B</p>
                         <p>New York, NY 10001</p>
                         <p>United States</p>
-                    </div>
-                    <div class="card-right">
-                        <button class="edit-btn" onclick="openEditPopup()">Edit</button>
-                        <button class="delete-btn" onclick="deleteAddress()">Delete</button>
                     </div>
                 </div>
 
@@ -146,6 +142,28 @@
         <% } %>
 
         <script>
+            // Function to disable scrolling
+            function disableScroll() {
+                const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Function to enable scrolling
+            function enableScroll() {
+                const scrollY = parseInt(document.body.style.top || '0');
+
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+
+                window.scrollTo(0, Math.abs(scrollY));
+            }
+
             // add address
             const addAddressBtn = document.getElementById('addAddressBtn');
             const addPopup = document.getElementById('addPopup');
@@ -155,6 +173,7 @@
             // open popup form
             addAddressBtn.addEventListener('click', function () {
                 addPopup.style.display = 'flex';
+                disableScroll();
                 document.getElementById('addUsername').value = document.getElementById('usernameDisplay').textContent;
                 document.getElementById('addPhone').value = document.getElementById('phoneDisplay').textContent;
                 document.getElementById('addLine1').value = document.getElementById('line1Display').textContent;
@@ -166,6 +185,7 @@
             // close popup form
             closePopupBtn.addEventListener('click', function () {
                 addPopup.style.display = 'none';
+                enableScroll();
             });
 
             // after add Successful popup

@@ -67,28 +67,30 @@
                     </div>
                     <div class="p-rating">Click stars to filter</div>
                     <input type="hidden" id="selectedRating" value="0">
-                    <button class="apply" style="margin-top: 10px;">Apply Rating</button>
+                    <button class="apply">Apply Rating</button>
                 </div>
             </div>
 
             <!--Products-->
             <div class="products-section">
                 <div class="products-grid">
-                    <div class="card">
-                        <div class="image">
-                            <img src="${pageContext.request.contextPath}/pic/pic_products/iem/Aful Explorer 3.png">
+                    <a href="${pageContext.request.contextPath}/page/products.jsp">
+                        <div class="card">
+                            <div class="image">
+                                <img src="${pageContext.request.contextPath}/pic/pic_products/iem/Aful Explorer 3.png">
+                            </div>
+                            <div class="name">Aful Explorer 1</div>
+                            <div class="price">RM 199.00</div>
+                            <div class="product-rating">
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                                <i class="fa-regular fa-star"></i>
+                            </div>
+                            <button class="add-to-cart">Add to Cart</button>
                         </div>
-                        <div class="name">Aful Explorer 1</div>
-                        <div class="price">RM 199.00</div>
-                        <div class="product-rating">
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
+                    </a>
 
                     <div class="card">
                         <div class="image">

@@ -27,7 +27,7 @@
         <div class="container">
             <div class="box">
                 <div class="image">
-                    <img src="${pageContext.request.contextPath}/pic/logo/logo_2.png">
+                    <img src="${pageContext.request.contextPath}/pic/logo/logo_use.png">
                 </div>
                 <div class="form">
                     <h1 class="signup-title">Sign Up</h1>

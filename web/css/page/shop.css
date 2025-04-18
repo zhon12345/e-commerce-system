@@ -88,7 +88,10 @@ input[type="checkbox"] {
 }
 
 .apply:hover {
-    background: #3a4bb8;
+    transform: none;
+    background: #fff;
+    color: #4C60DF;
+    border: #4C60DF 2px solid;
 }
 
 /* star rating for filter */
@@ -192,7 +195,10 @@ input[type="checkbox"] {
 }
 
 .add-to-cart:hover {
-    background: #3a4bb8;
+    transform: none;
+    background: #fff;
+    color: var(--primary-color);
+    border: #4C60DF 2px solid;
 }
 
 /* @media */

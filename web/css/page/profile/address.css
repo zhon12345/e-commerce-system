@@ -61,7 +61,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 /* address display */
-.card {
+.list {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -72,50 +72,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background-color: var(--secondary-color);
 }
 
-.card-left {
-    flex: 1;
-}
-
-.card-right {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-left: 20px;
-}
-
-.card-left p {
+.card p {
     margin: 3px 0;
     line-height: 1.6;
 }
 
-.edit-btn, .delete-btn {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 14px;
-    width: 110px;
-    transition: background-color 0.3s, transform 0.2s;
-}
 
-.edit-btn {
-    background-color: #4CAF50;
-    color: white;
-}
 
-.edit-btn:hover {
-    background-color: #3e8e41;
-    transform: scale(1.03);
-}
-
-.delete-btn {
-    background-color: #f44336;
-    color: white;
-}
-
-.delete-btn:hover {
-    background-color: #d32f2f;
-    transform: scale(1.03);
-}
 

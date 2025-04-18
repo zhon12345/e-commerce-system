@@ -132,6 +132,28 @@
         <% } %>
 
         <script>
+            // Function to disable scrolling
+            function disableScroll() {
+                const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Function to enable scrolling
+            function enableScroll() {
+                const scrollY = parseInt(document.body.style.top || '0');
+
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+
+                window.scrollTo(0, Math.abs(scrollY));
+            }
+
             // avatar upload
             document.querySelector('.upload-pic').addEventListener('click', function () {
                 document.getElementById('avatarInput').click();
@@ -156,6 +178,7 @@
             // open popup form
             editProfileBtn.addEventListener('click', function () {
                 editPopup.style.display = 'flex';
+                disableScroll();
                 document.getElementById('editUsername').value = document.getElementById('usernameDisplay').textContent;
                 document.getElementById('editEmail').value = document.getElementById('emailDisplay').textContent;
                 document.getElementById('editPhone').value = document.getElementById('phoneDisplay').textContent;
@@ -164,6 +187,7 @@
             // close popup form
             closePopupBtn.addEventListener('click', function () {
                 editPopup.style.display = 'none';
+                enableScroll();
             });
 
             // after edit Successful popup

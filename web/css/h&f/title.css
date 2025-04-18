@@ -7,6 +7,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     Author     : yjee0
 */
 
+:root {
+    --primary-color: #4C60DF;
+}
+
 /* title */
 .title {
     width: 100%;

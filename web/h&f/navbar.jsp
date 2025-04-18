@@ -10,7 +10,7 @@
     <body>
         <div class="navbar">
             <a href="${pageContext.request.contextPath}/index.jsp">
-                <img src="${pageContext.request.contextPath}/pic/logo/logo.jpg" class="logo">
+                <img src="${pageContext.request.contextPath}/pic/logo/logo_use.png" class="logo">
             </a>
 
             <div class="in-navbar">
@@ -27,7 +27,7 @@
 
                 <% if (session.getAttribute("user") != null) { %>
                 <div class="icon-container">
-                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='cart.jsp'"></i>
+                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='${pageContext.request.contextPath}/page/cart.jsp'"></i>
                     <div class="user-dropdown">
                         <i class="fas fa-user-circle nav-icon"></i>
                         <div class="dropdown-content">
