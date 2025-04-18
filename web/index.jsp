@@ -18,7 +18,7 @@ Document   : index
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/h&f/popup.css">
     </head>
     <header>
-        <%@include file="h&f/navbar.jsp" %>
+        <%@include file="components/navbar.jsp" %>
     </header>
     <body>
         <!-- success message popup -->
@@ -84,6 +84,6 @@ Document   : index
         </script>
     </body>
     <footer>
-        <%@include file="h&f/footer.jsp" %>
+        <%@include file="components/footer.jsp" %>
     </footer>
 </html>

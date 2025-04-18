@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/popup_form.css">
     </head>
     <header>
-        <%@include file="../../h&f/navbar.jsp" %>
+        <%@include file="../components/navbar.jsp" %>
     </header>
     <body>
         <!-- title -->
@@ -120,7 +120,7 @@
                 state != null && !state.isEmpty() ) {
 
                 session.setAttribute("addSuccess", "true");
-                response.sendRedirect(request.getContextPath() + "/page/profile/address.jsp");
+                response.sendRedirect(request.getContextPath() + "/user/address.jsp");
                 return;
             } else {
                 return;
@@ -201,6 +201,6 @@
         </script>
     </body>
     <footer>
-        <%@include file="../../h&f/footer.jsp" %>
+        <%@include file="../components/footer.jsp" %>
     </footer>
 </html>

@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <header>
-        <%@include file="../h&f/navbar.jsp" %>
+        <%@include file="components/navbar.jsp" %>
     </header>
     <body>
         <div class="title">
@@ -87,6 +87,6 @@
         </div>
     </body>
     <footer>
-        <%@include file="../h&f/footer.jsp" %>
+        <%@include file="components/footer.jsp" %>
     </footer>
 </html>

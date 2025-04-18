@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
     </head>
     <header>
-        <%@include file="../../h&f/navbar.jsp" %>
+        <%@include file="components/navbar.jsp" %>
     </header>
     <body>
         <!-- title -->
@@ -86,6 +86,6 @@
 
     </body>
     <footer>
-        <%@include file="../../h&f/footer.jsp" %>
+        <%@include file="components/footer.jsp" %>
     </footer>
 </html>

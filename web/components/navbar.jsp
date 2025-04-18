@@ -15,9 +15,9 @@
 
             <div class="in-navbar">
                 <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-                <a href="${pageContext.request.contextPath}/page/shop.jsp">Shop</a>
-                <a href="${pageContext.request.contextPath}/page/aboutus.jsp">About Us</a>
-                <a href="${pageContext.request.contextPath}/page/contact.jsp">Contact</a>
+                <a href="${pageContext.request.contextPath}/shop.jsp">Shop</a>
+                <a href="${pageContext.request.contextPath}/about.jsp">About Us</a>
+                <a href="${pageContext.request.contextPath}/contact.jsp">Contact</a>
 
                 <div class="search-container">
                     <input type="text" class="search-input" placeholder="Search products...">
@@ -27,18 +27,18 @@
 
                 <% if (session.getAttribute("user") != null) { %>
                 <div class="icon-container">
-                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='${pageContext.request.contextPath}/page/cart.jsp'"></i>
+                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='${pageContext.request.contextPath}/cart.jsp'"></i>
                     <div class="user-dropdown">
                         <i class="fas fa-user-circle nav-icon"></i>
                         <div class="dropdown-content">
-                            <a href="${pageContext.request.contextPath}/page/profile/profile.jsp">My Profile</a>
-                            <a href="${pageContext.request.contextPath}/page/profile/history.jsp">History</a>
+                            <a href="${pageContext.request.contextPath}/user/profile.jsp">My Profile</a>
+                            <a href="${pageContext.request.contextPath}/user/history.jsp">History</a>
                             <a href="${pageContext.request.contextPath}/index.jsp?logout=true">Logout</a>
                         </div>
                     </div>
                 </div>
                 <% } else { %>
-                <a href="${pageContext.request.contextPath}/page/login_signup/login.jsp" class="login_signup-btn">Login / Sign Up</a>
+                <a href="${pageContext.request.contextPath}/login.jsp" class="login_signup-btn">Login / Sign Up</a>
                 <% } %>
             </div>
         </div>

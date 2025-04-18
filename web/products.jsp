@@ -12,12 +12,12 @@
         <title>JSP Page</title>
     </head>
     <header>
-        <%@include file="../h&f/navbar.jsp" %>
+        <%@include file="components/navbar.jsp" %>
     </header>
     <body>
 
     </body>
     <footer>
-        <%@include file="../h&f/footer.jsp" %>
+        <%@include file="components/footer.jsp" %>
     </footer>
 </html>

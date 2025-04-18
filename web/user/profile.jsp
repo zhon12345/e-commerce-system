@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/profile/popup_form.css">
     </head>
     <header>
-        <%@include file="../../h&f/navbar.jsp" %>
+        <%@include file="../components/navbar.jsp" %>
     </header>
     <body>
         <!-- title -->
@@ -43,7 +43,7 @@
             <div class="content">
                 <div class="header">
                     <div class="avatar">
-                        <img src="../../jeramy.jpg" alt="Avatar" class="pic" id="userAvatar">
+                        <img src="../jeramy.jpg" alt="Avatar" class="pic" id="userAvatar">
                         <!-- upload pic -->
                         <div class="upload-pic" title="Change photo">
                             <i class="fas fa-camera"></i>
@@ -110,7 +110,7 @@
                 phone != null && !phone.isEmpty()) {
 
                 session.setAttribute("editSuccess", "true");
-                response.sendRedirect(request.getContextPath() + "/page/profile/profile.jsp");
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp");
                 return;
             } else {
                 return;
@@ -203,6 +203,6 @@
         </script>
     </body>
     <footer>
-        <%@include file="../../h&f/footer.jsp" %>
+        <%@include file="../components/footer.jsp" %>
     </footer>
 </html>

@@ -13,7 +13,7 @@
         if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
             session.setAttribute("user", username);
             session.setAttribute("loginSuccess", "true");
-            response.sendRedirect("../../index.jsp");
+            response.sendRedirect("index.jsp");
             return;
         } else {
             request.setAttribute("error", "Username and password cannot be empty");
@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/page/body.css">
     </head>
     <header>
-        <%@include file="../../h&f/navbar.jsp" %>
+        <%@include file="components/navbar.jsp" %>
     </header>
     <body>
         <!-- title -->
@@ -76,7 +76,7 @@
                         </div>
 
                         <div class="forgot-passwd">
-                            <a href="forgot_password.jsp">Forgot password?</a>
+                            <a href="reset.jsp">Forgot password?</a>
                         </div>
 
                         <button type="submit" class="button">Login</button>
@@ -84,13 +84,13 @@
 
                     <!-- go to sign up page -->
                     <div class="signup">
-                        Don't have an account? <a href="signup.jsp">Sign up</a>
+                        Don't have an account? <a href="register.jsp">Sign up</a>
                     </div>
                 </div>
             </div>
         </div>
     </body>
     <footer>
-        <%@include file="../../h&f/footer.jsp" %>
+        <%@include file="components/footer.jsp" %>
     </footer>
 </html>
