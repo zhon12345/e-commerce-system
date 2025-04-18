@@ -1,0 +1,29 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/*
+    Created on : 17 Apr 2025, 12:29:59 am
+    Author     : yjee0
+*/
+
+.empty-status {
+    text-align: center;
+    padding: 50px 20px;
+    color: #666;
+}
+
+.empty-status i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-status h3 {
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.empty-status p {
+    margin-bottom: 20px;
+}
