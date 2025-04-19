@@ -51,7 +51,7 @@ CREATE TABLE Orders (
     delivery_cost DECIMAL(10,2) DEFAULT 0.00,
     status INT NOT NULL, 
     address_id INT, 
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL, 
+    FOREIGN KEY (user_id) REFERENCES Users(id) , 
     FOREIGN KEY (address_id) REFERENCES CustomerAddresses(id) ,
     FOREIGN KEY (payment_info_id) REFERENCES PaymentInfo(id) 
 );
