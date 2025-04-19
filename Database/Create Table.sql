@@ -16,10 +16,10 @@ CREATE TABLE Categories (
 CREATE TABLE PaymentInfo (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT, -- References Users.id
-    card_number VARCHAR(255) NOT NULL, 
-    card_holder_name VARCHAR(255) NOT NULL,
-    expiration_date DATE NOT NULL,
-    cvv VARCHAR(255) NOT NULL, 
+    card_number VARCHAR(255) , 
+    card_holder_name VARCHAR(255) ,
+    expiration_date DATE ,
+    cvv VARCHAR(255) , 
     payment_method VARCHAR(50) NOT NULL CHECK (payment_method IN ('cash', 'card','E-Wallet')), 
     FOREIGN KEY (user_id) REFERENCES Users(id) 
 );
