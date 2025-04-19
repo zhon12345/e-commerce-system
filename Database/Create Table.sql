@@ -50,7 +50,6 @@ CREATE TABLE Orders (
     total_price DECIMAL(10,2) NOT NULL CHECK (total_price >= 0),
     payment_info_id INT NOT NULL,
     delivery_cost DECIMAL(10,2) DEFAULT 0.00,
-    status INT NOT NULL, 
     address_id INT, 
     FOREIGN KEY (user_id) REFERENCES Users(id) , 
     FOREIGN KEY (address_id) REFERENCES CustomerAddresses(id) ,
