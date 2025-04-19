@@ -33,7 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Promotions.findByPromoCode", query = "SELECT p FROM Promotions p WHERE p.promoCode = :promoCode"),
 	@NamedQuery(name = "Promotions.findByDiscount", query = "SELECT p FROM Promotions p WHERE p.discount = :discount"),
 	@NamedQuery(name = "Promotions.findByValidFrom", query = "SELECT p FROM Promotions p WHERE p.validFrom = :validFrom"),
-	@NamedQuery(name = "Promotions.findByValidTo", query = "SELECT p FROM Promotions p WHERE p.validTo = :validTo")})
+	@NamedQuery(name = "Promotions.findByValidTo", query = "SELECT p FROM Promotions p WHERE p.validTo = :validTo"),
+	@NamedQuery(name = "Promotions.findByIsActive", query = "SELECT p FROM Promotions p WHERE p.isActive = :isActive")})
 public class Promotions implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -57,6 +58,8 @@ public class Promotions implements Serializable {
   @Column(name = "VALID_TO")
   @Temporal(TemporalType.DATE)
 	private Date validTo;
+	@Column(name = "IS_ACTIVE")
+	private Boolean isActive;
 
 	public Promotions() {
 	}
@@ -111,6 +114,14 @@ public class Promotions implements Serializable {
 
 	public void setValidTo(Date validTo) {
 		this.validTo = validTo;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	@Override

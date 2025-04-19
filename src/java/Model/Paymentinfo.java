@@ -5,6 +5,7 @@
 package Model;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,12 +15,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,7 +38,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Paymentinfo.findByCardNumber", query = "SELECT p FROM Paymentinfo p WHERE p.cardNumber = :cardNumber"),
 	@NamedQuery(name = "Paymentinfo.findByCardHolderName", query = "SELECT p FROM Paymentinfo p WHERE p.cardHolderName = :cardHolderName"),
 	@NamedQuery(name = "Paymentinfo.findByExpirationDate", query = "SELECT p FROM Paymentinfo p WHERE p.expirationDate = :expirationDate"),
-	@NamedQuery(name = "Paymentinfo.findByCvv", query = "SELECT p FROM Paymentinfo p WHERE p.cvv = :cvv")})
+	@NamedQuery(name = "Paymentinfo.findByCvv", query = "SELECT p FROM Paymentinfo p WHERE p.cvv = :cvv"),
+	@NamedQuery(name = "Paymentinfo.findByPaymentMethod", query = "SELECT p FROM Paymentinfo p WHERE p.paymentMethod = :paymentMethod")})
 public class Paymentinfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -43,22 +48,23 @@ public class Paymentinfo implements Serializable {
   @Basic(optional = false)
   @Column(name = "ID")
 	private Integer id;
-	@Basic(optional = false)
-  @Column(name = "CARD_NUMBER")
+	@Column(name = "CARD_NUMBER")
 	private String cardNumber;
-	@Basic(optional = false)
-  @Column(name = "CARD_HOLDER_NAME")
+	@Column(name = "CARD_HOLDER_NAME")
 	private String cardHolderName;
-	@Basic(optional = false)
-  @Column(name = "EXPIRATION_DATE")
+	@Column(name = "EXPIRATION_DATE")
   @Temporal(TemporalType.DATE)
 	private Date expirationDate;
-	@Basic(optional = false)
-  @Column(name = "CVV")
+	@Column(name = "CVV")
 	private String cvv;
-	@JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+	@Basic(optional = false)
+  @Column(name = "PAYMENT_METHOD")
+	private String paymentMethod;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfoId")
+	private List<Orders> ordersList;
+	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Customers customerId;
+	private Users userId;
 
 	public Paymentinfo() {
 	}
@@ -67,12 +73,9 @@ public class Paymentinfo implements Serializable {
 		this.id = id;
 	}
 
-	public Paymentinfo(Integer id, String cardNumber, String cardHolderName, Date expirationDate, String cvv) {
+	public Paymentinfo(Integer id, String paymentMethod) {
 		this.id = id;
-		this.cardNumber = cardNumber;
-		this.cardHolderName = cardHolderName;
-		this.expirationDate = expirationDate;
-		this.cvv = cvv;
+		this.paymentMethod = paymentMethod;
 	}
 
 	public Integer getId() {
@@ -115,12 +118,29 @@ public class Paymentinfo implements Serializable {
 		this.cvv = cvv;
 	}
 
-	public Customers getCustomerId() {
-		return customerId;
+	public String getPaymentMethod() {
+		return paymentMethod;
 	}
 
-	public void setCustomerId(Customers customerId) {
-		this.customerId = customerId;
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	@XmlTransient
+	public List<Orders> getOrdersList() {
+		return ordersList;
+	}
+
+	public void setOrdersList(List<Orders> ordersList) {
+		this.ordersList = ordersList;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
 	}
 
 	@Override
