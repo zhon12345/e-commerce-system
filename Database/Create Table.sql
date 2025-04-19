@@ -3,7 +3,8 @@ CREATE TABLE Users (
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL, 
-    role VARCHAR(50) NOT NULL CHECK (role IN ('customer', 'staff', 'manager')), 
+    role VARCHAR(50) NOT NULL CHECK (role IN ('customer', 'staff', 'manager')),
+    is_archived BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 );
 
@@ -39,7 +40,7 @@ CREATE TABLE Products (
     description VARCHAR(255),
     price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
     stock INT NOT NULL CHECK (stock >= 0),
-    category_id INT, 
+    category_id INT,
     FOREIGN KEY (category_id) REFERENCES Categories(id) 
 );
 CREATE TABLE Orders (
@@ -72,6 +73,7 @@ CREATE TABLE Reviews (
     product_id INT, 
     rating INT CHECK (rating BETWEEN 1 AND 5),
     review VARCHAR(255),
+    is_archived BOOLEAN DEFAULT FALSE,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
     FOREIGN KEY (user_id) REFERENCES Users(id) , 
     FOREIGN KEY (product_id) REFERENCES Products(id)  
@@ -82,6 +84,7 @@ CREATE TABLE Reply (
     review_id INT, 
     user_id INT, 
     reply_text VARCHAR(255) NOT NULL,
+    is_archived BOOLEAN DEFAULT FALSE,
     reply_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (review_id) REFERENCES Reviews(id) , 
     FOREIGN KEY (user_id) REFERENCES Users(id)
