@@ -14,31 +14,27 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author zhon12345
  */
 @Entity
-@Table(name = "REVIEWS")
+@Table(name = "REPLY")
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name = "Reviews.findAll", query = "SELECT r FROM Reviews r"),
-	@NamedQuery(name = "Reviews.findById", query = "SELECT r FROM Reviews r WHERE r.id = :id"),
-	@NamedQuery(name = "Reviews.findByRating", query = "SELECT r FROM Reviews r WHERE r.rating = :rating"),
-	@NamedQuery(name = "Reviews.findByReview", query = "SELECT r FROM Reviews r WHERE r.review = :review"),
-	@NamedQuery(name = "Reviews.findByIsArchived", query = "SELECT r FROM Reviews r WHERE r.isArchived = :isArchived"),
-	@NamedQuery(name = "Reviews.findByReviewDate", query = "SELECT r FROM Reviews r WHERE r.reviewDate = :reviewDate")})
-public class Reviews implements Serializable {
+	@NamedQuery(name = "Reply.findAll", query = "SELECT r FROM Reply r"),
+	@NamedQuery(name = "Reply.findById", query = "SELECT r FROM Reply r WHERE r.id = :id"),
+	@NamedQuery(name = "Reply.findByReplyText", query = "SELECT r FROM Reply r WHERE r.replyText = :replyText"),
+	@NamedQuery(name = "Reply.findByIsArchived", query = "SELECT r FROM Reply r WHERE r.isArchived = :isArchived"),
+	@NamedQuery(name = "Reply.findByReplyDate", query = "SELECT r FROM Reply r WHERE r.replyDate = :replyDate")})
+public class Reply implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -46,29 +42,31 @@ public class Reviews implements Serializable {
   @Basic(optional = false)
   @Column(name = "ID")
 	private Integer id;
-	@Column(name = "RATING")
-	private Integer rating;
-	@Column(name = "REVIEW")
-	private String review;
+	@Basic(optional = false)
+  @Column(name = "REPLY_TEXT")
+	private String replyText;
 	@Column(name = "IS_ARCHIVED")
 	private Boolean isArchived;
-	@Column(name = "REVIEW_DATE")
+	@Column(name = "REPLY_DATE")
   @Temporal(TemporalType.TIMESTAMP)
-	private Date reviewDate;
-	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+	private Date replyDate;
+	@JoinColumn(name = "REVIEW_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Products productId;
+	private Reviews reviewId;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Users userId;
-	@OneToMany(mappedBy = "reviewId")
-	private List<Reply> replyList;
 
-	public Reviews() {
+	public Reply() {
 	}
 
-	public Reviews(Integer id) {
+	public Reply(Integer id) {
 		this.id = id;
+	}
+
+	public Reply(Integer id, String replyText) {
+		this.id = id;
+		this.replyText = replyText;
 	}
 
 	public Integer getId() {
@@ -79,20 +77,12 @@ public class Reviews implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getRating() {
-		return rating;
+	public String getReplyText() {
+		return replyText;
 	}
 
-	public void setRating(Integer rating) {
-		this.rating = rating;
-	}
-
-	public String getReview() {
-		return review;
-	}
-
-	public void setReview(String review) {
-		this.review = review;
+	public void setReplyText(String replyText) {
+		this.replyText = replyText;
 	}
 
 	public Boolean getIsArchived() {
@@ -103,20 +93,20 @@ public class Reviews implements Serializable {
 		this.isArchived = isArchived;
 	}
 
-	public Date getReviewDate() {
-		return reviewDate;
+	public Date getReplyDate() {
+		return replyDate;
 	}
 
-	public void setReviewDate(Date reviewDate) {
-		this.reviewDate = reviewDate;
+	public void setReplyDate(Date replyDate) {
+		this.replyDate = replyDate;
 	}
 
-	public Products getProductId() {
-		return productId;
+	public Reviews getReviewId() {
+		return reviewId;
 	}
 
-	public void setProductId(Products productId) {
-		this.productId = productId;
+	public void setReviewId(Reviews reviewId) {
+		this.reviewId = reviewId;
 	}
 
 	public Users getUserId() {
@@ -125,15 +115,6 @@ public class Reviews implements Serializable {
 
 	public void setUserId(Users userId) {
 		this.userId = userId;
-	}
-
-	@XmlTransient
-	public List<Reply> getReplyList() {
-		return replyList;
-	}
-
-	public void setReplyList(List<Reply> replyList) {
-		this.replyList = replyList;
 	}
 
 	@Override
@@ -146,10 +127,10 @@ public class Reviews implements Serializable {
 	@Override
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Reviews)) {
+		if (!(object instanceof Reply)) {
 			return false;
 		}
-		Reviews other = (Reviews) object;
+		Reply other = (Reply) object;
 		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
 			return false;
 		}
@@ -158,7 +139,7 @@ public class Reviews implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Model.Reviews[ id=" + id + " ]";
+		return "Model.Reply[ id=" + id + " ]";
 	}
 
 }
