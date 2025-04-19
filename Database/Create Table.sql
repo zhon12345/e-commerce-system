@@ -41,17 +41,18 @@ CREATE TABLE Products (
     stock INT NOT NULL CHECK (stock >= 0),
     category_id INT, 
     FOREIGN KEY (category_id) REFERENCES Categories(id) 
-
+);
 CREATE TABLE Orders (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT, 
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(10,2) NOT NULL CHECK (total_price >= 0),
+    payment_info_id INT NOT NULL,
     delivery_cost DECIMAL(10,2) DEFAULT 0.00,
     status INT NOT NULL, 
-    shipping_address_id INT, 
+    address_id INT, 
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL, 
-    FOREIGN KEY (shipping_address_id) REFERENCES CustomerAddresses(id) ,
+    FOREIGN KEY (address_id) REFERENCES CustomerAddresses(id) ,
     FOREIGN KEY (payment_info_id) REFERENCES PaymentInfo(id) 
 );
 
