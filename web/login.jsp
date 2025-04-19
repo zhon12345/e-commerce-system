@@ -21,42 +21,61 @@
     </header>
         <body>
             <%
-            if ("POST".equalsIgnoreCase(request.getMethod())) {
-                String username = request.getParameter("username");
-                String password = request.getParameter("password");
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
-                if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
-                    // Successful login
-                    session.setAttribute("user", username);
-                    session.setAttribute("successful", "true");
-                    response.sendRedirect("index.jsp");
-                    return;
-                } else {
-                    // Failed login
-                    session.setAttribute("unsuccessful", "false");
-                    response.sendRedirect("login.jsp");
-                    return;
-                }
+        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+            // Successful login
+            session.setAttribute("user", username);
+            session.setAttribute("successful", "true");
+            response.sendRedirect("index.jsp");
+            return;
+        } else {
+            // Failed login
+            session.setAttribute("unsuccessful", "false");
+            response.sendRedirect("login.jsp");
+            return;
+        }
+    }
+
+    if (session.getAttribute("unsuccessful") != null) {
+        String errorType = (String) session.getAttribute("unsuccessful");
+        session.removeAttribute("unsuccessful");
+
+if ("false".equals(errorType)) {
+        %>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: 'Username and password Invalid',
+                timer: 5000
+            });
+        </script>
+        <%
             }
+        }
+        %>
 
-            if (session.getAttribute("unsuccessful") != null) {
-                String errorType = (String) session.getAttribute("unsuccessful");
-                session.removeAttribute("unsuccessful");
 
-                if ("false".equals(errorType)) {
-            %>
-            <script>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Login Failed',
-                    text: 'Username and password Invalid',
-                    confirmButtonColor: '#4C60DF'
-                });
-            </script>
-            <%
-                }
-            }
-            %>
+        <!-- logout -->
+        <%
+        if (request.getParameter("logout") != null && request.getParameter("logout").equals("true")) {
+            String username = (String) session.getAttribute("user");
+            session.invalidate();
+        %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Logout Successful!',
+                text: 'Goodbye, <%= username %>!',
+                timer: 5000
+            });
+        </script>
+        <%
+        }
+        %>
 
         <!-- title -->
         <div class="title">

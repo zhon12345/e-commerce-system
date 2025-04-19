@@ -25,39 +25,16 @@ Document   : index
         <!-- popup successful -->
         <%
         if (session.getAttribute("successful") != null) {
-            String username = (String) session.getAttribute("user");
+    String username = (String) session.getAttribute("user");
     session.removeAttribute("successful");
         %>
         <script>
+            <!-- pop up -->
             Swal.fire({
                 icon: 'success',
                 title: 'Login Successful!',
                 text: 'Welcome back, <%= username %>!',
-                confirmButtonColor: '#4C60DF',
-                allowOutsideClick: false,
-                showConfirmButton: true
-            });
-        </script>
-        <%
-        }
-        %>
-
-        <!-- logout -->
-        <%
-        if (request.getParameter("logout") != null && request.getParameter("logout").equals("true")) {
-            String username = (String) session.getAttribute("user");
-    session.invalidate();
-        %>
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Logout Successful!',
-                text: 'Goodbye, <%= username %>!',
-                confirmButtonColor: '#4C60DF',
-                allowOutsideClick: false,
-                showConfirmButton: true
-            }).then() => {
-                window.location.href = 'index.jsp';
+                timer: 5000
             });
         </script>
         <%
@@ -87,19 +64,6 @@ Document   : index
                 </div>
             </div>
         </div>
-
-        <script>
-            <!-- pop up -->
-            function closePopup() {
-                const popup = document.getElementById('popup');
-                const overlay = document.getElementById('overlay');
-
-                if (popup && overlay) {
-                    popup.classList.remove('show');
-                    overlay.classList.remove('show');
-                }
-            }
-        </script>
     </body>
     <footer>
         <%@include file="components/footer.jsp" %>
