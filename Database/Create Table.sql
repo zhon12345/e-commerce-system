@@ -15,7 +15,7 @@ CREATE TABLE Categories (
 
 CREATE TABLE PaymentInfo (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    user_id INT, -- References Users.id
+    user_id INT, 
     card_number VARCHAR(255) , 
     card_holder_name VARCHAR(255) ,
     expiration_date DATE ,
@@ -48,7 +48,7 @@ CREATE TABLE Orders (
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(10,2) NOT NULL CHECK (total_price >= 0),
     delivery_cost DECIMAL(10,2) DEFAULT 0.00,
-    status INT NOT NULL, -- Consider using VARCHAR or ENUM for status (e.g., 'pending', 'shipped', 'delivered')
+    status INT NOT NULL, 
     shipping_address_id INT, 
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL, 
     FOREIGN KEY (shipping_address_id) REFERENCES CustomerAddresses(id) ,
