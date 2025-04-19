@@ -21,7 +21,7 @@ CREATE TABLE PaymentInfo (
     expiration_date DATE NOT NULL,
     cvv VARCHAR(255) NOT NULL, 
     payment_method VARCHAR(50) NOT NULL CHECK (payment_method IN ('cash', 'card','E-Wallet')), 
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE 
+    FOREIGN KEY (user_id) REFERENCES Users(id) 
 );
 
 CREATE TABLE CustomerAddresses (
@@ -30,7 +30,7 @@ CREATE TABLE CustomerAddresses (
     receiver_name VARCHAR(255) NOT NULL,
     phone_number VARCHAR(20) NOT NULL,
     home_address VARCHAR(255) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE 
+    FOREIGN KEY (user_id) REFERENCES Users(id) 
 );
 
 CREATE TABLE Products (
@@ -40,7 +40,7 @@ CREATE TABLE Products (
     price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
     stock INT NOT NULL CHECK (stock >= 0),
     category_id INT, 
-    FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE SET NULL 
+    FOREIGN KEY (category_id) REFERENCES Categories(id) 
 
 CREATE TABLE Orders (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -51,8 +51,8 @@ CREATE TABLE Orders (
     status INT NOT NULL, -- Consider using VARCHAR or ENUM for status (e.g., 'pending', 'shipped', 'delivered')
     shipping_address_id INT, 
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL, 
-    FOREIGN KEY (shipping_address_id) REFERENCES CustomerAddresses(id) ON DELETE SET NULL,
-    FOREIGN KEY (payment_info_id) REFERENCES PaymentInfo(id) ON DELETE SET NULL
+    FOREIGN KEY (shipping_address_id) REFERENCES CustomerAddresses(id) ,
+    FOREIGN KEY (payment_info_id) REFERENCES PaymentInfo(id) 
 );
 
 CREATE TABLE OrderDetails (
@@ -61,8 +61,8 @@ CREATE TABLE OrderDetails (
     product_id INT, 
     quantity INT NOT NULL CHECK (quantity > 0),
     price DECIMAL(10,2) NOT NULL, 
-    FOREIGN KEY (order_id) REFERENCES Orders(id) ON DELETE CASCADE, 
-    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE SET NULL 
+    FOREIGN KEY (order_id) REFERENCES Orders(id) , 
+    FOREIGN KEY (product_id) REFERENCES Products(id) 
 );
 
 CREATE TABLE Reviews (
@@ -72,8 +72,8 @@ CREATE TABLE Reviews (
     rating INT CHECK (rating BETWEEN 1 AND 5),
     review VARCHAR(255),
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, 
-    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE 
+    FOREIGN KEY (user_id) REFERENCES Users(id) , 
+    FOREIGN KEY (product_id) REFERENCES Products(id)  
 );
 
 CREATE TABLE Reply (
@@ -82,18 +82,18 @@ CREATE TABLE Reply (
     user_id INT, 
     reply_text VARCHAR(255) NOT NULL,
     reply_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (review_id) REFERENCES Reviews(id) ON DELETE CASCADE, 
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE 
+    FOREIGN KEY (review_id) REFERENCES Reviews(id) , 
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
 CREATE TABLE Cart (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, -- Or use (user_id, product_id) as composite PK
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT, 
     product_id INT, 
     quantity INT NOT NULL CHECK (quantity > 0),
     added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, 
-    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE, 
+    FOREIGN KEY (user_id) REFERENCES Users(id) , 
+    FOREIGN KEY (product_id) REFERENCES Products(id) , 
     UNIQUE (user_id, product_id) 
 );
 
@@ -112,5 +112,5 @@ CREATE TABLE Reports (
     generated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     details VARCHAR(4000), 
     generated_by_user_id INT, 
-    FOREIGN KEY (generated_by_user_id) REFERENCES Users(id) ON DELETE SET NULL 
+    FOREIGN KEY (generated_by_user_id) REFERENCES Users(id) 
 );
