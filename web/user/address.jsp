@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <!-- edit profile -->
+        <!-- add address -->
         <div class="add-container" id="addPopup">
             <div class="add-content">
                 <span class="close-btn" id="closePopupBtn">&times;</span>
@@ -128,19 +128,6 @@
         }
         %>
 
-        <!-- success message popup -->
-        <% if (session.getAttribute("addSuccess") != null && session.getAttribute("addSuccess").equals("true")) { %>
-        <div class="overlay show" id="overlay"></div>
-        <div class="popup show" id="popup">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="success-title">Add Successful!</div>
-            <button class="close" onclick="closePopup()">OK</button>
-            <% session.removeAttribute("addSuccess"); %>
-        </div>
-        <% } %>
-
         <script>
             // Function to disable scrolling
             function disableScroll() {
@@ -187,17 +174,6 @@
                 addPopup.style.display = 'none';
                 enableScroll();
             });
-
-            // after add Successful popup
-            function closePopup() {
-                const popup = document.getElementById('popup');
-                const overlay = document.getElementById('overlay');
-
-                if (popup && overlay) {
-                    popup.classList.remove('show');
-                    overlay.classList.remove('show');
-                }
-            }
         </script>
     </body>
     <footer>

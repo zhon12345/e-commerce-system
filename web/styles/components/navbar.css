@@ -1,0 +1,179 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/*
+    Created on : 16 Apr 2025, 11:17:30 pm
+    Author     : yjee0
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7ff;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+}
+
+.in-navbar {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: all 0.2s ease;
+    font-weight: normal;
+}
+
+.navbar a:hover,
+.in-navbar > a:not(.login_signup-btn),
+.logo-link {
+    font-weight: bold;
+}
+
+.in-navbar a:hover {
+    color: #4C60DF;
+    transform: translateY(5px);
+}
+
+.logo {
+    width: 50px;
+}
+
+.in-navbar .login_signup-btn {
+    padding: 7px 12px;
+    background: #4C60DF;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.in-navbar .login_signup-btn:hover {
+    transform: none;
+    background: #fff;
+    color: #4C60DF;
+    border: #4C60DF 2px solid;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/* icon style */
+.nav-icon {
+    font-size: 22px;
+    color: #4C60DF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icon:hover {
+    transform: scale(1.1);
+}
+
+/* profile dropdown */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    padding: 10px 0;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #4C60DF;
+}
+
+.user-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Search styles */
+.search-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.search-input {
+    width: 0;
+    padding: 0;
+    border: none;
+    border-radius: 20px;
+    background: #d9d9d9;
+    outline: none;
+    position: absolute;
+    right: 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding-left: 35px;
+    padding-right: 30px;
+    display: none;
+    font-weight: bold;
+}
+
+.search-input.active {
+    width: 350px;
+    padding: 8px 35px;
+    display: block
+}
+
+.search-icon {
+    cursor: pointer;
+    margin-left: 10px;
+    color: #555;
+    z-index: 1;
+    position: relative;
+}
+
+.close-icon {
+    position: absolute;
+    right: 60px;
+    cursor: pointer;
+    color: #888;
+    z-index: 2;
+    display: none;
+}
+
+.close-icon.active {
+    display: block;
+}

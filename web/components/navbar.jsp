@@ -4,108 +4,88 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Navbar</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <style>
-            /* Minimal CSS for search toggle */
-            .search-container {
-                position: relative;
-                margin-right: 1rem;
-            }
-            .search-input {
-                width: 0;
-                opacity: 0;
-                transition: all 0.3s ease;
-                position: absolute;
-                right: 40px;
-            }
-            .search-input.expanded {
-                width: 500px;
-                opacity: 1;
-                padding: 8px 15px;
-            }
-        </style>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/navbar.css">
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white">
-            <div class="container">
-                <!-- Brand/Logo -->
-                <a class="navbar-brand me-5" href="${pageContext.request.contextPath}/index.jsp">
-                    <img src="${pageContext.request.contextPath}/assets/logo/text.png" height="40">
-                </a>
+        <div class="navbar">
+            <a href="${pageContext.request.contextPath}/index.jsp">
+                <img src="${pageContext.request.contextPath}/assets/logo/text.png" class="logo">
+            </a>
 
-                <!-- Mobile Toggle -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <div class="in-navbar">
+                <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
+                <a href="${pageContext.request.contextPath}/shop.jsp">Shop</a>
+                <a href="${pageContext.request.contextPath}/about.jsp">About Us</a>
+                <a href="${pageContext.request.contextPath}/contact.jsp">Contact</a>
 
-                <!-- Navbar Content -->
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <!-- Navigation Links -->
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/index.jsp">Home</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/shop.jsp">Shop</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/about.jsp">About Us</a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/contact.jsp">Contact</a>
-                        </li>
-                    </ul>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search products...">
+                    <i class="fa fa-search search-icon" id="searchIcon" onclick="toggleSearch()"></i>
+                    <i class="fa fa-times close-icon" id="closeIcon" onclick="closeSearch()"></i>
+                </div>
 
-                    <!-- Right-aligned Items -->
-                    <div class="d-flex align-items-center">
-                        <!-- Search Icon -->
-                        <div class="search-container">
-                            <input type="text" class="form-control search-input" placeholder="Search...">
-                            <button class="btn btn-link text-dark" id="searchToggle">
-                                <i class="fas fa-search"></i>
-                            </button>
+                <% if (session.getAttribute("user") != null) { %>
+                <div class="icon-container">
+                    <i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href = '${pageContext.request.contextPath}/cart.jsp'"></i>
+                    <div class="user-dropdown">
+                        <i class="fas fa-user-circle nav-icon"></i>
+                        <div class="dropdown-content">
+                            <a href="${pageContext.request.contextPath}/user/profile.jsp">My Profile</a>
+                            <a href="${pageContext.request.contextPath}/user/history.jsp">History</a>
+                            <a href="${pageContext.request.contextPath}/index.jsp?logout=true">Logout</a>
                         </div>
-
-                        <!-- Login Button -->
-                        <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-primary px-4">
-                            Login / Sign Up
-                        </a>
                     </div>
                 </div>
+                <% } else { %>
+                <a href="${pageContext.request.contextPath}/login.jsp" class="login_signup-btn">Login / Sign Up</a>
+                <% } %>
             </div>
-        </nav>
+        </div>
 
-        <!-- Bootstrap JS Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <%
+            if (request.getParameter("logout") != null) {
+                session.setAttribute("logoutSuccess", "true");
+                session.invalidate();
+                HttpSession newSession = request.getSession(true);
+                newSession.setAttribute("logoutSuccess", "true");
+                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                return;
+            }
+        %>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const searchToggle = document.getElementById('searchToggle');
+            function toggleSearch() {
                 const searchInput = document.querySelector('.search-input');
+                const closeIcon = document.getElementById('closeIcon');
 
-                // Toggle search input
-                searchToggle.addEventListener('click', function () {
-                    searchInput.classList.toggle('expanded');
-                    if (searchInput.classList.contains('expanded')) {
-                        searchInput.focus();
-                    }
-                });
+                searchInput.classList.toggle('active');
+                closeIcon.classList.toggle('active');
 
-                // Close search when clicking outside
-                document.addEventListener('click', function (e) {
-                    if (!e.target.closest('.search-container') && e.target !== searchToggle) {
-                        searchInput.classList.remove('expanded');
-                    }
-                });
+                if (searchInput.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            }
 
-                // Handle search on Enter key
-                searchInput.addEventListener('keypress', function (e) {
-                    if (e.key === 'Enter') {
-                        // Perform search action here
-                        alert('Searching for: ' + searchInput.value);
-                    }
-                });
+            function closeSearch() {
+                const searchInput = document.querySelector('.search-input');
+                const closeIcon = document.getElementById('closeIcon');
+
+                searchInput.classList.remove('active');
+                closeIcon.classList.remove('active');
+                searchInput.value = '';
+            }
+
+            document.addEventListener('click', function (e) {
+                const searchContainer = document.querySelector('.search-container');
+                const searchInput = document.querySelector('.search-input');
+                const searchIcon = document.getElementById('searchIcon');
+                const closeIcon = document.getElementById('closeIcon');
+
+                if (!searchContainer.contains(e.target) && e.target !== searchIcon && e.target !== closeIcon) {
+                    searchInput.classList.remove('active');
+                    closeIcon.classList.remove('active');
+                }
             });
         </script>
     </body>

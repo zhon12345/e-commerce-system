@@ -16,31 +16,11 @@ Document   : index
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <header>
         <%@include file="components/navbar.jsp" %>
     </header>
     <body>
-        <!-- popup successful -->
-        <%
-        if (session.getAttribute("successful") != null) {
-    String username = (String) session.getAttribute("user");
-    session.removeAttribute("successful");
-        %>
-        <script>
-            <!-- pop up -->
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Successful!',
-                text: 'Welcome back, <%= username %>!',
-                timer: 5000
-            });
-        </script>
-        <%
-        }
-        %>
-
         <img src="assets/home/hero.jpg" class="web_img">
 
         <!--Categories-->
