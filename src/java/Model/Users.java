@@ -58,9 +58,9 @@ public class Users implements Serializable {
 	@Basic(optional = false)
   @Column(name = "ROLE")
 	private String role;
-	@Column(name = "IS_ARCHIVED")
+	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
-	@Column(name = "CREATED_AT")
+	@Column(name = "CREATED_AT", insertable = false, updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
 	@OneToMany(mappedBy = "userId")
@@ -85,8 +85,7 @@ public class Users implements Serializable {
 		this.id = id;
 	}
 
-	public Users(Integer id, String username, String email, String password, String role) {
-		this.id = id;
+	public Users(String username, String email, String password, String role) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
