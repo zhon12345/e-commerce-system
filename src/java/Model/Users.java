@@ -32,8 +32,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
 	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
+	@NamedQuery(name = "Users.findByAvatar", query = "SELECT u FROM Users u WHERE u.avatar = :avatar"),
 	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
+	@NamedQuery(name = "Users.findByName", query = "SELECT u FROM Users u WHERE u.name = :name"),
 	@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
+	@NamedQuery(name = "Users.findByContact", query = "SELECT u FROM Users u WHERE u.contact = :contact"),
 	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
 	@NamedQuery(name = "Users.findByRole", query = "SELECT u FROM Users u WHERE u.role = :role"),
 	@NamedQuery(name = "Users.findByIsArchived", query = "SELECT u FROM Users u WHERE u.isArchived = :isArchived"),
@@ -46,12 +49,18 @@ public class Users implements Serializable {
   @Basic(optional = false)
   @Column(name = "ID")
 	private Integer id;
+	@Column(name = "AVATAR")
+	private String avatar;
 	@Basic(optional = false)
   @Column(name = "USERNAME")
 	private String username;
+	@Column(name = "NAME")
+	private String name;
 	@Basic(optional = false)
   @Column(name = "EMAIL")
 	private String email;
+	@Column(name = "CONTACT")
+	private String contact;
 	@Basic(optional = false)
   @Column(name = "PASSWORD")
 	private String password;
@@ -65,7 +74,7 @@ public class Users implements Serializable {
 	private Date createdAt;
 	@OneToMany(mappedBy = "userId")
 	private List<Reviews> reviewsList;
-	@OneToMany(mappedBy = "generatedByUserId")
+	@OneToMany(mappedBy = "generatedById")
 	private List<Reports> reportsList;
 	@OneToMany(mappedBy = "userId")
 	private List<Orders> ordersList;
@@ -100,6 +109,14 @@ public class Users implements Serializable {
 		this.id = id;
 	}
 
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -108,12 +125,28 @@ public class Users implements Serializable {
 		this.username = username;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 	public String getPassword() {
