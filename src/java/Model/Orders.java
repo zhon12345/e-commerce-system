@@ -37,8 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Orders.findById", query = "SELECT o FROM Orders o WHERE o.id = :id"),
 	@NamedQuery(name = "Orders.findByOrderDate", query = "SELECT o FROM Orders o WHERE o.orderDate = :orderDate"),
 	@NamedQuery(name = "Orders.findByTotalPrice", query = "SELECT o FROM Orders o WHERE o.totalPrice = :totalPrice"),
-	@NamedQuery(name = "Orders.findByDeliveryCost", query = "SELECT o FROM Orders o WHERE o.deliveryCost = :deliveryCost"),
-	@NamedQuery(name = "Orders.findByStatus", query = "SELECT o FROM Orders o WHERE o.status = :status")})
+	@NamedQuery(name = "Orders.findByDeliveryCost", query = "SELECT o FROM Orders o WHERE o.deliveryCost = :deliveryCost")})
 public class Orders implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -56,9 +55,6 @@ public class Orders implements Serializable {
 	private BigDecimal totalPrice;
 	@Column(name = "DELIVERY_COST")
 	private BigDecimal deliveryCost;
-	@Basic(optional = false)
-  @Column(name = "STATUS")
-	private int status;
 	@JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Customeraddresses addressId;
@@ -78,10 +74,9 @@ public class Orders implements Serializable {
 		this.id = id;
 	}
 
-	public Orders(Integer id, BigDecimal totalPrice, int status) {
+	public Orders(Integer id, BigDecimal totalPrice) {
 		this.id = id;
 		this.totalPrice = totalPrice;
-		this.status = status;
 	}
 
 	public Integer getId() {
@@ -114,14 +109,6 @@ public class Orders implements Serializable {
 
 	public void setDeliveryCost(BigDecimal deliveryCost) {
 		this.deliveryCost = deliveryCost;
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	public Customeraddresses getAddressId() {

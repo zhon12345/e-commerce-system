@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Customeraddresses.findAll", query = "SELECT c FROM Customeraddresses c"),
 	@NamedQuery(name = "Customeraddresses.findById", query = "SELECT c FROM Customeraddresses c WHERE c.id = :id"),
 	@NamedQuery(name = "Customeraddresses.findByReceiverName", query = "SELECT c FROM Customeraddresses c WHERE c.receiverName = :receiverName"),
-	@NamedQuery(name = "Customeraddresses.findByPhoneNumber", query = "SELECT c FROM Customeraddresses c WHERE c.phoneNumber = :phoneNumber"),
+	@NamedQuery(name = "Customeraddresses.findByContactNumber", query = "SELECT c FROM Customeraddresses c WHERE c.contactNumber = :contactNumber"),
 	@NamedQuery(name = "Customeraddresses.findByHomeAddress", query = "SELECT c FROM Customeraddresses c WHERE c.homeAddress = :homeAddress")})
 public class Customeraddresses implements Serializable {
 
@@ -46,8 +46,8 @@ public class Customeraddresses implements Serializable {
   @Column(name = "RECEIVER_NAME")
 	private String receiverName;
 	@Basic(optional = false)
-  @Column(name = "PHONE_NUMBER")
-	private String phoneNumber;
+  @Column(name = "CONTACT_NUMBER")
+	private String contactNumber;
 	@Basic(optional = false)
   @Column(name = "HOME_ADDRESS")
 	private String homeAddress;
@@ -64,10 +64,10 @@ public class Customeraddresses implements Serializable {
 		this.id = id;
 	}
 
-	public Customeraddresses(Integer id, String receiverName, String phoneNumber, String homeAddress) {
+	public Customeraddresses(Integer id, String receiverName, String contactNumber, String homeAddress) {
 		this.id = id;
 		this.receiverName = receiverName;
-		this.phoneNumber = phoneNumber;
+		this.contactNumber = contactNumber;
 		this.homeAddress = homeAddress;
 	}
 
@@ -87,12 +87,12 @@ public class Customeraddresses implements Serializable {
 		this.receiverName = receiverName;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getContactNumber() {
+		return contactNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
 
 	public String getHomeAddress() {

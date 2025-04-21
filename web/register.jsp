@@ -30,7 +30,7 @@
 				</div>
 				<div class="form">
 					<h1 class="signup-title">Register</h1>
-					<form onsubmit="" action="Register" method="post">
+					<form onsubmit="" action="register" method="post">
 						<input type="hidden" name="csrf_token" value="${csrf_token}" />
 						<div class="input username">
 							<label for="username">Username</label>

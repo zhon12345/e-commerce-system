@@ -49,7 +49,7 @@
 				<div class="form">
 					<h1 class="login-title">Login</h1>
 
-					<form onsubmit="return validateForm()" action="Login" method="POST">
+					<form onsubmit="return validateForm()" action="login" method="POST">
 						<div class="detail username">
 							<label for="username">Username / Email</label>
 							<div class="icon">

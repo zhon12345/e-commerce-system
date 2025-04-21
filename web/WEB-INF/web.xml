@@ -12,16 +12,24 @@
         <servlet-name>Logout</servlet-name>
         <servlet-class>Controller.Logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateProfile</servlet-name>
+        <servlet-class>Controller.UpdateProfile</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
-        <url-pattern>/Register</url-pattern>
+        <url-pattern>/register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/Login</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
-        <url-pattern>/Logout</url-pattern>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProfile</servlet-name>
+        <url-pattern>/updateProfile</url-pattern>
     </servlet-mapping>
 </web-app>

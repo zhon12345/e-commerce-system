@@ -1,6 +1,6 @@
 /*
 Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to save this template
 */
 /*
     Created on : 16 Apr 2025, 11:42:31 pm
@@ -25,7 +25,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background: white;
     padding: 30px;
     border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .content h2 {
@@ -33,21 +33,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-bottom: 20px;
 }
 
-.header {
+.form-content {
     display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.left {
+    width: 50%;
+}
+
+.right {
+    width: 50%;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
 }
 
 /* content of avatar */
 .avatar {
     position: relative;
-    margin-right: 30px;
 }
 
 .pic {
-    width: 120px;
-    height: 120px;
+    width: 175px;
+    height: 175px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid #e0e0e0;
@@ -60,14 +70,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     right: 0;
     background-color: var(--primary-color);
     color: white;
-    width: 36px;
-    height: 36px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .upload-pic:hover {
@@ -78,40 +88,45 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 .upload-pic i {
-    font-size: 18px;
-}
-
-.Info {
-    flex: 1;
-}
-
-.name {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 20px;
 }
 
 /* content of info */
 .info {
-    margin-bottom: 20px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
 }
 
 .info label {
-    display: block;
-    margin-bottom: 5px;
+    width: 100px;
     font-weight: bold;
+    margin-right: 10px;
 }
 
-.info p {
-    margin: 0;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
+.info input {
+    flex: 1;
+    padding: 10px;
     border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    max-width: 350px;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* edit button */
-.edit {
+.info input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+    outline: none;
+}
+
+.form-actions {
+    margin-top: 25px;
+}
+
+/* save button */
+.save {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -122,10 +137,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     transition: background-color 0.3s;
 }
 
-.edit:hover {
+.save:hover {
     transform: none;
     background: #fff;
     color: #4C60DF;
     border: #4C60DF 2px solid;
 }
-
