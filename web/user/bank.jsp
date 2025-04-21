@@ -49,7 +49,6 @@
 
                 <!-- card list sample -->
                 <div class="list">
-                    <!--
                     <div class="card">
                         <div class="number">•••• •••• •••• 4242</div>
                         <div class="details">
@@ -58,23 +57,28 @@
                                 <div>John Doe</div>
                             </div>
                             <div>
-                                <div class="label">Expires</div>
+                                <div class="label">Expiry Date</div>
                                 <div>12/25</div>
+                            </div>
+                    <div>
+                                <div class="label">Cvv</div>
+                                <div>123</div>
                             </div>
                         </div>
                         <div class="actions">
                             <button class="delete">Delete</button>
                         </div>
                     </div>
-                    -->
                 </div>
 
                 <!-- empty state sample -->
+                <!--
                 <div class="empty-status">
                     <i class="far fa-credit-card"></i>
                     <h3>You don't have cards yet.</h3>
                     <p>Add your credit or debit card to make payments easier.</p>
                 </div>
+                -->
             </div>
         </div>
 
@@ -93,16 +97,12 @@
                         <input type="text" id="accountNumber" name="accountNumber" required>
                     </div>
                     <div class="add-info">
-                        <label for="accountType">Account Type</label>
-                        <select id="accountType" name="accountType" required>
-                            <option value="Checking">Checking</option>
-                            <option value="Savings">Savings</option>
-                            <option value="Business">Business</option>
-                        </select>
+                        <label for="routingNumber">Expiry Date</label>
+                        <input type="text" id="expiryDate" name="expiryDate" required>
                     </div>
                     <div class="add-info">
-                        <label for="routingNumber">Routing Number</label>
-                        <input type="text" id="routingNumber" name="routingNumber" required>
+                        <label for="cvv">cvv</label>
+                        <input type="text" id="cvv" name="cvv" required>
                     </div>
                     <button type="submit" class="btn">Add Bank Account</button>
                 </form>
@@ -113,13 +113,13 @@
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             String bankName = request.getParameter("bankName");
             String accountNumber = request.getParameter("accountNumber");
-            String accountType = request.getParameter("accountType");
-            String routingNumber = request.getParameter("routingNumber");
+            String cvv = request.getParameter("cvv");
+            String expiryDate = request.getParameter("expiryDate");
 
             if (bankName != null && !bankName.isEmpty() &&
                 accountNumber != null && !accountNumber.isEmpty() &&
-                accountType != null && !accountType.isEmpty() &&
-                routingNumber != null && !routingNumber.isEmpty()) {
+                cvv != null && !cvv.isEmpty() &&
+                expiryDate != null && !expiryDate.isEmpty()) {
 
                 session.setAttribute("addSuccess", "true");
                 response.sendRedirect(request.getContextPath() + "/user/bank.jsp");

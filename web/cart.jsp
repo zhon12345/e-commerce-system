@@ -97,10 +97,16 @@
                     <span>Total</span>
                     <span>$349.78</span>
                 </div>
-                <button class="checkout-btn">Proceed to Checkout</button>
+                <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
                 <a href="products.jsp" class="back">Continue Shopping</a>
             </div>
         </div>
+
+        <script>
+            document.getElementById("checkoutBtn").addEventListener("click", function () {
+                window.location.href = "checkout.jsp";
+            });
+        </script>
     </body>
     <footer>
         <%@include file="components/footer.jsp" %>

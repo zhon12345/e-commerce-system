@@ -68,11 +68,6 @@
                     <label>Email:</label>
                     <p id="emailDisplay">jeramy2004@gmail.com</p>
                 </div>
-
-                <div class="info">
-                    <label>Phone:</label>
-                    <p id="phoneDisplay">+60 123456789</p>
-                </div>
             </div>
         </div>
 
@@ -90,10 +85,6 @@
                         <label for="editEmail">Email</label>
                         <input type="email" id="editEmail" name="email" value="jeramy2004@gmail.com">
                     </div>
-                    <div class="edit-info">
-                        <label for="editPhone">Phone</label>
-                        <input type="tel" id="editPhone" name="phone" value="+60 123456789">
-                    </div>
                     <button type="submit" class="btn">Save</button>
                 </form>
             </div>
@@ -103,11 +94,9 @@
         if ("POST".equalsIgnoreCase(request.getMethod())) {
             String username = request.getParameter("username");
             String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
 
             if (username != null && !username.isEmpty() &&
-                email != null && !email.isEmpty() &&
-                phone != null && !phone.isEmpty()) {
+                email != null && !email.isEmpty()) {
 
                 session.setAttribute("editSuccess", "true");
                 response.sendRedirect(request.getContextPath() + "/user/profile.jsp");
@@ -181,7 +170,6 @@
                 disableScroll();
                 document.getElementById('editUsername').value = document.getElementById('usernameDisplay').textContent;
                 document.getElementById('editEmail').value = document.getElementById('emailDisplay').textContent;
-                document.getElementById('editPhone').value = document.getElementById('phoneDisplay').textContent;
             });
 
             // close popup form

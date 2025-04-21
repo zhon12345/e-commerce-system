@@ -8,75 +8,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Login Page</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css" />
     </head>
-    <header>
-        <%@include file="components/navbar.jsp" %>
-    </header>
-        <body>
-            <%
-    if ("POST".equalsIgnoreCase(request.getMethod())) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+    <header><%@include file="components/navbar.jsp" %></header>
 
-        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
-            // Successful login
-            session.setAttribute("user", username);
-            session.setAttribute("successful", "true");
-            response.sendRedirect("index.jsp");
-            return;
-        } else {
-            // Failed login
-            session.setAttribute("unsuccessful", "false");
-            response.sendRedirect("login.jsp");
-            return;
-        }
-    }
-
-    if (session.getAttribute("unsuccessful") != null) {
-        String errorType = (String) session.getAttribute("unsuccessful");
-        session.removeAttribute("unsuccessful");
-
-if ("false".equals(errorType)) {
-        %>
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Failed',
-                text: 'Username and password Invalid',
-                timer: 5000
-            });
-        </script>
-        <%
-            }
-        }
-        %>
-
-
-        <!-- logout -->
-        <%
-        if (request.getParameter("logout") != null && request.getParameter("logout").equals("true")) {
-            String username = (String) session.getAttribute("user");
-            session.invalidate();
-        %>
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Logout Successful!',
-                text: 'Goodbye, <%= username %>!',
-                timer: 5000
-            });
-        </script>
-        <%
-        }
-        %>
-
+    <body>
         <!-- title -->
         <div class="title">
             <h2>Login</h2>
@@ -88,34 +29,30 @@ if ("false".equals(errorType)) {
             <div class="box">
                 <!-- image -->
                 <div class="image">
-                    <img src="${pageContext.request.contextPath}/assets/logo/text.png">
+                    <img src="${pageContext.request.contextPath}/assets/logo/text.png" />
                 </div>
 
                 <!-- form -->
                 <div class="form">
                     <h1 class="login-title">Login</h1>
 
-                    <% if (request.getAttribute("error") != null) { %>
-                    <div class="error-message">
-                        <%= request.getAttribute("error") %>
-                    </div>
-                    <% } %>
-
-                    <form method="POST">
-                        <div class="detail">
-                            <label for="username">Username</label>
+                    <form onsubmit="return validateForm()" action="Login" method="POST">
+                        <div class="detail username">
+                            <label for="username">Username / Email</label>
                             <div class="icon">
                                 <i class="fa-solid fa-user"></i>
-                                <input type="text" id="username" name="username" placeholder="Enter username" required>
+                                <input type="text" id="username" name="username" placeholder="Enter username / email" value="${username}" />
                             </div>
+                            <span class="error-message">${usernameError}</span>
                         </div>
 
-                        <div class="detail">
+                        <div class="detail password">
                             <label for="password">Password</label>
                             <div class="icon">
                                 <i class="fa-solid fa-key"></i>
-                                <input type="password" id="password" name="password" placeholder="Enter password" required>
+                                <input type="password" id="password" name="password" placeholder="Enter password" />
                             </div>
+                            <span class="error-message">${passwordError}</span>
                         </div>
 
                         <div class="forgot-passwd">
@@ -126,14 +63,49 @@ if ("false".equals(errorType)) {
                     </form>
 
                     <!-- go to sign up page -->
-                    <div class="signup">
-                        Don't have an account? <a href="register.jsp">Sign up</a>
-                    </div>
+                    <div class="signup">Don't have an account? <a href="register.jsp">Register</a></div>
                 </div>
             </div>
         </div>
+        <script>
+            window.addEventListener("DOMContentLoaded", () => {
+            <%
+                    String[] errorFields = { "username", "password"};
+                    for (String field : errorFields) {
+                      String error = (String) request.getAttribute(field + "Error");
+                      if (error != null) {
+            %>
+                showError('<%= field %>', '<%= error %>');
+            <%
+                      }
+                    }
+            %>
+            })
+
+            window.addEventListener("DOMContentLoaded", () => {
+            <%
+                    // Check if the "loginSuccess" attribute is set from the server-side
+                    String loginSuccess = (String) request.getAttribute("loginSuccess");
+                    String username = (String) request.getAttribute("username");  // Get the username
+
+                    if (loginSuccess != null && loginSuccess.equals("true")) {
+            %>
+                    // Display SweetAlert2 success message with the username
+                    Swal.fire({
+                        title: 'Login Successful!',
+                        text: 'Welcome, <%= username %>! You have logged in successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Redirect to the index page after the popup
+                        window.location.href = 'index.jsp';  // Redirect to index.jsp
+                    });
+            <%
+                    }
+            %>
+            });
+        </script>
     </body>
-    <footer>
-        <%@include file="components/footer.jsp" %>
-    </footer>
+    <footer><%@include file="components/footer.jsp" %></footer>
+    <script src="${pageContext.request.contextPath}/scripts/login.js"></script>
 </html>
