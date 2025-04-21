@@ -15,7 +15,7 @@
 
             <div class="in-navbar">
                 <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-                <a href="${pageContext.request.contextPath}/shop.jsp">Shop</a>
+                <a href="${pageContext.request.contextPath}/products.jsp">Shop</a>
                 <a href="${pageContext.request.contextPath}/about.jsp">About Us</a>
                 <a href="${pageContext.request.contextPath}/contact.jsp">Contact</a>
 

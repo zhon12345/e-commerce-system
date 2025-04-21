@@ -71,7 +71,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .place-order {
     width: 100%;
-    padding: 12px;
+    padding: 12px 10px;
     background: #e63946;
     color: white;
     border: none;

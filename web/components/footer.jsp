@@ -34,7 +34,7 @@
                 <div class="column">
                     <h3>Quick Links</h3>
                     <a href="${pageContext.request.contextPath}/index.jsp"><p>Home</p></a>
-                    <a href="${pageContext.request.contextPath}/shop.jsp"><p>Shop</p></a>
+                    <a href="${pageContext.request.contextPath}/products.jsp"><p>Shop</p></a>
                     <a href="${pageContext.request.contextPath}/about.jsp"><p>About</p></a>
                     <a href="${pageContext.request.contextPath}/contact.jsp"><p>Contact</p></a>
                 </div>
