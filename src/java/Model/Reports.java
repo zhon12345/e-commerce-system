@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -48,6 +50,9 @@ public class Reports implements Serializable {
 	private Date generatedDate;
 	@Column(name = "DETAILS")
 	private String details;
+	@JoinColumn(name = "GENERATED_BY_USER_ID", referencedColumnName = "ID")
+  @ManyToOne
+	private Users generatedByUserId;
 
 	public Reports() {
 	}
@@ -91,6 +96,14 @@ public class Reports implements Serializable {
 
 	public void setDetails(String details) {
 		this.details = details;
+	}
+
+	public Users getGeneratedByUserId() {
+		return generatedByUserId;
+	}
+
+	public void setGeneratedByUserId(Users generatedByUserId) {
+		this.generatedByUserId = generatedByUserId;
 	}
 
 	@Override

@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -33,8 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Products.findByName", query = "SELECT p FROM Products p WHERE p.name = :name"),
 	@NamedQuery(name = "Products.findByDescription", query = "SELECT p FROM Products p WHERE p.description = :description"),
 	@NamedQuery(name = "Products.findByPrice", query = "SELECT p FROM Products p WHERE p.price = :price"),
-	@NamedQuery(name = "Products.findByStock", query = "SELECT p FROM Products p WHERE p.stock = :stock"),
-	@NamedQuery(name = "Products.findByCategory", query = "SELECT p FROM Products p WHERE p.category = :category")})
+	@NamedQuery(name = "Products.findByStock", query = "SELECT p FROM Products p WHERE p.stock = :stock")})
 public class Products implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,10 +56,11 @@ public class Products implements Serializable {
 	@Basic(optional = false)
   @Column(name = "STOCK")
 	private int stock;
-	@Column(name = "CATEGORY")
-	private String category;
 	@OneToMany(mappedBy = "productId")
 	private List<Reviews> reviewsList;
+	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
+  @ManyToOne
+	private Categories categoryId;
 	@OneToMany(mappedBy = "productId")
 	private List<Orderdetails> orderdetailsList;
 	@OneToMany(mappedBy = "productId")
@@ -118,14 +120,6 @@ public class Products implements Serializable {
 		this.stock = stock;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
 	@XmlTransient
 	public List<Reviews> getReviewsList() {
 		return reviewsList;
@@ -133,6 +127,14 @@ public class Products implements Serializable {
 
 	public void setReviewsList(List<Reviews> reviewsList) {
 		this.reviewsList = reviewsList;
+	}
+
+	public Categories getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Categories categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	@XmlTransient

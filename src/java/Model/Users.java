@@ -14,7 +14,10 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -24,15 +27,18 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author zhon12345
  */
 @Entity
-@Table(name = "CUSTOMERS")
+@Table(name = "USERS")
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name = "Customers.findAll", query = "SELECT c FROM Customers c"),
-	@NamedQuery(name = "Customers.findById", query = "SELECT c FROM Customers c WHERE c.id = :id"),
-	@NamedQuery(name = "Customers.findByUsername", query = "SELECT c FROM Customers c WHERE c.username = :username"),
-	@NamedQuery(name = "Customers.findByEmail", query = "SELECT c FROM Customers c WHERE c.email = :email"),
-	@NamedQuery(name = "Customers.findByPassword", query = "SELECT c FROM Customers c WHERE c.password = :password")})
-public class Customers implements Serializable {
+	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
+	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
+	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
+	@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
+	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
+	@NamedQuery(name = "Users.findByRole", query = "SELECT u FROM Users u WHERE u.role = :role"),
+	@NamedQuery(name = "Users.findByIsArchived", query = "SELECT u FROM Users u WHERE u.isArchived = :isArchived"),
+	@NamedQuery(name = "Users.findByCreatedAt", query = "SELECT u FROM Users u WHERE u.createdAt = :createdAt")})
+public class Users implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -49,29 +55,41 @@ public class Customers implements Serializable {
 	@Basic(optional = false)
   @Column(name = "PASSWORD")
 	private String password;
-	@OneToMany(mappedBy = "customerId")
+	@Basic(optional = false)
+  @Column(name = "ROLE")
+	private String role;
+	@Column(name = "IS_ARCHIVED", insertable = false)
+	private Boolean isArchived;
+	@Column(name = "CREATED_AT", insertable = false, updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+	private Date createdAt;
+	@OneToMany(mappedBy = "userId")
 	private List<Reviews> reviewsList;
-	@OneToMany(mappedBy = "customerId")
+	@OneToMany(mappedBy = "generatedByUserId")
+	private List<Reports> reportsList;
+	@OneToMany(mappedBy = "userId")
 	private List<Orders> ordersList;
-	@OneToMany(mappedBy = "customerId")
+	@OneToMany(mappedBy = "userId")
 	private List<Paymentinfo> paymentinfoList;
-	@OneToMany(mappedBy = "customerId")
+	@OneToMany(mappedBy = "userId")
 	private List<Customeraddresses> customeraddressesList;
-	@OneToMany(mappedBy = "customerId")
+	@OneToMany(mappedBy = "userId")
+	private List<Reply> replyList;
+	@OneToMany(mappedBy = "userId")
 	private List<Cart> cartList;
 
-	public Customers() {
+	public Users() {
 	}
 
-	public Customers(Integer id) {
+	public Users(Integer id) {
 		this.id = id;
 	}
 
-	public Customers(Integer id, String username, String email, String password) {
-		this.id = id;
+	public Users(String username, String email, String password, String role) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.role = role;
 	}
 
 	public Integer getId() {
@@ -106,6 +124,30 @@ public class Customers implements Serializable {
 		this.password = password;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Boolean getIsArchived() {
+		return isArchived;
+	}
+
+	public void setIsArchived(Boolean isArchived) {
+		this.isArchived = isArchived;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	@XmlTransient
 	public List<Reviews> getReviewsList() {
 		return reviewsList;
@@ -113,6 +155,15 @@ public class Customers implements Serializable {
 
 	public void setReviewsList(List<Reviews> reviewsList) {
 		this.reviewsList = reviewsList;
+	}
+
+	@XmlTransient
+	public List<Reports> getReportsList() {
+		return reportsList;
+	}
+
+	public void setReportsList(List<Reports> reportsList) {
+		this.reportsList = reportsList;
 	}
 
 	@XmlTransient
@@ -143,6 +194,15 @@ public class Customers implements Serializable {
 	}
 
 	@XmlTransient
+	public List<Reply> getReplyList() {
+		return replyList;
+	}
+
+	public void setReplyList(List<Reply> replyList) {
+		this.replyList = replyList;
+	}
+
+	@XmlTransient
 	public List<Cart> getCartList() {
 		return cartList;
 	}
@@ -161,10 +221,10 @@ public class Customers implements Serializable {
 	@Override
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Customers)) {
+		if (!(object instanceof Users)) {
 			return false;
 		}
-		Customers other = (Customers) object;
+		Users other = (Users) object;
 		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
 			return false;
 		}
@@ -173,7 +233,7 @@ public class Customers implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Model.Customers[ id=" + id + " ]";
+		return "Model.Users[ id=" + id + " ]";
 	}
 
 }

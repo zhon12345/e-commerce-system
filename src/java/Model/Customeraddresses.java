@@ -14,9 +14,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -48,9 +51,11 @@ public class Customeraddresses implements Serializable {
 	@Basic(optional = false)
   @Column(name = "HOME_ADDRESS")
 	private String homeAddress;
-	@JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+	@OneToMany(mappedBy = "addressId")
+	private List<Orders> ordersList;
+	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Customers customerId;
+	private Users userId;
 
 	public Customeraddresses() {
 	}
@@ -98,12 +103,21 @@ public class Customeraddresses implements Serializable {
 		this.homeAddress = homeAddress;
 	}
 
-	public Customers getCustomerId() {
-		return customerId;
+	@XmlTransient
+	public List<Orders> getOrdersList() {
+		return ordersList;
 	}
 
-	public void setCustomerId(Customers customerId) {
-		this.customerId = customerId;
+	public void setOrdersList(List<Orders> ordersList) {
+		this.ordersList = ordersList;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
 	}
 
 	@Override
