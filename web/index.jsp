@@ -69,7 +69,7 @@ Document   : index
 			</div>
 		</div>
 
-		<script src="${pageContext.request.contextPath}/scripts/popup.js"></script>
+		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
 </html>

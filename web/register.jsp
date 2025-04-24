@@ -93,5 +93,5 @@
 		</script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
-	<script src="${pageContext.request.contextPath}/scripts/register.js"></script>
+	<script src="${pageContext.request.contextPath}/scripts/register.js" type="module"></script>
 </html>
