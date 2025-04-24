@@ -16,6 +16,10 @@
         <servlet-name>UpdateProfile</servlet-name>
         <servlet-class>Controller.UpdateProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FetchUploads</servlet-name>
+        <servlet-class>Controller.FetchUploads</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -31,5 +35,9 @@
     <servlet-mapping>
         <servlet-name>UpdateProfile</servlet-name>
         <url-pattern>/updateProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FetchUploads</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -94,25 +94,40 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to save this t
 /* content of info */
 .info {
     margin: 15px 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: 0.8fr 2.2fr;
+    grid-template-areas:
+        "label input"
+        ". error-message";
     align-items: center;
     padding: 8px 0;
 }
 
 .info label {
-    width: 100px;
+    grid-area: label;
     font-weight: bold;
-    margin-right: 10px;
 }
 
 .info input {
-    flex: 1;
+    grid-area: input;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
     max-width: 350px;
     transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.info .error {
+    border: 1px solid red;
+}
+
+.info .error-message {
+    grid-area: error-message;
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
 }
 
 .info input:focus {

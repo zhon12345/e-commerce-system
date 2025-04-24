@@ -8,10 +8,10 @@ import Model.Users;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
@@ -34,6 +34,7 @@ import jakarta.transaction.UserTransaction;
  * @author zhon12345
  */
 public class UpdateProfile extends HttpServlet {
+	private static final String UPLOAD_DIR = "uploads/avatars";
 
 	@PersistenceContext
 	private EntityManager em;
@@ -62,7 +63,7 @@ public class UpdateProfile extends HttpServlet {
 		String name = req.getParameter("name").trim();
 		String email = req.getParameter("email").trim();
 		String contact = req.getParameter("phone").trim();
-		// Part filePart = req.getPart("avatar");
+		Part filePart = req.getPart("avatar");
 
 		Boolean hasErrors = false;
 
@@ -96,38 +97,49 @@ public class UpdateProfile extends HttpServlet {
 			hasErrors = true;
 		}
 
-		// String avatarPath = user.getAvatar();
-		// if (filePart != null && filePart.getSize() > 0) {
-		// try {
-		// String contentType = filePart.getContentType();
-		// if (!contentType.startsWith("image/")) {
-		// req.setAttribute("avatarError", "Invalid file type. Only images are
-		// allowed.");
-		// hasErrors = true;
-		// } else {
-		// String fileName = UUID.randomUUID().toString() + "_" +
-		// Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+		String avatar = user.getAvatar();
+		if (filePart != null && filePart.getSize() > 0) {
+			try {
+				String contentType = filePart.getContentType();
+				if (!contentType.startsWith("image/")) {
+					req.setAttribute("avatarError", "Only images are allowed");
+					hasErrors = true;
+				} else {
+					String extension = contentType.split("/")[1];
+					String fileName = UUID.randomUUID() + "." + extension;
 
-		// Path uploadDir =
-		// Paths.get(getServletContext().getRealPath("/web/assets/avatars"));
+					String webAppPath = getServletContext().getRealPath("/");
+					File webAppDir = new File(webAppPath);
+					File projectRootDir = webAppDir.getParentFile().getParentFile();
+					File uploadDir = new File(projectRootDir, UPLOAD_DIR);
 
-		// if (!Files.exists(uploadDir)) {
-		// Files.createDirectories(uploadDir);
-		// }
+					if (!uploadDir.exists()) {
+						uploadDir.mkdirs();
+					}
 
-		// Path filePath = uploadDir.resolve(fileName);
-		// try (InputStream inputStream = filePart.getInputStream()) {
-		// Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-		// }
+					if (avatar != null && !avatar.isEmpty()) {
+						File oldFile = new File(uploadDir, avatar);
+						if (oldFile.exists()) {
+							try {
+								Files.delete(oldFile.toPath());
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
 
-		// avatarPath = "/assets/avatars/" + fileName;
-		// }
-		// } catch (Exception e) {
-		// req.setAttribute("avatarError", "An error occurred while uploading the
-		// file.");
-		// hasErrors = true;
-		// }
-		// }
+					File file = new File(uploadDir, fileName);
+					try (InputStream input = filePart.getInputStream()) {
+						Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+					}
+
+					avatar = fileName;
+				}
+			} catch (Exception e) {
+				req.setAttribute("avatarError", "Upload failed: " + e.getMessage());
+				hasErrors = true;
+			}
+		}
 
 		if (hasErrors) {
 			req.setAttribute("name", name);
@@ -143,12 +155,12 @@ public class UpdateProfile extends HttpServlet {
 			user.setName(name);
 			user.setEmail(email);
 			user.setContact(contact);
-			// user.setAvatar(avatarPath);
+			user.setAvatar(avatar);
 
 			em.merge(user);
 			utx.commit();
 
-			session.setAttribute("user", em.merge(user));
+			session.setAttribute("user", user);
 			session.setAttribute("editSuccess", "true");
 
 			res.sendRedirect(req.getContextPath() + "/user/profile.jsp");
@@ -163,7 +175,6 @@ public class UpdateProfile extends HttpServlet {
 			req.setAttribute("error", "An error occurred, please try again.");
 			req.getRequestDispatcher("/user/profile.jsp").forward(req, res);
 		}
-
 	}
 
 }
