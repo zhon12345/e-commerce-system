@@ -95,8 +95,8 @@
 			  %>
 			})
 		</script>
-		<script src="${pageContext.request.contextPath}/scripts/popup.js"></script>
+		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
-	<script src="${pageContext.request.contextPath}/scripts/login.js"></script>
+	<script src="${pageContext.request.contextPath}/scripts/login.js" type="module"></script>
 </html>
