@@ -36,7 +36,7 @@
     <%-- <jsp:include page="/WEB-INF/views/components/navbar.jsp" /> --%>
     <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 shadow-sm">
       <div class="container-fluid">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/dashboard.jsp"> <%-- Link back to dashboard --%>
+        <a class="navbar-brand" href="/admin/dashboard.jsp"> <%-- Link back to dashboard --%>
             <i class="fas fa-shield-alt me-2"></i>Admin Panel
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-3">
                 <%-- Include the sidebar component --%>
-                <jsp:include page="/WEB-INF/views/admin/admin_sidebar.jsp" />
+                <jsp:include page="/admin/admin_sidebar.jsp" />
             </div>
             <div class="col-lg-10 col-md-9">
                 <%-- Main content area where specific page content will be loaded --%>
