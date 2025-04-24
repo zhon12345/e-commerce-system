@@ -41,7 +41,8 @@ public class FetchUploads extends HttpServlet {
 		String contentType = getServletContext().getMimeType(file.getName());
 		if (contentType == null) {
 			contentType = "application/octet-stream";
-		res.setContentType(contentType);
-		Files.copy(file.toPath(), res.getOutputStream());
+			res.setContentType(contentType);
+			Files.copy(file.toPath(), res.getOutputStream());
+		}
 	}
 }
