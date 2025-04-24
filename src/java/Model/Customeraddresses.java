@@ -14,9 +14,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Customeraddresses.findAll", query = "SELECT c FROM Customeraddresses c"),
 	@NamedQuery(name = "Customeraddresses.findById", query = "SELECT c FROM Customeraddresses c WHERE c.id = :id"),
 	@NamedQuery(name = "Customeraddresses.findByReceiverName", query = "SELECT c FROM Customeraddresses c WHERE c.receiverName = :receiverName"),
-	@NamedQuery(name = "Customeraddresses.findByPhoneNumber", query = "SELECT c FROM Customeraddresses c WHERE c.phoneNumber = :phoneNumber"),
+	@NamedQuery(name = "Customeraddresses.findByContactNumber", query = "SELECT c FROM Customeraddresses c WHERE c.contactNumber = :contactNumber"),
 	@NamedQuery(name = "Customeraddresses.findByHomeAddress", query = "SELECT c FROM Customeraddresses c WHERE c.homeAddress = :homeAddress")})
 public class Customeraddresses implements Serializable {
 
@@ -43,14 +46,16 @@ public class Customeraddresses implements Serializable {
   @Column(name = "RECEIVER_NAME")
 	private String receiverName;
 	@Basic(optional = false)
-  @Column(name = "PHONE_NUMBER")
-	private String phoneNumber;
+  @Column(name = "CONTACT_NUMBER")
+	private String contactNumber;
 	@Basic(optional = false)
   @Column(name = "HOME_ADDRESS")
 	private String homeAddress;
-	@JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+	@OneToMany(mappedBy = "addressId")
+	private List<Orders> ordersList;
+	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Customers customerId;
+	private Users userId;
 
 	public Customeraddresses() {
 	}
@@ -59,10 +64,10 @@ public class Customeraddresses implements Serializable {
 		this.id = id;
 	}
 
-	public Customeraddresses(Integer id, String receiverName, String phoneNumber, String homeAddress) {
+	public Customeraddresses(Integer id, String receiverName, String contactNumber, String homeAddress) {
 		this.id = id;
 		this.receiverName = receiverName;
-		this.phoneNumber = phoneNumber;
+		this.contactNumber = contactNumber;
 		this.homeAddress = homeAddress;
 	}
 
@@ -82,12 +87,12 @@ public class Customeraddresses implements Serializable {
 		this.receiverName = receiverName;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getContactNumber() {
+		return contactNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
 
 	public String getHomeAddress() {
@@ -98,12 +103,21 @@ public class Customeraddresses implements Serializable {
 		this.homeAddress = homeAddress;
 	}
 
-	public Customers getCustomerId() {
-		return customerId;
+	@XmlTransient
+	public List<Orders> getOrdersList() {
+		return ordersList;
 	}
 
-	public void setCustomerId(Customers customerId) {
-		this.customerId = customerId;
+	public void setOrdersList(List<Orders> ordersList) {
+		this.ordersList = ordersList;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
 	}
 
 	@Override

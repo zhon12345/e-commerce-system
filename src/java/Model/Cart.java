@@ -15,7 +15,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,7 +31,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
 	@NamedQuery(name = "Cart.findAll", query = "SELECT c FROM Cart c"),
 	@NamedQuery(name = "Cart.findById", query = "SELECT c FROM Cart c WHERE c.id = :id"),
-	@NamedQuery(name = "Cart.findByQuantity", query = "SELECT c FROM Cart c WHERE c.quantity = :quantity")})
+	@NamedQuery(name = "Cart.findByQuantity", query = "SELECT c FROM Cart c WHERE c.quantity = :quantity"),
+	@NamedQuery(name = "Cart.findByAddedDate", query = "SELECT c FROM Cart c WHERE c.addedDate = :addedDate")})
 public class Cart implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -40,12 +44,15 @@ public class Cart implements Serializable {
 	@Basic(optional = false)
   @Column(name = "QUANTITY")
 	private int quantity;
-	@JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
-  @ManyToOne
-	private Customers customerId;
+	@Column(name = "ADDED_DATE")
+  @Temporal(TemporalType.TIMESTAMP)
+	private Date addedDate;
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Products productId;
+	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+  @ManyToOne
+	private Users userId;
 
 	public Cart() {
 	}
@@ -75,12 +82,12 @@ public class Cart implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public Customers getCustomerId() {
-		return customerId;
+	public Date getAddedDate() {
+		return addedDate;
 	}
 
-	public void setCustomerId(Customers customerId) {
-		this.customerId = customerId;
+	public void setAddedDate(Date addedDate) {
+		this.addedDate = addedDate;
 	}
 
 	public Products getProductId() {
@@ -89,6 +96,14 @@ public class Cart implements Serializable {
 
 	public void setProductId(Products productId) {
 		this.productId = productId;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
 	}
 
 	@Override

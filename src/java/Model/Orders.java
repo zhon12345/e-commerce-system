@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Orders.findById", query = "SELECT o FROM Orders o WHERE o.id = :id"),
 	@NamedQuery(name = "Orders.findByOrderDate", query = "SELECT o FROM Orders o WHERE o.orderDate = :orderDate"),
 	@NamedQuery(name = "Orders.findByTotalPrice", query = "SELECT o FROM Orders o WHERE o.totalPrice = :totalPrice"),
-	@NamedQuery(name = "Orders.findByStatus", query = "SELECT o FROM Orders o WHERE o.status = :status")})
+	@NamedQuery(name = "Orders.findByDeliveryCost", query = "SELECT o FROM Orders o WHERE o.deliveryCost = :deliveryCost")})
 public class Orders implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -53,12 +53,17 @@ public class Orders implements Serializable {
 	@Basic(optional = false)
   @Column(name = "TOTAL_PRICE")
 	private BigDecimal totalPrice;
-	@Basic(optional = false)
-  @Column(name = "STATUS")
-	private int status;
-	@JoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
+	@Column(name = "DELIVERY_COST")
+	private BigDecimal deliveryCost;
+	@JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Customers customerId;
+	private Customeraddresses addressId;
+	@JoinColumn(name = "PAYMENT_INFO_ID", referencedColumnName = "ID")
+  @ManyToOne(optional = false)
+	private Paymentinfo paymentInfoId;
+	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+  @ManyToOne
+	private Users userId;
 	@OneToMany(mappedBy = "orderId")
 	private List<Orderdetails> orderdetailsList;
 
@@ -69,10 +74,9 @@ public class Orders implements Serializable {
 		this.id = id;
 	}
 
-	public Orders(Integer id, BigDecimal totalPrice, int status) {
+	public Orders(Integer id, BigDecimal totalPrice) {
 		this.id = id;
 		this.totalPrice = totalPrice;
-		this.status = status;
 	}
 
 	public Integer getId() {
@@ -99,20 +103,36 @@ public class Orders implements Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	public int getStatus() {
-		return status;
+	public BigDecimal getDeliveryCost() {
+		return deliveryCost;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setDeliveryCost(BigDecimal deliveryCost) {
+		this.deliveryCost = deliveryCost;
 	}
 
-	public Customers getCustomerId() {
-		return customerId;
+	public Customeraddresses getAddressId() {
+		return addressId;
 	}
 
-	public void setCustomerId(Customers customerId) {
-		this.customerId = customerId;
+	public void setAddressId(Customeraddresses addressId) {
+		this.addressId = addressId;
+	}
+
+	public Paymentinfo getPaymentInfoId() {
+		return paymentInfoId;
+	}
+
+	public void setPaymentInfoId(Paymentinfo paymentInfoId) {
+		this.paymentInfoId = paymentInfoId;
+	}
+
+	public Users getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Users userId) {
+		this.userId = userId;
 	}
 
 	@XmlTransient
