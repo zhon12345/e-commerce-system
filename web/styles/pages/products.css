@@ -3,7 +3,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
 */
 /*
-    Created on : 16 Apr 2025, 11:27:55 pm
+    Created on : 22 Apr 2025, 12:51:26 am
     Author     : yjee0
 */
 
@@ -142,6 +142,10 @@ input[type="checkbox"] {
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
+.link {
+    text-decoration: none;
+}
+
 /* products image */
 .image {
     width: 100%;
@@ -167,6 +171,7 @@ input[type="checkbox"] {
 .name {
     font-weight: bold;
     margin-bottom: 5px;
+    color: #000;
 }
 
 /* products price */

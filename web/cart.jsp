@@ -36,7 +36,23 @@
                         <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png" alt="Product" class="item-image">
                         <div class="item-details">
                             <div class="item-title">Premium Wireless Headphones</div>
-                            <div class="item-price">$129.99</div>
+                            <div class="item-price">RM 129.99</div>
+                            <div class="quantity">
+                                <button class="quantity-btn">-</button>
+                                <input type="number" value="1" min="1" class="quantity-input">
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <i class="fas fa-trash remove-btn"></i>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png" alt="Product" class="item-image">
+                        <div class="item-details">
+                            <div class="item-title">Premium Wireless Headphones</div>
+                            <div class="item-price">RM 129.99</div>
                             <div class="quantity">
                                 <button class="quantity-btn">-</button>
                                 <input type="number" value="1" min="1" class="quantity-input">
@@ -81,10 +97,16 @@
                     <span>Total</span>
                     <span>$349.78</span>
                 </div>
-                <button class="checkout-btn">Proceed to Checkout</button>
+                <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
                 <a href="products.jsp" class="back">Continue Shopping</a>
             </div>
         </div>
+
+        <script>
+            document.getElementById("checkoutBtn").addEventListener("click", function () {
+                window.location.href = "checkout.jsp";
+            });
+        </script>
     </body>
     <footer>
         <%@include file="components/footer.jsp" %>
