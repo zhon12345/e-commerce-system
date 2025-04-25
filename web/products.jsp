@@ -36,8 +36,8 @@
                                <label for="cat<%= category.getId() %>"><%= category.getName() %></label>
                     </div>
                     <%
-   }
-}
+                                }
+                        }
                     %>
 
                 </div>

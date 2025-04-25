@@ -54,16 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Category filter
-    const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
-    categoryCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
-                    .map(cb => cb.value);
-            // You would typically make an AJAX call here to filter products
-            alert(`Filtering by categories: ${selectedCategories.join(', ')}`);
-            // Implement actual filtering logic here
-        });
-    });
+
 
     // Add to cart functionality
     document.querySelectorAll('.add-to-cart').forEach(button => {

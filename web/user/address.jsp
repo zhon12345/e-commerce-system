@@ -1,12 +1,8 @@
-<%--
-    Document   : address
-    Created on : 15 Apr 2025, 1:32:39 pm
-    Author     : yjee0
---%>
+<%@page import="java.util.List, Model.Addresses"%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>My Address</title>
@@ -21,7 +17,26 @@
     <header>
         <%@include file="../components/navbar.jsp" %>
     </header>
+
     <body>
+
+        <!-- success message popup -->
+        <% if (session.getAttribute("addSuccess") != null || session.getAttribute("editSuccess") != null || session.getAttribute("deleteSuccess") != null) { %>
+        <div class="overlay show" id="overlay"></div>
+        <div class="popup show" id="popup">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-title"><%= session.getAttribute("editSuccess") != null ? "Edit" : session.getAttribute("deleteSuccess") != null ? "Delete" : "Add" %> Successful!</div>
+            <button class="close" onclick="closePopup()">OK</button>
+            <%
+                    session.removeAttribute("addSuccess");
+                    session.removeAttribute("editSuccess");
+                    session.removeAttribute("deleteSuccess");
+            %>
+        </div>
+        <% } %>
+
         <!-- title -->
         <div class="title">
             <h2>Address</h2>
@@ -33,7 +48,7 @@
                 <h3>My Account</h3>
                 <ul>
                     <li><a href="profile.jsp">Profile</a></li>
-                    <li><a href="address.jsp" class="active">Address</a></li>
+                    <li><a href="address" class="active">Address</a></li>
                     <li><a href="bank.jsp">Bank & Card</a></li>
                     <li><a href="history.jsp">History</a></li>
                 </ul>
@@ -48,135 +63,124 @@
 
                 <!-- address display sample -->
                 <div class="list">
+                    <%
+                    List<Addresses> addresses = (List<Addresses>) request.getAttribute("addresses");
+                    if (addresses != null && !addresses.isEmpty()) {
+                            for (Addresses addr : addresses) {
+                                    String fullAddress = addr.getAddress1();
+                                    if (addr.getAddress2() != null && !addr.getAddress2().isEmpty()) {
+                                            fullAddress += ", " + addr.getAddress2();
+                                    }
+                                    fullAddress += ", " + addr.getCity() + ", " + addr.getPostalCode() + ", " + addr.getState();
+                    %>
                     <div class="card">
-                        <p>Jeramy</p>
-                        <p>+60 123456789</p>
-                        <p>123 Main Street</p>
-                        <p>Apartment 4B</p>
-                        <p>New York, NY 10001</p>
-                        <p>United States</p>
+                        <div class="details">
+                            <span><%= addr.getReceiverName() %></span>
+                            <div class="separator"></div>
+                            <span><%= addr.getContactNumber() %></span>
+                        </div>
+                        <div class="address"><%= fullAddress %></div>
+
+                        <div class="actions">
+                            <a href="${pageContext.request.contextPath}/user/address?action=edit&id=<%= addr.getId() %>" class="edit">Edit</a>
+                            <a href="${pageContext.request.contextPath}/user/address?action=delete&id=<%= addr.getId() %>" class="delete">Delete</a>
+                        </div>
                     </div>
+                    <%
+                            }
+                    } else {
+                    %>
+                    <div class="empty-status">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>No Saved Addresses</h3>
+                        <p>You haven't added any addresses yet. Add your first address to get started.</p>
+                    </div>
+                    <% } %>
                 </div>
 
-                <!--
-                <div class="empty-status">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <h3>No Saved Addresses</h3>
-                    <p>You haven't added any addresses yet. Add your first address to get started.</p>
-                </div>
-                -->
             </div>
         </div>
 
-        <!-- add address -->
+        <!-- edit profile -->
         <div class="add-container" id="addPopup">
             <div class="add-content">
                 <span class="close-btn" id="closePopupBtn">&times;</span>
-                <h2>Add New Address</h2>
-                <form method="POST" id="newAddressForm">
-                    <div class="add-info">
-                        <label for="addUsername">Username</label>
-                        <input type="text" id="addUsername" name="username" required>
+                <h2><%= request.getAttribute("editAddress") != null ? "Edit Address" :  "Add New Address" %></h2>
+                <form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/address" method="POST">
+                    <% if (request.getAttribute("editAddress") != null) {
+                            Addresses editAddress = (Addresses) request.getAttribute("editAddress");
+                    %>
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="id" value="<%= editAddress.getId() %>">
+                    <% } %>
+
+                    <div class="add-info name">
+                        <label for="name">Receiver Name</label>
+                        <input type="text" id="name" name="name" value="${name}">
+                        <span class="error-message">${nameError}</span>
+                    </div>
+                    <div class="add-info phone">
+                        <label for="phone">Contact Number</label>
+                        <input type="tel" id="phone" name="phone" value="${phone}">
+                        <span class="error-message">${phoneError}</span>
+                    </div>
+                    <div class="add-info line1">
+                        <label for="line1">Address Line 1</label>
+                        <input type="text" id="line1" name="line1" value="${line1}">
+                        <span class="error-message">${line1Error}</span>
                     </div>
                     <div class="add-info">
-                        <label for="addPhone">Phone</label>
-                        <input type="tel" id="editPhone" name="phone" required>
+                        <label for="line2">Address Line 2 (Optional)</label>
+                        <input type="text" id="line2" name="line2" value="${line2}">
                     </div>
-                    <div class="add-info">
-                        <label for="addLine1">Address Line 1</label>
-                        <input type="text" id="addLine1" name="line1" required>
+                    <div class="add-info postcode">
+                        <label for="postcode">Postal Code</label>
+                        <input type="text" id="postcode" name="postcode" value="${postcode}">
+                        <span class="error-message">${postcodeError}</span>
                     </div>
-                    <div class="add-info">
-                        <label for="addLine2">Address Line 2(Optional)</label>
-                        <input type="text" id="addLine2" name="line2">
+                    <div class="add-info city">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" value="${city}">
+                        <span class="error-message">${cityError}</span>
                     </div>
-                    <div class="add-info">
-                        <label for="addPostCode">Postal Code / City</label>
-                        <input type="text" id="addPostCode" name="postcode" required>
+                    <div class="add-info state">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" value="${state}">
+                        <span class="error-message">${stateError}</span>
                     </div>
-                    <div class="add-info">
-                        <label for="addState">State / Country</label>
-                        <input type="text" id="addState" name="state" required>
-                    </div>
-                    <button type="submit" class="btn">Add</button>
+                    <button type="submit" class="btn"><%= request.getAttribute("editAddress") != null ? "Save" : "Add" %></button>
                 </form>
             </div>
         </div>
 
-        <%
-        if ("POST".equalsIgnoreCase(request.getMethod())) {
-            String username = request.getParameter("username");
-            String phone = request.getParameter("phone");
-            String line1 = request.getParameter("line1");
-            String line2 = request.getParameter("line2");
-            String postcode = request.getParameter("postcode");
-            String state = request.getParameter("state");
-
-            if (username != null && !username.isEmpty() &&
-                phone != null && !phone.isEmpty() &&
-                line1 != null && !line1.isEmpty() &&
-                line2 != null &&
-                postcode != null && !postcode.isEmpty() &&
-                state != null && !state.isEmpty() ) {
-
-                session.setAttribute("addSuccess", "true");
-                response.sendRedirect(request.getContextPath() + "/user/address.jsp");
-                return;
-            } else {
-                return;
-            }
-        }
-        %>
-
         <script>
-            // Function to disable scrolling
-            function disableScroll() {
-                const scrollY = window.scrollY || document.documentElement.scrollTop;
+            window.addEventListener("DOMContentLoaded", () => {
+            <%
+                                String[] errorFields = {"name", "phone", "line1", "postcode", "city","state"};
+                                for (String field : errorFields) {
+                                        String error = (String) request.getAttribute(field + "Error");
+                                        if (error != null) {
+            %>
+                                addPopup.style.display = 'flex';
+                showError('<%= field %>', '<%= error %>');
+            <%
+                                        }
+                                }
 
-                document.body.style.position = 'fixed';
-                document.body.style.top = `-${scrollY}px`;
-                document.body.style.width = '100%';
-                document.body.style.overflow = 'hidden';
-            }
-
-            // Function to enable scrolling
-            function enableScroll() {
-                const scrollY = parseInt(document.body.style.top || '0');
-
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.width = '';
-                document.body.style.overflow = '';
-
-                window.scrollTo(0, Math.abs(scrollY));
-            }
-
-            // add address
-            const addAddressBtn = document.getElementById('addAddressBtn');
-            const addPopup = document.getElementById('addPopup');
-            const closePopupBtn = document.getElementById('closePopupBtn');
-            const newAddressForm = document.getElementById('newAddressForm');
-
-            // open popup form
-            addAddressBtn.addEventListener('click', function () {
+                                if (request.getAttribute("editAddress") != null) {
+            %>
                 addPopup.style.display = 'flex';
-                disableScroll();
-                document.getElementById('addUsername').value = document.getElementById('usernameDisplay').textContent;
-                document.getElementById('addPhone').value = document.getElementById('phoneDisplay').textContent;
-                document.getElementById('addLine1').value = document.getElementById('line1Display').textContent;
-                document.getElementById('addLine2').value = document.getElementById('line2Display').textContent;
-                document.getElementById('addPostCode').value = document.getElementById('postcodeDisplay').textContent;
-                document.getElementById('addState').value = document.getElementById('stateDisplay').textContent;
-            });
+            <%
+                                }
+            %>
 
-            // close popup form
-            closePopupBtn.addEventListener('click', function () {
-                addPopup.style.display = 'none';
-                enableScroll();
             });
         </script>
+        <script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
     </body>
     <footer>
         <%@include file="../components/footer.jsp" %>
     </footer>
+    <script src="${pageContext.request.contextPath}/scripts/user/address.js" type="module"></script>
+
 </html>

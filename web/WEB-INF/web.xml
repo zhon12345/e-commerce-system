@@ -12,6 +12,22 @@
         <servlet-name>products</servlet-name>
         <servlet-class>Controller.products</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>Controller.Logout</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Profile</servlet-name>
+        <servlet-class>Controller.user.Profile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FetchUploads</servlet-name>
+        <servlet-class>Controller.FetchUploads</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Address</servlet-name>
+        <servlet-class>Controller.user.Address</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -19,6 +35,22 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Profile</servlet-name>
+        <url-pattern>/user/profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FetchUploads</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Address</servlet-name>
+        <url-pattern>/user/address</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>products</servlet-name>
