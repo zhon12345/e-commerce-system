@@ -1,4 +1,4 @@
-import { validateRequired, validateEmail, showError } from './components/validation.js';
+import { validateRequired, validateEmail, showError } from '../components/validation.js';
 
 document.getElementById("name").addEventListener("input", () => validateName());
 document.getElementById("email").addEventListener("input", () => validateEmail());

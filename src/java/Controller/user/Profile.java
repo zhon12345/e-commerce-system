@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller;
+package Controller.user;
 
 import Model.Users;
 import jakarta.annotation.Resource;
@@ -33,7 +33,7 @@ import jakarta.transaction.UserTransaction;
  *
  * @author zhon12345
  */
-public class UpdateProfile extends HttpServlet {
+public class Profile extends HttpServlet {
 	private static final String UPLOAD_DIR = "uploads/avatars";
 
 	@PersistenceContext
