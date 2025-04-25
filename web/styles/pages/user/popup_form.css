@@ -13,7 +13,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 /* Popup Form Styles */
-.edit-container, .add-container {
+.edit-container,
+.add-container {
     display: none;
     position: fixed;
     top: 0;
@@ -25,7 +26,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     align-items: center;
 }
 
-.edit-content, .add-content {
+.edit-content,
+.add-content {
     background-color: white;
     padding: 30px;
     border-radius: 8px;
@@ -47,11 +49,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     color: #333;
 }
 
-.edit-info, .add-info {
+.edit-info,
+.add-info {
     margin-bottom: 20px;
 }
 
-.edit-info label, .add-info label {
+.edit-info label,
+.add-info label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
@@ -59,7 +63,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     color: #555;
 }
 
-.edit-info input, .add-info input {
+.edit-info input,
+.add-info input {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -69,7 +74,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     transition: border-color 0.3s;
 }
 
-.edit-info input:focus, .add-info input:focus {
+.add-info .error {
+    border: 1px solid red;
+}
+
+.add-info .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+.edit-info input:focus,
+.add-info input:focus {
     border-color: var(--primary-color);
     outline: none;
 }
@@ -95,11 +112,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     padding: 10px 20px;
 }
 
-.edit-info, .add-info {
+.edit-info,
+.add-info {
     margin-top: 15px;
 }
 
-.edit-content h2, .add-content h2 {
+.edit-content h2,
+.add-content h2 {
     margin-bottom: 25px;
     color: #333;
     text-align: center;

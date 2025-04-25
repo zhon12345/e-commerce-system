@@ -31,7 +31,7 @@
                 <h3>My Account</h3>
                 <ul>
                     <li><a href="profile.jsp">Profile</a></li>
-                    <li><a href="address.jsp">Address</a></li>
+                    <li><a href="address">Address</a></li>
                     <li><a href="bank.jsp" class="active">Bank & Card</a></li>
                     <li><a href="history.jsp">History</a></li>
                 </ul>

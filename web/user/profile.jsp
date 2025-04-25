@@ -42,7 +42,7 @@
 			<h3>My Account</h3>
 			<ul>
 				<li><a href="profile.jsp" class="active">Profile</a></li>
-				<li><a href="address.jsp">Address</a></li>
+				<li><a href="address">Address</a></li>
 				<li><a href="bank.jsp">Bank & Card</a></li>
 				<li><a href="history.jsp">History</a></li>
 			</ul>
@@ -52,7 +52,7 @@
 		<div class="content">
 			<h2>Personal Information</h2>
 
-			<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/updateProfile" method="post" enctype="multipart/form-data">
+			<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/profile" method="post" enctype="multipart/form-data">
 				<div class="form-content">
 					<div class="left">
 						<div class="info">
@@ -119,6 +119,6 @@
 <footer>
 	<%@include file="../components/footer.jsp" %>
 </footer>
-<script src="${pageContext.request.contextPath}/scripts/profile.js" type="module"></script>
+<script src="${pageContext.request.contextPath}/scripts/user/profile.js" type="module"></script>
 
 </html>

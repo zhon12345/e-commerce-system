@@ -26,23 +26,27 @@ public class FetchUploads extends HttpServlet {
 		File uploadDir = new File(projectRootDir, "uploads/avatars");
 
 		if (!uploadDir.exists()) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND, "Upload directory not found: " + uploadDir.getAbsolutePath());
+			res.sendError(HttpServletResponse.SC_NOT_FOUND, "Upload directory not found.");
 			return;
 		}
 
 		File file = new File(uploadDir, fileName);
-		System.out.println("File Path: " + file.getAbsolutePath());
-
 		if (!file.exists()) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found: " + file.getAbsolutePath());
+			res.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found.");
 			return;
 		}
 
 		String contentType = getServletContext().getMimeType(file.getName());
 		if (contentType == null) {
 			contentType = "application/octet-stream";
-			res.setContentType(contentType);
+		}
+		res.setContentType(contentType);
+
+		try {
 			Files.copy(file.toPath(), res.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to stream file.");
 		}
 	}
 }
