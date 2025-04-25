@@ -7,8 +7,8 @@ CREATE TABLE Users (
     contact VARCHAR(20),
     password CHAR(64) NOT NULL,
     role VARCHAR(50) NOT NULL CHECK (role IN ('customer', 'staff', 'manager')),
-    is_archived BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_archived BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Categories (
@@ -17,23 +17,28 @@ CREATE TABLE Categories (
     description VARCHAR(255)
 );
 
-CREATE TABLE PaymentInfo (
+CREATE TABLE CardInfo (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT,
-    card_number VARCHAR(255) ,
-    card_holder_name VARCHAR(255) ,
-    expiration_date DATE ,
-    cvv VARCHAR(255) ,
-    payment_method VARCHAR(50) NOT NULL CHECK (payment_method IN ('cash', 'card','e-wallet')),
+    card_number VARCHAR(255),
+    card_holder_name VARCHAR(255),
+    expiration_date DATE,
+    cvv VARCHAR(255),
+    is_archived BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
-CREATE TABLE CustomerAddresses (
+CREATE TABLE Addresses (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INT,
     receiver_name VARCHAR(255) NOT NULL,
     contact_number VARCHAR(20) NOT NULL,
-    home_address VARCHAR(255) NOT NULL,
+    address1 VARCHAR(120) NOT NULL,
+    address2 VARCHAR(120),
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    is_archived BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
@@ -52,12 +57,13 @@ CREATE TABLE Orders (
     user_id INT,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_price DECIMAL(10,2) NOT NULL CHECK (total_price >= 0),
-    payment_info_id INT NOT NULL,
+    payment_method VARCHAR(50) NOT NULL CHECK (payment_method IN ('cash', 'card','e-wallet')),
+    card_info_id INT,
     delivery_cost DECIMAL(10,2) DEFAULT 0.00,
     address_id INT,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ,
-    FOREIGN KEY (address_id) REFERENCES CustomerAddresses(id) ,
-    FOREIGN KEY (payment_info_id) REFERENCES PaymentInfo(id)
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (address_id) REFERENCES Addresses(id),
+    FOREIGN KEY (card_info_id) REFERENCES CardInfo(id)
 );
 
 CREATE TABLE OrderDetails (
@@ -66,7 +72,7 @@ CREATE TABLE OrderDetails (
     product_id INT,
     quantity INT NOT NULL CHECK (quantity > 0),
     price DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(id) ,
+    FOREIGN KEY (order_id) REFERENCES Orders(id),
     FOREIGN KEY (product_id) REFERENCES Products(id)
 );
 
@@ -78,7 +84,7 @@ CREATE TABLE Reviews (
     review VARCHAR(255),
     is_archived BOOLEAN DEFAULT FALSE,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (product_id) REFERENCES Products(id)
 );
 
@@ -89,7 +95,7 @@ CREATE TABLE Reply (
     reply_text VARCHAR(255) NOT NULL,
     is_archived BOOLEAN DEFAULT FALSE,
     reply_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (review_id) REFERENCES Reviews(id) ,
+    FOREIGN KEY (review_id) REFERENCES Reviews(id),
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
@@ -99,8 +105,8 @@ CREATE TABLE Cart (
     product_id INT,
     quantity INT NOT NULL CHECK (quantity > 0),
     added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ,
-    FOREIGN KEY (product_id) REFERENCES Products(id) ,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (product_id) REFERENCES Products(id),
     UNIQUE (user_id, product_id)
 );
 
