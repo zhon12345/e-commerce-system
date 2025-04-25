@@ -1,4 +1,4 @@
-<%-- /WEB-INF/views/admin/content/dashboard_content.jsp --%>
+<%-- /admin/content/dashboard_content.jsp --%>
 <%-- This file contains only the content specific to the Dashboard page --%>
 
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
