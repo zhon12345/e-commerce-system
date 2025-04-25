@@ -5,7 +5,6 @@
 package Model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,17 +29,17 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author zhon12345
  */
 @Entity
-@Table(name = "PAYMENTINFO")
+@Table(name = "CARDINFO")
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name = "Paymentinfo.findAll", query = "SELECT p FROM Paymentinfo p"),
-	@NamedQuery(name = "Paymentinfo.findById", query = "SELECT p FROM Paymentinfo p WHERE p.id = :id"),
-	@NamedQuery(name = "Paymentinfo.findByCardNumber", query = "SELECT p FROM Paymentinfo p WHERE p.cardNumber = :cardNumber"),
-	@NamedQuery(name = "Paymentinfo.findByCardHolderName", query = "SELECT p FROM Paymentinfo p WHERE p.cardHolderName = :cardHolderName"),
-	@NamedQuery(name = "Paymentinfo.findByExpirationDate", query = "SELECT p FROM Paymentinfo p WHERE p.expirationDate = :expirationDate"),
-	@NamedQuery(name = "Paymentinfo.findByCvv", query = "SELECT p FROM Paymentinfo p WHERE p.cvv = :cvv"),
-	@NamedQuery(name = "Paymentinfo.findByPaymentMethod", query = "SELECT p FROM Paymentinfo p WHERE p.paymentMethod = :paymentMethod")})
-public class Paymentinfo implements Serializable {
+	@NamedQuery(name = "Cardinfo.findAll", query = "SELECT c FROM Cardinfo c"),
+	@NamedQuery(name = "Cardinfo.findById", query = "SELECT c FROM Cardinfo c WHERE c.id = :id"),
+	@NamedQuery(name = "Cardinfo.findByCardNumber", query = "SELECT c FROM Cardinfo c WHERE c.cardNumber = :cardNumber"),
+	@NamedQuery(name = "Cardinfo.findByCardHolderName", query = "SELECT c FROM Cardinfo c WHERE c.cardHolderName = :cardHolderName"),
+	@NamedQuery(name = "Cardinfo.findByExpirationDate", query = "SELECT c FROM Cardinfo c WHERE c.expirationDate = :expirationDate"),
+	@NamedQuery(name = "Cardinfo.findByCvv", query = "SELECT c FROM Cardinfo c WHERE c.cvv = :cvv"),
+	@NamedQuery(name = "Cardinfo.findByIsArchived", query = "SELECT c FROM Cardinfo c WHERE c.isArchived = :isArchived")})
+public class Cardinfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -57,25 +56,19 @@ public class Paymentinfo implements Serializable {
 	private Date expirationDate;
 	@Column(name = "CVV")
 	private String cvv;
-	@Basic(optional = false)
-  @Column(name = "PAYMENT_METHOD")
-	private String paymentMethod;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfoId")
+	@Column(name = "IS_ARCHIVED")
+	private Boolean isArchived;
+	@OneToMany(mappedBy = "cardInfoId")
 	private List<Orders> ordersList;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Users userId;
 
-	public Paymentinfo() {
+	public Cardinfo() {
 	}
 
-	public Paymentinfo(Integer id) {
+	public Cardinfo(Integer id) {
 		this.id = id;
-	}
-
-	public Paymentinfo(Integer id, String paymentMethod) {
-		this.id = id;
-		this.paymentMethod = paymentMethod;
 	}
 
 	public Integer getId() {
@@ -118,12 +111,12 @@ public class Paymentinfo implements Serializable {
 		this.cvv = cvv;
 	}
 
-	public String getPaymentMethod() {
-		return paymentMethod;
+	public Boolean getIsArchived() {
+		return isArchived;
 	}
 
-	public void setPaymentMethod(String paymentMethod) {
-		this.paymentMethod = paymentMethod;
+	public void setIsArchived(Boolean isArchived) {
+		this.isArchived = isArchived;
 	}
 
 	@XmlTransient
@@ -153,10 +146,10 @@ public class Paymentinfo implements Serializable {
 	@Override
 	public boolean equals(Object object) {
 		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Paymentinfo)) {
+		if (!(object instanceof Cardinfo)) {
 			return false;
 		}
-		Paymentinfo other = (Paymentinfo) object;
+		Cardinfo other = (Cardinfo) object;
 		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
 			return false;
 		}
@@ -165,7 +158,7 @@ public class Paymentinfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Model.Paymentinfo[ id=" + id + " ]";
+		return "Model.Cardinfo[ id=" + id + " ]";
 	}
 
 }
