@@ -30,7 +30,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .edit-content,
 .add-content {
-    top: 10%;
+    top: 50px;
     background-color: white;
     padding: 30px;
     border-radius: 8px;

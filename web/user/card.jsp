@@ -98,18 +98,16 @@
                     </div>
                     <%
                             }
-                        } else {
+    }
                     %>
+                </div>
+                    <% if (cards == null || cards.isEmpty()) { %>
                     <div class="empty-status">
                         <i class="far fa-credit-card"></i>
                         <h3>No Saved Cards</h3>
                         <p>You haven't added any credit or debit cards yet. Add your first card to get started.</p>
                     </div>
-                    <%
-                        }
-                    %>
-                </div>
-
+                    <% } %>
             </div>
         </div>
 
@@ -154,16 +152,16 @@
                                                                          if (error != null) {
                             %>
                 addPopup.style.display = 'flex';
-                showError('<%= field %>', '<%= error %>');
+                                showError('<%= field %>', '<%= error %>');
                             <%
-                                         }
-                                 }
+                         }
+                 }
 
-         if (request.getAttribute("editEdit") != null) {
+if (request.getAttribute("editEdit") != null) {
             %>
                 addPopup.style.display = 'flex';
             <%
-                                 }
+                 }
             %>
 
             });
