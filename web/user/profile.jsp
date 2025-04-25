@@ -43,8 +43,8 @@
 			<ul>
 				<li><a href="profile.jsp" class="active">Profile</a></li>
 				<li><a href="address">Address</a></li>
-				<li><a href="bank.jsp">Bank & Card</a></li>
-				<li><a href="history.jsp">History</a></li>
+                                <li><a href="card">Bank & Card</a></li>
+                                <li><a href="history.jsp">History</a></li>
 			</ul>
 		</div>
 

@@ -24,16 +24,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
+
 }
 
 .edit-content,
 .add-content {
+    top: 10%;
     background-color: white;
     padding: 30px;
     border-radius: 8px;
     width: 90%;
     max-width: 400px;
     position: relative;
+    overflow: hidden;
 }
 
 .close-btn {

@@ -4,24 +4,42 @@
     Author     : yjee0
 --%>
 
+<%@page import="java.util.List, Model.Cardinfo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bank</title>
+        <title>Bank & Cards</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/bank.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/empty_status.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
     </head>
     <header>
         <%@include file="../components/navbar.jsp" %>
     </header>
     <body>
+        <!-- Success message popup -->
+        <% if (session.getAttribute("addSuccess") != null || session.getAttribute("editSuccess") != null) { %>
+        <div class="overlay show" id="overlay"></div>
+        <div class="popup show" id="popup">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-title"><%= session.getAttribute("editSuccess") != null ? "Edit" : "Add" %> Successful!</div>
+            <button class="close" onclick="closePopup()">OK</button>
+            <%
+                session.removeAttribute("addSuccess");
+    session.removeAttribute("editSuccess");
+            %>
+        </div>
+        <% } %>
+
         <!-- title -->
         <div class="title">
             <h2>Bank & Cards</h2>
@@ -33,7 +51,7 @@
                 <ul>
                     <li><a href="profile.jsp">Profile</a></li>
                     <li><a href="address">Address</a></li>
-                    <li><a href="bank.jsp" class="active">Bank & Card</a></li>
+                    <li><a href="card" class="active">Bank & Card</a></li>
                     <li><a href="history.jsp">History</a></li>
                 </ul>
             </div>
@@ -42,136 +60,118 @@
             <div class="content">
                 <div class="header">
                     <h2>Credit / Debit Cards</h2>
-                    <button class="add-card" id="addBankBtn">
+                    <button class="add-card" id="addCardBtn">
                         <i class="fas fa-plus"></i> Add New Card
                     </button>
                 </div>
 
-                <!-- card list sample -->
+
+                <!-- In the card list section -->
                 <div class="list">
+                    <%
+                        List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("card");
+                        if (cards != null && !cards.isEmpty()) {
+                            for (Cardinfo card : cards) {
+            String cardNumber = "•••• •••• •••• " + card.getCardNumber().substring(card.getCardNumber().length() - 4);
+            String expiryDate = new java.text.SimpleDateFormat("MM/yy").format(card.getExpirationDate());
+                    %>
                     <div class="card">
-                        <div class="number">•••• •••• •••• 4242</div>
+                        <div class="number"><%= cardNumber %></div>
                         <div class="details">
                             <div>
                                 <div class="label">Card Holder</div>
-                                <div>John Doe</div>
+                                <div><%= card.getCardHolderName() %></div>
                             </div>
                             <div>
                                 <div class="label">Expiry Date</div>
-                                <div>12/25</div>
+                                <div><%= expiryDate %></div>
                             </div>
-                    <div>
-                                <div class="label">Cvv</div>
-                                <div>123</div>
+                            <div>
+                                <div class="label">CVV</div>
+                                <div><%= card.getCvv() %></div>
                             </div>
                         </div>
                         <div class="actions">
-                            <button class="delete">Delete</button>
+                            <a href="${pageContext.request.contextPath}/user/card?action=edit&id=<%= card.getId() %>" class="edit">Edit</a>
+                            <a href="${pageContext.request.contextPath}/user/card?action=delete&id=<%= card.getId() %>" class="delete">Delete</a>
                         </div>
                     </div>
+                    <%
+                            }
+                        } else {
+                    %>
+                    <div class="empty-status">
+                        <i class="far fa-credit-card"></i>
+                        <h3>No Saved Cards</h3>
+                        <p>You haven't added any credit or debit cards yet. Add your first card to get started.</p>
+                    </div>
+                    <%
+                        }
+                    %>
                 </div>
 
-                <!-- empty state sample -->
-                <!--
-                <div class="empty-status">
-                    <i class="far fa-credit-card"></i>
-                    <h3>You don't have cards yet.</h3>
-                    <p>Add your credit or debit card to make payments easier.</p>
-                </div>
-                -->
             </div>
         </div>
 
-        <!-- add bank -->
-        <div class="add-container" id="addPopup" style="display: none;">
+        <!-- Add Card Form -->
+        <div class="add-container" id="addPopup">
             <div class="add-content">
                 <span class="close-btn" id="closePopupBtn">&times;</span>
-                <h2>Add New Bank Account</h2>
-                <form method="POST" id="newBankForm">
+                <h2>Add New Card</h2>
+                <form action="${pageContext.request.contextPath}/user/card" method="POST">
                     <div class="add-info">
-                        <label for="bankName">Bank Name</label>
-                        <input type="text" id="bankName" name="bankName" required>
+                        <label for="number">Card Number</label>
+                        <input type="text" id="number" name="number" value="${number}" required>
+                        <span class="error-message">${numberError}</span>
                     </div>
                     <div class="add-info">
-                        <label for="accountNumber">Account Number</label>
-                        <input type="text" id="accountNumber" name="accountNumber" required>
+                        <label for="name">Card Holder Name</label>
+                        <input type="text" id="name" name="name" value="${name}" required>
+                        <span class="error-message">${nameError}</span>
                     </div>
                     <div class="add-info">
-                        <label for="routingNumber">Expiry Date</label>
-                        <input type="text" id="expiryDate" name="expiryDate" required>
+                        <label for="expiryDate">Expiry Date (MM/YY)</label>
+                        <input type="text" id="expiryDate" name="expiryDate"
+                               placeholder="MM/YY" value="${expiryDate}" required>
+                        <span class="error-message">${expiryDateError}</span>
                     </div>
                     <div class="add-info">
-                        <label for="cvv">cvv</label>
-                        <input type="text" id="cvv" name="cvv" required>
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" value="${cvv}" required>
+                        <span class="error-message">${cvvError}</span>
                     </div>
-                    <button type="submit" class="btn">Add Bank Account</button>
+                    <button type="submit" class="btn">Add Card</button>
                 </form>
             </div>
         </div>
 
-        <%
-        if ("POST".equalsIgnoreCase(request.getMethod())) {
-            String bankName = request.getParameter("bankName");
-            String accountNumber = request.getParameter("accountNumber");
-            String cvv = request.getParameter("cvv");
-            String expiryDate = request.getParameter("expiryDate");
-
-            if (bankName != null && !bankName.isEmpty() &&
-                accountNumber != null && !accountNumber.isEmpty() &&
-                cvv != null && !cvv.isEmpty() &&
-                expiryDate != null && !expiryDate.isEmpty()) {
-
-                session.setAttribute("addSuccess", "true");
-                response.sendRedirect(request.getContextPath() + "/user/bank.jsp");
-                return;
-            } else {
-                return;
-            }
-        }
-        %>
-
-        <script>
-            // Function to disable scrolling
-            function disableScroll() {
-                const scrollY = window.scrollY || document.documentElement.scrollTop;
-
-                document.body.style.position = 'fixed';
-                document.body.style.top = `-${scrollY}px`;
-                document.body.style.width = '100%';
-                document.body.style.overflow = 'hidden';
-            }
-
-            // Function to enable scrolling
-            function enableScroll() {
-                const scrollY = parseInt(document.body.style.top || '0');
-
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.width = '';
-                document.body.style.overflow = '';
-
-                window.scrollTo(0, Math.abs(scrollY));
-            }
-
-            // Add bank account form
-            const addBankBtn = document.getElementById('addBankBtn');
-            const addPopup = document.getElementById('addPopup');
-            const closePopupBtn = document.getElementById('closePopupBtn');
-
-            // open popup form
-            addBankBtn.addEventListener('click', function () {
+                        <script>
+            window.addEventListener("DOMContentLoaded", () => {
+                            <%
+                                                                 String[] errorFields = {"number", "name", "expiryDate", "cvv"};
+                                                                 for (String field : errorFields) {
+                                                                         String error = (String) request.getAttribute(field + "Error");
+                                                                         if (error != null) {
+                            %>
                 addPopup.style.display = 'flex';
-                disableScroll();
-            });
+                showError('<%= field %>', '<%= error %>');
+                            <%
+                                         }
+                                 }
 
-            // close popup form
-            closePopupBtn.addEventListener('click', function () {
-                addPopup.style.display = 'none';
-                enableScroll();
+         if (request.getAttribute("editEdit") != null) {
+            %>
+                addPopup.style.display = 'flex';
+            <%
+                                 }
+            %>
+
             });
         </script>
+        <script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
     </body>
     <footer>
         <%@include file="../components/footer.jsp" %>
     </footer>
+    <script src="${pageContext.request.contextPath}/scripts/user/card.js" type="module"></script>
 </html>
