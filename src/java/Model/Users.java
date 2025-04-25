@@ -30,51 +30,60 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "USERS")
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
-	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
-	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
-	@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
-	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
-	@NamedQuery(name = "Users.findByRole", query = "SELECT u FROM Users u WHERE u.role = :role"),
-	@NamedQuery(name = "Users.findByIsArchived", query = "SELECT u FROM Users u WHERE u.isArchived = :isArchived"),
-	@NamedQuery(name = "Users.findByCreatedAt", query = "SELECT u FROM Users u WHERE u.createdAt = :createdAt")})
+		@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
+		@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
+		@NamedQuery(name = "Users.findByAvatar", query = "SELECT u FROM Users u WHERE u.avatar = :avatar"),
+		@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
+		@NamedQuery(name = "Users.findByName", query = "SELECT u FROM Users u WHERE u.name = :name"),
+		@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
+		@NamedQuery(name = "Users.findByContact", query = "SELECT u FROM Users u WHERE u.contact = :contact"),
+		@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
+		@NamedQuery(name = "Users.findByRole", query = "SELECT u FROM Users u WHERE u.role = :role"),
+		@NamedQuery(name = "Users.findByCreatedAt", query = "SELECT u FROM Users u WHERE u.createdAt = :createdAt"),
+		@NamedQuery(name = "Users.findByIsArchived", query = "SELECT u FROM Users u WHERE u.isArchived = :isArchived") })
 public class Users implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Basic(optional = false)
-  @Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "ID")
 	private Integer id;
+	@Column(name = "AVATAR")
+	private String avatar;
 	@Basic(optional = false)
-  @Column(name = "USERNAME")
+	@Column(name = "USERNAME")
 	private String username;
+	@Column(name = "NAME")
+	private String name;
 	@Basic(optional = false)
-  @Column(name = "EMAIL")
+	@Column(name = "EMAIL")
 	private String email;
+	@Column(name = "CONTACT")
+	private String contact;
 	@Basic(optional = false)
-  @Column(name = "PASSWORD")
+	@Column(name = "PASSWORD")
 	private String password;
 	@Basic(optional = false)
-  @Column(name = "ROLE")
+	@Column(name = "ROLE")
 	private String role;
+	@Column(name = "CREATED_AT", insertable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdAt;
 	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
-	@Column(name = "CREATED_AT", insertable = false, updatable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
 	@OneToMany(mappedBy = "userId")
 	private List<Reviews> reviewsList;
-	@OneToMany(mappedBy = "generatedByUserId")
+	@OneToMany(mappedBy = "generatedById")
 	private List<Reports> reportsList;
 	@OneToMany(mappedBy = "userId")
 	private List<Orders> ordersList;
 	@OneToMany(mappedBy = "userId")
-	private List<Paymentinfo> paymentinfoList;
-	@OneToMany(mappedBy = "userId")
-	private List<Customeraddresses> customeraddressesList;
+	private List<Addresses> addressesList;
 	@OneToMany(mappedBy = "userId")
 	private List<Reply> replyList;
+	@OneToMany(mappedBy = "userId")
+	private List<Cardinfo> cardinfoList;
 	@OneToMany(mappedBy = "userId")
 	private List<Cart> cartList;
 
@@ -100,6 +109,14 @@ public class Users implements Serializable {
 		this.id = id;
 	}
 
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -108,12 +125,28 @@ public class Users implements Serializable {
 		this.username = username;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 	public String getPassword() {
@@ -132,20 +165,20 @@ public class Users implements Serializable {
 		this.role = role;
 	}
 
-	public Boolean getIsArchived() {
-		return isArchived;
-	}
-
-	public void setIsArchived(Boolean isArchived) {
-		this.isArchived = isArchived;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Boolean getIsArchived() {
+		return isArchived;
+	}
+
+	public void setIsArchived(Boolean isArchived) {
+		this.isArchived = isArchived;
 	}
 
 	@XmlTransient
@@ -176,21 +209,12 @@ public class Users implements Serializable {
 	}
 
 	@XmlTransient
-	public List<Paymentinfo> getPaymentinfoList() {
-		return paymentinfoList;
+	public List<Addresses> getAddressesList() {
+		return addressesList;
 	}
 
-	public void setPaymentinfoList(List<Paymentinfo> paymentinfoList) {
-		this.paymentinfoList = paymentinfoList;
-	}
-
-	@XmlTransient
-	public List<Customeraddresses> getCustomeraddressesList() {
-		return customeraddressesList;
-	}
-
-	public void setCustomeraddressesList(List<Customeraddresses> customeraddressesList) {
-		this.customeraddressesList = customeraddressesList;
+	public void setAddressesList(List<Addresses> addressesList) {
+		this.addressesList = addressesList;
 	}
 
 	@XmlTransient
@@ -200,6 +224,15 @@ public class Users implements Serializable {
 
 	public void setReplyList(List<Reply> replyList) {
 		this.replyList = replyList;
+	}
+
+	@XmlTransient
+	public List<Cardinfo> getCardinfoList() {
+		return cardinfoList;
+	}
+
+	public void setCardinfoList(List<Cardinfo> cardinfoList) {
+		this.cardinfoList = cardinfoList;
 	}
 
 	@XmlTransient

@@ -6,16 +6,16 @@ package Controller;
 
 import Model.Users;
 import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
 
 /**
@@ -98,7 +98,9 @@ public class Register extends HttpServlet {
 			em.persist(newUser);
 			utx.commit();
 
-			res.sendRedirect(req.getContextPath() + "/login.jsp?success=true");
+			HttpSession session = req.getSession();
+			session.setAttribute("registerSuccess", "true");
+			res.sendRedirect(req.getContextPath() + "/login.jsp");
 		} catch (Exception e) {
 			e.printStackTrace();
 

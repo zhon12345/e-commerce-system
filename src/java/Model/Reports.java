@@ -50,9 +50,9 @@ public class Reports implements Serializable {
 	private Date generatedDate;
 	@Column(name = "DETAILS")
 	private String details;
-	@JoinColumn(name = "GENERATED_BY_USER_ID", referencedColumnName = "ID")
+	@JoinColumn(name = "GENERATED_BY_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Users generatedByUserId;
+	private Users generatedById;
 
 	public Reports() {
 	}
@@ -98,12 +98,12 @@ public class Reports implements Serializable {
 		this.details = details;
 	}
 
-	public Users getGeneratedByUserId() {
-		return generatedByUserId;
+	public Users getGeneratedById() {
+		return generatedById;
 	}
 
-	public void setGeneratedByUserId(Users generatedByUserId) {
-		this.generatedByUserId = generatedByUserId;
+	public void setGeneratedById(Users generatedById) {
+		this.generatedById = generatedById;
 	}
 
 	@Override

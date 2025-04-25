@@ -14,10 +14,23 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css" />
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css" />
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
 	<body>
+		<% if (session.getAttribute("registerSuccess") !=null && session.getAttribute("registerSuccess").equals("true")) { %>
+      <div class="overlay show" id="overlay"></div>
+      <div class="popup show" id="popup">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="success-title">Register Successful!</div>
+        <button class="close" onclick="closePopup()">OK</button>
+        <% session.removeAttribute("registerSuccess"); %>
+      </div>
+		<% } %>
+
 		<!-- title -->
 		<div class="title">
 			<h2>Login</h2>
@@ -36,7 +49,7 @@
 				<div class="form">
 					<h1 class="login-title">Login</h1>
 
-					<form onsubmit="return validateForm()" action="Login" method="POST">
+					<form onsubmit="return validateForm()" action="login" method="POST">
 						<div class="detail username">
 							<label for="username">Username / Email</label>
 							<div class="icon">
@@ -82,7 +95,8 @@
 			  %>
 			})
 		</script>
+		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
-	<script src="${pageContext.request.contextPath}/scripts/login.js"></script>
+	<script src="${pageContext.request.contextPath}/scripts/login.js" type="module"></script>
 </html>
