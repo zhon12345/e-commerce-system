@@ -22,14 +22,14 @@
 
         <!-- Filter -->
         <div class="container">
-            <div class="box">
+            <form class="box" method="POST">
                 <!-- Option for category -->
                 <div class="filter">
                     <h3>Product Category</h3>
                     <%
-List<Categories> categories = (List<Categories>) request.getAttribute("categories");
-if (categories != null) {
-for (Categories category : categories) {
+                        List<Categories> categories = (List<Categories>) request.getAttribute("categories");
+                        if (categories != null) {
+                        for (Categories category : categories) {
                     %>
                     <div class="option">
                         <input type="checkbox" name="category" value="<%= category.getId() %>"
@@ -67,7 +67,7 @@ for (Categories category : categories) {
                     <input type="hidden" id="selectedRating" value="0">
                     <button class="apply">Apply Rating</button>
                 </div>
-            </div>
+            </form>
 
             <!-- Products -->
             <div class="products-section">
