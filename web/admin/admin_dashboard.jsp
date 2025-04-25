@@ -4,7 +4,7 @@
     request.setAttribute("activeAdminPage", "dashboard");
     request.setAttribute("pageTitle", "Dashboard");
     // Specify the path to the content fragment for this page
-    request.setAttribute("mainContentPage", "/admin/content/dashboard_content.jsp");
+    request.setAttribute("mainContentPage", "${pageContext.request.contextPath}/admin/content/dashboard_content.jsp");
 %>
 
 <%-- Include the main layout template --%>
