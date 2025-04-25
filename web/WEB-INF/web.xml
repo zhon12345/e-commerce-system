@@ -53,22 +53,6 @@
         <url-pattern>/user/address</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Logout</servlet-name>
-        <url-pattern>/logout</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Profile</servlet-name>
-        <url-pattern>/user/profile</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FetchUploads</servlet-name>
-        <url-pattern>/uploads/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Address</servlet-name>
-        <url-pattern>/user/address</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>products</servlet-name>
         <url-pattern>/products</url-pattern>
     </servlet-mapping>
