@@ -73,6 +73,7 @@ public class Login extends HttpServlet {
 			if (!hasErrors) {
 				HttpSession session = req.getSession();
 				session.setAttribute("user", user);
+				session.setAttribute("loginSuccess", "true");
 				res.sendRedirect(req.getContextPath() + "/index.jsp");
 				return;
 			}
