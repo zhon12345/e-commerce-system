@@ -4,7 +4,7 @@
     request.setAttribute("activeAdminPage", "orders");
     request.setAttribute("pageTitle", "Order Management");
     // Specify the path to the content fragment for this page
-    request.setAttribute("mainContentPage", "/admin/content/admin_orders.jsp");
+    request.setAttribute("mainContentPage", "${pageContext.request.contextPath}/admin/content/orders_content.jsp");
 
     // --- TODO: Add backend logic here to fetch orderList and set it as a request attribute ---
     // Example: List<Orders> orderList = orderDAO.getAllOrders();
