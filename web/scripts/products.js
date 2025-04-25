@@ -1,107 +1,77 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
- */
-
-
+// products.js
 document.addEventListener('DOMContentLoaded', function () {
-    const stars = document.querySelectorAll('.star');
+    // Star rating filter
+    const stars = document.querySelectorAll('.star-rating .star');
     const selectedRatingInput = document.getElementById('selectedRating');
-    let currentRating = 0;
-    let selectedRating = 0;
 
-    // Handle star click
     stars.forEach(star => {
         star.addEventListener('click', function () {
             const value = parseInt(this.getAttribute('data-value'));
-            selectedRating = value;
-            currentRating = value;
             selectedRatingInput.value = value;
-            updateStars();
+
+            // Update star display
+            stars.forEach((s, index) => {
+                if (index < value) {
+                    s.classList.remove('fa-regular');
+                    s.classList.add('fa-solid');
+                } else {
+                    s.classList.remove('fa-solid');
+                    s.classList.add('fa-regular');
+                }
+            });
         });
     });
 
-    // Handle star hover
-    stars.forEach(star => {
-        star.addEventListener('mouseover', function () {
-            const value = parseInt(this.getAttribute('data-value'));
-            currentRating = value;
-            updateStars();
-        });
+    // Apply rating filter
+    document.getElementById('applyRating').addEventListener('click', function () {
+        const rating = parseInt(selectedRatingInput.value);
+        // You would typically make an AJAX call here to filter products
+        // For now, we'll just show an alert
+        alert(`Filtering by rating: ${rating}+ stars`);
+        // Implement actual filtering logic here
+    });
 
-        star.addEventListener('mouseout', function () {
-            currentRating = selectedRating;
-            updateStars();
+    // Apply price filter
+    document.getElementById('applyPrice').addEventListener('click', function () {
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+
+        // Validate inputs
+        if (minPrice && isNaN(minPrice)) {  // Fixed parentheses
+            alert('Please enter a valid minimum price');
+            return;
+        }
+
+        if (maxPrice && isNaN(maxPrice)) {  // Fixed parentheses
+            alert('Please enter a valid maximum price');
+            return;
+        }
+
+        // You would typically make an AJAX call here to filter products
+        alert(`Filtering by price range: RM ${minPrice || '0'} to RM ${maxPrice || 'Any'}`);
+        // Implement actual filtering logic here
+    });
+
+
+    // Category filter
+    const categoryCheckboxes = document.querySelectorAll('input[name="category"]');
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+                    .map(cb => cb.value);
+            // You would typically make an AJAX call here to filter products
+            alert(`Filtering by categories: ${selectedCategories.join(', ')}`);
+            // Implement actual filtering logic here
         });
     });
 
-    // Update star display
-    function updateStars() {
-        stars.forEach(star => {
-            const value = parseInt(star.getAttribute('data-value'));
-            if (value <= currentRating) {
-                star.classList.add('hovered');
-                star.classList.remove('fa-regular');
-                star.classList.add('fa-solid');
-            } else {
-                star.classList.remove('hovered');
-                star.classList.remove('fa-solid');
-                star.classList.add('fa-regular');
-            }
+    // Add to cart functionality
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.getAttribute('data-product-id');
+            // You would typically make an AJAX call here to add to cart
+            alert(`Added product ${productId} to cart`);
+            // Implement actual add to cart logic here
         });
-
-        // For selected stars (persistent)
-        stars.forEach(star => {
-            const value = parseInt(star.getAttribute('data-value'));
-            if (value <= selectedRating) {
-                star.classList.add('selected');
-            } else {
-                star.classList.remove('selected');
-            }
-        });
-    }
+    });
 });
-
-document.addEventListener('DOMContentLoaded', function () {
-    const categoryFilters = document.querySelectorAll('.filter input[type="checkbox"]');
-    const minPriceInput = document.getElementById('minPrice');
-    const maxPriceInput = document.getElementById('maxPrice');
-    const applyPriceBtn = document.querySelector('.apply');
-    const productCards = document.querySelectorAll('.products-grid .card');
-
-    // filter products
-    function filterProducts() {
-        let selectedCategories = [];
-        categoryFilters.forEach(filter => {
-            if (filter.checked) {
-                selectedCategories.push(filter.id);
-            }
-        });
-
-        // price range
-        const minPrice = parseFloat(minPriceInput.value) || 0;
-        const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
-
-        productCards.forEach(card => {
-            const productCategory = card.querySelector('.name').textContent.toLowerCase(); // Adjust this according to your product data
-            const productPrice = parseFloat(card.querySelector('.price').textContent.replace('RM ', '').replace(',', ''));
-
-            const matchesCategory = selectedCategories.some(category => productCategory.includes(category.toLowerCase()));
-            const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
-
-            if ((selectedCategories.length === 0 || matchesCategory) && (productPrice >= minPrice && productPrice <= maxPrice)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    categoryFilters.forEach(filter => {
-        filter.addEventListener('change', filterProducts);
-    });
-
-    applyPriceBtn.addEventListener('click', filterProducts);
-    filterProducts();
-});
-

@@ -8,6 +8,10 @@
         <servlet-name>Login</servlet-name>
         <servlet-class>Controller.Login</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>products</servlet-name>
+        <servlet-class>Controller.products</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -15,5 +19,9 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>products</servlet-name>
+        <url-pattern>/products</url-pattern>
     </servlet-mapping>
 </web-app>

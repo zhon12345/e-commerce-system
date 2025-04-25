@@ -1,10 +1,6 @@
-<%--
-    Document   : products
-    Created on : 22 Apr 2025, 12:52:11 am
-    Author     : yjee0
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page import="java.util.List, Model.Products"%>
+<%@page import="java.util.List, Model.Categories"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +12,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
     </head>
     <header>
-        <%@include file="components/navbar.jsp" %>
+        <%@ include file="components/navbar.jsp" %>
     </header>
     <body>
         <!-- title -->
@@ -24,27 +20,29 @@
             <h2>SHOP</h2>
         </div>
 
-        <!--Filter-->
+        <!-- Filter -->
         <div class="container">
             <div class="box">
-                <!-- option for category -->
+                <!-- Option for category -->
                 <div class="filter">
                     <h3>Product Category</h3>
+                    <%
+List<Categories> categories = (List<Categories>) request.getAttribute("categories");
+if (categories != null) {
+for (Categories category : categories) {
+                    %>
                     <div class="option">
-                        <input type="checkbox" id="iem">
-                        <label for="iem">IEM</label>
+                        <input type="checkbox" name="category" value="<%= category.getId() %>"
+                               <label for="cat<%= category.getId() %>"><%= category.getName() %></label>
                     </div>
-                    <div class="option">
-                        <input type="checkbox" id="mouse">
-                        <label for="mouse">Mouse</label>
-                    </div>
-                    <div class="option">
-                        <input type="checkbox" id="keyboard">
-                        <label for="keyboard">Keyboard</label>
-                    </div>
+                    <%
+   }
+}
+                    %>
+
                 </div>
 
-                <!-- price range -->
+                <!-- Price range -->
                 <div class="filter">
                     <h3>Price Range</h3>
                     <div class="range">
@@ -55,7 +53,7 @@
                     <button class="apply">Apply</button>
                 </div>
 
-                <!-- star rating for filter -->
+                <!-- Star rating for filter -->
                 <div class="filter">
                     <h3>Rating</h3>
                     <div class="star-rating" id="starContainer">
@@ -71,48 +69,39 @@
                 </div>
             </div>
 
-            <!--Products-->
+            <!-- Products -->
             <div class="products-section">
                 <div class="products-grid">
+                    <%
+                        List<Products> products = (List<Products>) request.getAttribute("products");
+                        if (products != null) {
+                            for (Products product : products) {
+                    %>
                     <div class="card">
-                        <a href="${pageContext.request.contextPath}/product.jsp" class="link">
+                        <a href="<%= request.getContextPath() + "/product.jsp?id=" + product.getId() %>" class="link">
                             <div class="image">
                                 <img src="${pageContext.request.contextPath}/assets/products/iem/Aful Explorer 3.png">
                             </div>
-                            <div class="name">IEM Aful Explorer 1</div>
-                            <div class="price">RM 199.00</div>
+                            <div class="name"><%= product.getDescription() %></div>
+                            <div class="price">RM <%= product.getPrice() %></div>
                             <div class="product-rating">
+                                <% for (int i = 0; i < 5; i++) { %>
                                 <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
+                                <% } %>
                             </div>
                         </a>
                         <button class="add-to-cart">Add to Cart</button>
                     </div>
-
-                    <div class="card">
-                        <div class="image">
-                            <img src="${pageContext.request.contextPath}/assets/products/mouse/G pro hero 4.png">
-                        </div>
-                        <div class="name">Mouse Logitech G Pro Hero</div>
-                        <div class="price">RM 299.00</div>
-                        <div class="product-rating">
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                        </div>
-                        <button class="add-to-cart">Add to Cart</button>
-                    </div>
+                    <%
+                            }
+                        }
+                    %>
                 </div>
             </div>
         </div>
     </body>
     <footer>
-        <%@include file="components/footer.jsp" %>
+        <%@ include file="components/footer.jsp" %>
     </footer>
     <script src="${pageContext.request.contextPath}/scripts/products.js"></script>
 </html>
