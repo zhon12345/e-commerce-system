@@ -9,6 +9,10 @@
         <servlet-class>Controller.Login</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>products</servlet-name>
+        <servlet-class>Controller.products</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Logout</servlet-name>
         <servlet-class>Controller.Logout</servlet-class>
     </servlet>
@@ -47,5 +51,9 @@
     <servlet-mapping>
         <servlet-name>Address</servlet-name>
         <url-pattern>/user/address</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>products</servlet-name>
+        <url-pattern>/products</url-pattern>
     </servlet-mapping>
 </web-app>

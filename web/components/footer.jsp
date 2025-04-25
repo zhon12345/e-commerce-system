@@ -18,8 +18,7 @@
             <div class="footer_content">
                 <div class="column">
                     <div class="logo_name">
-                        <img src="${pageContext.request.contextPath}/assets/logo/textless.PNG" class="logo">
-                        <h3>Giant Rex Tech Store</h3>
+                        <img src="${pageContext.request.contextPath}/assets/logo/text_1.png" class="logo">
                     </div>
                     <p>Founded by six friends united by a shared passion for technology.
                         With an unwavering focus on quality and the passion to make advanced tech more accessible.</p>
@@ -35,7 +34,7 @@
                 <div class="column">
                     <h3>Quick Links</h3>
                     <a href="${pageContext.request.contextPath}/index.jsp"><p>Home</p></a>
-                    <a href="${pageContext.request.contextPath}/shop.jsp"><p>Shop</p></a>
+                    <a href="${pageContext.request.contextPath}/products.jsp"><p>Shop</p></a>
                     <a href="${pageContext.request.contextPath}/about.jsp"><p>About</p></a>
                     <a href="${pageContext.request.contextPath}/contact.jsp"><p>Contact</p></a>
                 </div>
