@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.mvc.connection.DatabaseConnection;
+
 
 /**
  *
