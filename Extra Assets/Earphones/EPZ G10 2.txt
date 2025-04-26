@@ -1,0 +1,7 @@
+Driver: 10mm Dual-Cavity Dual-Magnetic Circuit LCP Dynamic Driver
+Frequency Response: 20Hz - 20kHz
+Impedance: 32Ω
+Sensitivity: 100dB (± 3dB)
+Plug: 3.5mm
+Cable: Detachable 0.78mm dual-pin, 4-core single-crystal copper silver-plated
+Microphone: Yes (omnidirectional)

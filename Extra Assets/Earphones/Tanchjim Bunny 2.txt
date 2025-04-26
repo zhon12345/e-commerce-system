@@ -1,0 +1,12 @@
+Brand: TANCHJIM
+Model: BUNNY
+Drive unit: double-chamber dynamic driver
+Dynamic driver technology: DMT 4 Ultra
+Waveguide technology: Low-distortion waveguide cover technology
+Material of dynamic driver diaphragm: PU suspended edge PET plated with Ti dome composite diaphragm
+Total harmonic distortion (THD): 0.05% @1kHz 94dB
+Impedance: 30 Ohm±10%
+Sensitivity: 123 dB/Vrms
+Frequency response range: 8-48 kHz
+Wire specification: 0.78 2pin
+Wire material and structure: Litz copper silver-plated braid wire with a parallel structure
