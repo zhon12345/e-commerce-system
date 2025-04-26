@@ -1,136 +1,98 @@
-package controller;
+package Controller;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import Model.Product;
+import Model.Category;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import dao.ProductDAO;
-import model.Product;
 
-@WebServlet(name = "ProductController", urlPatterns = {"/admin/products"})
-public class ProductController extends HttpServlet {
-    
-    private ProductDAO productDAO;
-    
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        productDAO = new ProductDAO();
+@Path("/admin/products")
+@Produces(MediaType.APPLICATION_JSON)
+public class ProductController {
+
+    @PersistenceContext(unitName = "your-persistence-unit")
+    private EntityManager em;
+
+    @GET
+    public List<Product> getAllProducts() {
+        Query query = em.createNamedQuery("Products.findAll");
+        return query.getResultList();
     }
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        String action = request.getParameter("action");
-        if (action == null) {
-            action = "list";
+
+    @GET
+    @Path("/{id}")
+    public Product getProductById(@PathParam("id") Integer id) {
+        return em.find(Product.class, id);
+    }
+
+    @POST
+    @Transactional
+    public Product createProduct(Product product) {
+        if (product.getIsActive() == null) {
+            product.setIsActive(true);
         }
-        
-        try {
-            switch (action) {
-                case "new":
-                    showNewForm(request, response);
-                    break;
-                case "create":
-                    createProduct(request, response);
-                    break;
-                case "edit":
-                    showEditForm(request, response);
-                    break;
-                case "update":
-                    updateProduct(request, response);
-                    break;
-                case "delete":
-                    deleteProduct(request, response);
-                    break;
-                default:
-                    listProducts(request, response);
-                    break;
+        em.persist(product);
+        return product;
+    }
+
+    @POST
+    @Path("/{id}")
+    @Transactional
+    public Product updateProduct(@PathParam("id") Integer id, Product productUpdates) {
+        Product existingProduct = em.find(Product.class, id);
+        if (existingProduct != null) {
+            if (productUpdates.getName() != null) {
+                existingProduct.setName(productUpdates.getName());
             }
-        } catch (SQLException ex) {
-            throw new ServletException(ex);
+            if (productUpdates.getDescription() != null) {
+                existingProduct.setDescription(productUpdates.getDescription());
+            }
+            if (productUpdates.getPrice() > 0) {
+                existingProduct.setPrice(productUpdates.getPrice());
+            }
+            if (productUpdates.getStock() >= 0) {
+                existingProduct.setStock(productUpdates.getStock());
+            }
+            if (productUpdates.getImageUrl() != null) {
+                existingProduct.setImageUrl(productUpdates.getImageUrl());
+            }
+            if (productUpdates.getIsActive() != null) {
+                existingProduct.setIsActive(productUpdates.getIsActive());
+            }
+            if (productUpdates.getCategory() != null) {
+                existingProduct.setCategory(productUpdates.getCategory());
+            }
+            em.merge(existingProduct);
         }
-    }
-    
-    private void listProducts(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, ServletException, IOException {
-        
-        List<Product> products = productDAO.getAllProducts();
-        request.setAttribute("products", products);
-        request.getRequestDispatcher("/admin/products.jsp").forward(request, response);
-    }
-    
-    private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
-        
-        List<String> categories = productDAO.getAllCategories();
-        request.setAttribute("categories", categories);
-        request.getRequestDispatcher("/admin/product-form.jsp").forward(request, response);
-    }
-    
-    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, ServletException, IOException {
-        
-        int id = Integer.parseInt(request.getParameter("id"));
-        Product product = productDAO.getProductById(id);
-        List<String> categories = productDAO.getAllCategories();
-        
-        request.setAttribute("product", product);
-        request.setAttribute("categories", categories);
-        request.getRequestDispatcher("/admin/product-form.jsp").forward(request, response);
-    }
-    
-    private void createProduct(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        
-        Product product = new Product();
-        product.setName(request.getParameter("name"));
-        product.setDescription(request.getParameter("description"));
-        product.setPrice(Double.parseDouble(request.getParameter("price")));
-        product.setStock(Integer.parseInt(request.getParameter("stock")));
-        product.setCategoryId(Integer.parseInt(request.getParameter("category_id")));
-        
-        productDAO.addProduct(product);
-        response.sendRedirect("products");
-    }
-    
-    private void updateProduct(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        
-        int id = Integer.parseInt(request.getParameter("id"));
-        Product product = new Product();
-        product.setId(id);
-        product.setName(request.getParameter("name"));
-        product.setDescription(request.getParameter("description"));
-        product.setPrice(Double.parseDouble(request.getParameter("price")));
-        product.setStock(Integer.parseInt(request.getParameter("stock")));
-        product.setCategoryId(Integer.parseInt(request.getParameter("category_id")));
-        
-        productDAO.updateProduct(product);
-        response.sendRedirect("products");
-    }
-    
-    private void deleteProduct(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        
-        int id = Integer.parseInt(request.getParameter("id"));
-        productDAO.deleteProduct(id);
-        response.sendRedirect("products");
+        return existingProduct;
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    @POST
+    @Path("/delete/{id}")
+    @Transactional
+    public String deleteProduct(@PathParam("id") Integer id) {
+        Product product = em.find(Product.class, id);
+        if (product != null) {
+            // Soft delete by setting isActive to false
+            product.setIsActive(false);
+            em.merge(product);
+            return "Product deactivated successfully";
+        }
+        return "Product not found";
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    @GET
+    @Path("/categories")
+    public List<Category> getAllCategories() {
+        Query query = em.createNamedQuery("Category.findAll");
+        return query.getResultList();
     }
 }
