@@ -80,7 +80,8 @@ public class Address extends HttpServlet {
 						}
 
 						res.sendRedirect(req.getContextPath() + "/user/address");
-						return;
+                                    return;
+
 					case "edit":
 						req.setAttribute("editAddress", address);
 						req.setAttribute("name", address.getReceiverName());
@@ -100,7 +101,8 @@ public class Address extends HttpServlet {
 
 		loadAddresses(req, user);
 
-		req.getRequestDispatcher("/user/address.jsp").forward(req, res);
+            req.getRequestDispatcher("/user/address.jsp").forward(req, res);
+
 	}
 
 	/**
@@ -233,5 +235,6 @@ public class Address extends HttpServlet {
 				.getResultList();
 
 		req.setAttribute("addresses", addresses);
-	}
+    }
+
 }

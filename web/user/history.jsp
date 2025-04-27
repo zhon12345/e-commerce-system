@@ -32,7 +32,7 @@
                 <ul>
                     <li><a href="profile.jsp">Profile</a></li>
                     <li><a href="address">Address</a></li>
-                    <li><a href="bank.jsp">Bank & Card</a></li>
+                    <li><a href="card">Bank & Card</a></li>
                     <li><a href="history.jsp" class="active">Order History</a></li>
                 </ul>
             </div>

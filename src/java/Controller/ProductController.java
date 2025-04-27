@@ -26,10 +26,10 @@ public class ProductController extends HttpServlet {
 	/**
 	 * Handles the HTTP <code>GET</code> method.
 	 *
-	 * @param request  servlet request
+	 * @param request servlet request
 	 * @param response servlet response
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException      if an I/O error occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -37,8 +37,8 @@ public class ProductController extends HttpServlet {
 
 		try {
 			Products product = em.createNamedQuery("Products.findById", Products.class)
-					.setParameter("id", Integer.parseInt(productId))
-					.getSingleResult();
+							.setParameter("id", Integer.parseInt(productId))
+							.getSingleResult();
 
 			req.setAttribute("product", product);
 			req.getRequestDispatcher("/product.jsp").forward(req, res);
@@ -49,10 +49,10 @@ public class ProductController extends HttpServlet {
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param request  servlet request
+	 * @param request servlet request
 	 * @param response servlet response
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException      if an I/O error occurs
+	 * @throws IOException if an I/O error occurs
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
