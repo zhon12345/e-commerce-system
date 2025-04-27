@@ -20,23 +20,6 @@
 		<%@include file="../components/navbar.jsp" %>
 	</header>
 	<body>
-		<!-- success message popup -->
-		<% if (session.getAttribute("addSuccess") != null || session.getAttribute("editSuccess") != null) { %>
-		<div class="overlay show" id="overlay"></div>
-		<div class="popup show" id="popup">
-			<div class="success-icon">
-				<i class="fas fa-check-circle"></i>
-			</div>
-			<div class="success-title"><%= session.getAttribute("editSuccess") != null ? "Edit" : session.getAttribute("deleteSuccess") != null ? "Delete" : "Add" %> Successful!</div>
-			<button class="close" onclick="closePopup()">OK</button>
-			<%
-							session.removeAttribute("addSuccess");
-	session.removeAttribute("editSuccess");
-	session.removeAttribute("deleteSuccess");
-			%>
-		</div>
-		<% } %>
-
 		<div class="title">
 			<h2>Bank & Cards</h2>
 		</div>
@@ -61,11 +44,11 @@
 
 				<div class="list">
 					<%
-	List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("card");
-	if (cards != null && !cards.isEmpty()) {
-			for (Cardinfo card : cards) {
-					String cardNumber = "•••• •••• •••• " + card.getCardNumber().substring(card.getCardNumber().length() - 4);
-String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear());
+						List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("card");
+						if (cards != null && !cards.isEmpty()) {
+							for (Cardinfo card : cards) {
+									String cardNumber = "•••• •••• •••• " + card.getCardNumber().substring(card.getCardNumber().length() - 4);
+					String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear());
 					%>
 					<div class="card">
 						<div class="number"><%= cardNumber %></div>
@@ -86,7 +69,7 @@ String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear(
 					</div>
 					<%
 							}
-					}
+						}
 					%>
 				</div>
 				<% if (cards == null || cards.isEmpty()) { %>
@@ -106,17 +89,17 @@ String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear(
 				<h2><%= request.getAttribute("editCard") != null ? "Edit Card" : "Add New Card" %></h2>
 				<form action="${pageContext.request.contextPath}/user/card" method="POST">
 					<% if (request.getAttribute("editCard") != null) {
-                        Cardinfo editCard = (Cardinfo) request.getAttribute("editCard"); %>
+							Cardinfo editCard = (Cardinfo) request.getAttribute("editCard"); %>
 					<input type="hidden" name="action" value="edit">
 					<input type="hidden" name="id" value="<%= editCard.getId() %>">
 					<% } %>
 
-					<div class="add-info name">
+					<div class="add-info number">
 						<label for="number">Card Number</label>
 						<input type="text" id="number" name="number" value="${number}">
 						<span class="error-message">${numberError}</span>
 					</div>
-					<div class="add-info number">
+					<div class="add-info name">
 						<label for="name">Card Holder Name</label>
 						<input type="text" id="name" name="name" value="${name}">
 						<span class="error-message">${nameError}</span>
@@ -177,11 +160,32 @@ String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear(
 			});
 			<% session.removeAttribute("deleteSuccess"); %>
 			<% } %>
+
+			<% if (session.getAttribute("addSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Added!',
+				text: 'Your card has been added successfully.',
+				showConfirmButton: false,
+				timer: 1500
+			});
+			<% session.removeAttribute("addSuccess"); %>
+			<% } %>
+
+			<% if (session.getAttribute("editSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Updated!',
+				text: 'Your card has been updated successfully.',
+				showConfirmButton: false,
+				timer: 1500
+			});
+			<% session.removeAttribute("editSuccess"); %>
+			<% } %>
 		</script>
-		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
+		<script src="${pageContext.request.contextPath}/scripts/user/card.js" type="module"></script>
 	</body>
 	<footer>
 		<%@include file="../components/footer.jsp" %>
 	</footer>
-	<script src="${pageContext.request.contextPath}/scripts/user/card.js" type="module"></script>
 </html>

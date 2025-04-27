@@ -21,24 +21,6 @@
 	</header>
 
 	<body>
-
-		<!-- success message popup -->
-		<% if (session.getAttribute("addSuccess") != null || session.getAttribute("editSuccess") != null) { %>
-		<div class="overlay show" id="overlay"></div>
-		<div class="popup show" id="popup">
-			<div class="success-icon">
-				<i class="fas fa-check-circle"></i>
-			</div>
-			<div class="success-title"><%= session.getAttribute("editSuccess") != null ? "Edit" : session.getAttribute("deleteSuccess") != null ? "Delete" : "Add" %> Successful!</div>
-			<button class="close" onclick="closePopup()">OK</button>
-			<%
-							session.removeAttribute("addSuccess");
-	session.removeAttribute("editSuccess");
-	session.removeAttribute("deleteSuccess");
-			%>
-		</div>
-		<% } %>
-
 		<!-- title -->
 		<div class="title">
 			<h2>Address</h2>
@@ -157,6 +139,7 @@
 
 					<script>
 			window.addEventListener("DOMContentLoaded", () => {
+				const addPopup = document.getElementById('addPopup');
 						<%
 																	String[] errorFields = {"name", "phone", "line1", "postcode", "city","state"};
 																	for (String field : errorFields) {
@@ -172,9 +155,7 @@
 if (request.getAttribute("editAddress") != null) {
 			%>
 				addPopup.style.display = 'flex';
-			<%
-}
-			%>
+			<% } %>
 
 			});
 
@@ -204,7 +185,28 @@ if (request.getAttribute("editAddress") != null) {
 			});
 			<% session.removeAttribute("deleteSuccess"); %>
 			<% } %>
-		</script>
+			<% if (session.getAttribute("addSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Added!',
+				text: 'Your address has been added successfully.',
+				showConfirmButton: false,
+				timer: 1500
+			});
+			<% session.removeAttribute("addSuccess"); %>
+			<% } %>
+
+			<% if (session.getAttribute("editSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Updated!',
+				text: 'Your address has been updated successfully.',
+				showConfirmButton: false,
+				timer: 1500
+			});
+			<% session.removeAttribute("editSuccess"); %>
+			<% } %>
+					</script>
 		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 	</body>
 	<footer>

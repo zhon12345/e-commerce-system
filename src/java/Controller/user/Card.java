@@ -101,7 +101,6 @@ public class Card extends HttpServlet {
 		Short expYear = 0;
 		Boolean hasErrors = false;
 
-		// Expiry date parsing
 		if (expDate.isEmpty()) {
 			req.setAttribute("expiryDateError", "Expiry date is required");
 			hasErrors = true;
@@ -118,7 +117,6 @@ public class Card extends HttpServlet {
 					req.setAttribute("expiryDateError", "Invalid month (01-12)");
 					hasErrors = true;
 				}
-				// Check if year is at least current year's last two digits
 				int currentYear = java.time.Year.now().getValue() % 100;
 				if (expYear < currentYear) {
 					req.setAttribute("expiryDateError", "Card has expired");
@@ -133,7 +131,11 @@ public class Card extends HttpServlet {
 		if (number.isEmpty()) {
 			req.setAttribute("numberError", "Card number is required");
 			hasErrors = true;
+		} else if (!number.matches("\\d{12}")) {
+			req.setAttribute("numberError", "Card number must be 12 digits");
+			hasErrors = true;
 		}
+
 		if (name.isEmpty()) {
 			req.setAttribute("nameError", "Cardholder name is required");
 			hasErrors = true;
