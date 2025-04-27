@@ -46,13 +46,15 @@ public class ProductController extends HttpServlet {
 		}
 	}
 
-	*****
-
-	@param request  servlet request*
-	@param response servlet response*@throws ServletException if
-	a servlet-specific**/
-
+	/**
+	 * Handles the HTTP <code>POST</code> method.
+	 *
+	 * @param request  servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
 	@Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	}
 }
