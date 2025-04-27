@@ -33,10 +33,6 @@
         <servlet-class>Controller.user.Card</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ProductController</servlet-name>
-        <servlet-class>Controller.ProductController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>CartController</servlet-name>
         <servlet-class>Controller.CartController</servlet-class>
     </servlet>
@@ -71,7 +67,7 @@
     <servlet-mapping>
         <servlet-name>ProductsController</servlet-name>
         <url-pattern>/products</url-pattern>
-		</servlet-mapping>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
