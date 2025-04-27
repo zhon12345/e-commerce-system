@@ -61,7 +61,12 @@
 		<div class="product-container">
 			<!-- Left Box (Product Image) -->
 			<div class="left-box">
-				<img src="${pageContext.request.contextPath}/assets/products/${product.name}/1.png" alt="Product Image" class="product-image">
+				<%
+					String productName = product.getName();
+					String imagePath = request.getContextPath() + "/assets/products/" + productName + "/1";
+				%>
+
+				<img src="<%= imagePath %>.png" onerror="this.onerror=null; this.src='<%= imagePath %>.jpg'" alt="Product Image" class="product-image">
 			</div>
 
 			<!-- Right Box (Product Details) -->
