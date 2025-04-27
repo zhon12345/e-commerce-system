@@ -54,7 +54,7 @@ public class Cardinfo implements Serializable {
 	@Basic(optional = false)
   @Column(name = "EXP_YEAR")
 	private short expYear;
-	@Column(name = "IS_ARCHIVED")
+	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
 	@OneToMany(mappedBy = "cardInfoId")
 	private List<Orders> ordersList;

@@ -29,12 +29,16 @@
         <servlet-class>Controller.user.Address</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Card</servlet-name>
-        <servlet-class>Controller.user.Card</servlet-class>
+        <servlet-name>ProductController</servlet-name>
+        <servlet-class>Controller.ProductController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CartController</servlet-name>
         <servlet-class>Controller.CartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Card</servlet-name>
+        <servlet-class>Controller.user.Card</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
@@ -61,12 +65,16 @@
         <url-pattern>/user/address</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Card</servlet-name>
-        <url-pattern>/user/card</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ProductsController</servlet-name>
         <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductController</servlet-name>
+        <url-pattern>/product</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Card</servlet-name>
+        <url-pattern>/user/card</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CartController</servlet-name>
