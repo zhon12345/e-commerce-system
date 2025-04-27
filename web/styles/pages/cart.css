@@ -34,7 +34,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
 }
 
@@ -78,9 +78,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     font-weight: 600;
 }
 
-.quantity {
+.quantity form {
     display: flex;
-    align-items: center;
     gap: 10px;
     margin: 10px 0;
 }
@@ -92,9 +91,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background: #f8f8f8;
     border-radius: 4px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .quantity-input {
@@ -113,23 +109,24 @@ quantity-input::-webkit-outer-spin-button,
 
 .remove-btn {
     color: #999;
+    background: none;
     cursor: pointer;
     transition: color 0.2s;
     font-size: 1.1rem;
     padding: 5px;
+    border: none;
 }
 
 .remove-btn:hover {
     color: #e63946;
 }
 
-
 .summary {
     flex: 1;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     height: fit-content;
 }
 
@@ -148,6 +145,8 @@ quantity-input::-webkit-outer-spin-button,
 }
 
 .summary-total {
+    display: flex;
+    justify-content: space-between;
     font-weight: 600;
     font-size: 1.1rem;
     margin-top: 20px;

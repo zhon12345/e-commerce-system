@@ -99,16 +99,16 @@
 			FOREIGN KEY (user_id) REFERENCES Users(id)
 	);
 
-	CREATE TABLE Cart (
-			id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-			user_id INT,
-			product_id INT,
-			quantity INT NOT NULL CHECK (quantity > 0),
-			added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY (user_id) REFERENCES Users(id),
-			FOREIGN KEY (product_id) REFERENCES Products(id),
-			UNIQUE (user_id, product_id)
-	);
+CREATE TABLE Cart (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_id INT,
+    product_id INT,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (product_id) REFERENCES Products(id),
+    UNIQUE (user_id, product_id)
+);
 
 	CREATE TABLE Promotions (
 			id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
