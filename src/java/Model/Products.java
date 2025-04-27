@@ -18,7 +18,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -57,14 +57,14 @@ public class Products implements Serializable {
   @Column(name = "STOCK")
 	private int stock;
 	@OneToMany(mappedBy = "productId")
-	private Collection<Reviews> reviewsCollection;
+	private List<Reviews> reviewsList;
 	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Categories categoryId;
 	@OneToMany(mappedBy = "productId")
-	private Collection<Orderdetails> orderdetailsCollection;
+	private List<Orderdetails> orderdetailsList;
 	@OneToMany(mappedBy = "productId")
-	private Collection<Cart> cartCollection;
+	private List<Cart> cartList;
 
 	public Products() {
 	}
@@ -121,12 +121,12 @@ public class Products implements Serializable {
 	}
 
 	@XmlTransient
-	public Collection<Reviews> getReviewsCollection() {
-		return reviewsCollection;
+	public List<Reviews> getReviewsList() {
+		return reviewsList;
 	}
 
-	public void setReviewsCollection(Collection<Reviews> reviewsCollection) {
-		this.reviewsCollection = reviewsCollection;
+	public void setReviewsList(List<Reviews> reviewsList) {
+		this.reviewsList = reviewsList;
 	}
 
 	public Categories getCategoryId() {
@@ -138,21 +138,21 @@ public class Products implements Serializable {
 	}
 
 	@XmlTransient
-	public Collection<Orderdetails> getOrderdetailsCollection() {
-		return orderdetailsCollection;
+	public List<Orderdetails> getOrderdetailsList() {
+		return orderdetailsList;
 	}
 
-	public void setOrderdetailsCollection(Collection<Orderdetails> orderdetailsCollection) {
-		this.orderdetailsCollection = orderdetailsCollection;
+	public void setOrderdetailsList(List<Orderdetails> orderdetailsList) {
+		this.orderdetailsList = orderdetailsList;
 	}
 
 	@XmlTransient
-	public Collection<Cart> getCartCollection() {
-		return cartCollection;
+	public List<Cart> getCartList() {
+		return cartList;
 	}
 
-	public void setCartCollection(Collection<Cart> cartCollection) {
-		this.cartCollection = cartCollection;
+	public void setCartList(List<Cart> cartList) {
+		this.cartList = cartList;
 	}
 
 	@Override

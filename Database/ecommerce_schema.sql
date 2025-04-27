@@ -22,7 +22,7 @@
 			user_id INT,
 			card_number VARCHAR(25),
 			card_name VARCHAR(255),
-			exp_month TINYINT NOT NULL,
+			exp_month SMALLINT NOT NULL,
 			exp_year SMALLINT NOT NULL,
 			is_archived BOOLEAN DEFAULT FALSE,
 			FOREIGN KEY (user_id) REFERENCES Users(id)

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author zhon12345
+ * @author yjee0
  */
 @Entity
 @Table(name = "USERS")
@@ -45,32 +45,32 @@ public class Users implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Basic(optional = false)
-	@Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Basic(optional = false)
+  @Column(name = "ID")
 	private Integer id;
 	@Column(name = "AVATAR")
 	private String avatar;
 	@Basic(optional = false)
-	@Column(name = "USERNAME")
+  @Column(name = "USERNAME")
 	private String username;
 	@Column(name = "NAME")
 	private String name;
 	@Basic(optional = false)
-	@Column(name = "EMAIL")
+  @Column(name = "EMAIL")
 	private String email;
 	@Column(name = "CONTACT")
 	private String contact;
 	@Basic(optional = false)
-	@Column(name = "PASSWORD")
+  @Column(name = "PASSWORD")
 	private String password;
 	@Basic(optional = false)
-	@Column(name = "ROLE")
+  @Column(name = "ROLE")
 	private String role;
-	@Column(name = "CREATED_AT", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATED_AT")
+  @Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
-	@Column(name = "IS_ARCHIVED", insertable = false)
+	@Column(name = "IS_ARCHIVED")
 	private Boolean isArchived;
 	@OneToMany(mappedBy = "userId")
 	private List<Reviews> reviewsList;
@@ -94,7 +94,8 @@ public class Users implements Serializable {
 		this.id = id;
 	}
 
-	public Users(String username, String email, String password, String role) {
+	public Users(Integer id, String username, String email, String password, String role) {
+		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;

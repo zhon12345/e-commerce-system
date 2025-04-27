@@ -15,7 +15,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -45,7 +45,7 @@ public class Categories implements Serializable {
 	@Column(name = "DESCRIPTION")
 	private String description;
 	@OneToMany(mappedBy = "categoryId")
-	private Collection<Products> productsCollection;
+	private List<Products> productsList;
 
 	public Categories() {
 	}
@@ -84,12 +84,12 @@ public class Categories implements Serializable {
 	}
 
 	@XmlTransient
-	public Collection<Products> getProductsCollection() {
-		return productsCollection;
+	public List<Products> getProductsList() {
+		return productsList;
 	}
 
-	public void setProductsCollection(Collection<Products> productsCollection) {
-		this.productsCollection = productsCollection;
+	public void setProductsList(List<Products> productsList) {
+		this.productsList = productsList;
 	}
 
 	@Override

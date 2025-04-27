@@ -17,7 +17,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -54,10 +54,10 @@ public class Cardinfo implements Serializable {
 	@Basic(optional = false)
   @Column(name = "EXP_YEAR")
 	private short expYear;
-	@Column(name = "IS_ARCHIVED", insertable = false)
+	@Column(name = "IS_ARCHIVED")
 	private Boolean isArchived;
 	@OneToMany(mappedBy = "cardInfoId")
-	private Collection<Orders> ordersCollection;
+	private List<Orders> ordersList;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Users userId;
@@ -124,12 +124,12 @@ public class Cardinfo implements Serializable {
 	}
 
 	@XmlTransient
-	public Collection<Orders> getOrdersCollection() {
-		return ordersCollection;
+	public List<Orders> getOrdersList() {
+		return ordersList;
 	}
 
-	public void setOrdersCollection(Collection<Orders> ordersCollection) {
-		this.ordersCollection = ordersCollection;
+	public void setOrdersList(List<Orders> ordersList) {
+		this.ordersList = ordersList;
 	}
 
 	public Users getUserId() {

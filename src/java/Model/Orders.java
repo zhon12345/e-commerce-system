@@ -20,8 +20,8 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -69,7 +69,7 @@ public class Orders implements Serializable {
   @ManyToOne
 	private Users userId;
 	@OneToMany(mappedBy = "orderId")
-	private Collection<Orderdetails> orderdetailsCollection;
+	private List<Orderdetails> orderdetailsList;
 
 	public Orders() {
 	}
@@ -149,12 +149,12 @@ public class Orders implements Serializable {
 	}
 
 	@XmlTransient
-	public Collection<Orderdetails> getOrderdetailsCollection() {
-		return orderdetailsCollection;
+	public List<Orderdetails> getOrderdetailsList() {
+		return orderdetailsList;
 	}
 
-	public void setOrderdetailsCollection(Collection<Orderdetails> orderdetailsCollection) {
-		this.orderdetailsCollection = orderdetailsCollection;
+	public void setOrderdetailsList(List<Orderdetails> orderdetailsList) {
+		this.orderdetailsList = orderdetailsList;
 	}
 
 	@Override

@@ -19,8 +19,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -62,7 +62,7 @@ public class Reviews implements Serializable {
   @ManyToOne
 	private Users userId;
 	@OneToMany(mappedBy = "reviewId")
-	private Collection<Reply> replyCollection;
+	private List<Reply> replyList;
 
 	public Reviews() {
 	}
@@ -128,12 +128,12 @@ public class Reviews implements Serializable {
 	}
 
 	@XmlTransient
-	public Collection<Reply> getReplyCollection() {
-		return replyCollection;
+	public List<Reply> getReplyList() {
+		return replyList;
 	}
 
-	public void setReplyCollection(Collection<Reply> replyCollection) {
-		this.replyCollection = replyCollection;
+	public void setReplyList(List<Reply> replyList) {
+		this.replyList = replyList;
 	}
 
 	@Override
