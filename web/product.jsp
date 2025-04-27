@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/product.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script>
 		function switchTab(tabName, event) {
 			// Hide all content sections
@@ -102,19 +103,62 @@
 				</div>
 			</div>
 
-			<div id="reviews-content" class="content-section" style="display: none;">
-				<div class="review-section">
-					<h3>Your Review</h3>
-					<textarea class="review-textarea" placeholder="Your Review...."></textarea>
-					<button class="submit-review">Submit Review</button>
-				</div>
+				<div id="reviews-content" class="content-section" style="display: none;">
+					<div class="review-section">
+						<h3 class="review-title">Your Review</h3>
 
-				<div class="existing-reviews">
-					<h3>Customer Reviews</h3>
-					<!-- Reviews will be displayed here -->
-					<p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+						<!-- Star Rating -->
+						<div class="rating-container">
+							<div class="rating-stars">
+								<i class="fa-regular fa-star" data-rating="1"></i>
+								<i class="fa-regular fa-star" data-rating="2"></i>
+								<i class="fa-regular fa-star" data-rating="3"></i>
+								<i class="fa-regular fa-star" data-rating="4"></i>
+								<i class="fa-regular fa-star" data-rating="5"></i>
+							</div>
+							<input type="hidden" id="selected-rating" value="0">
+						</div>
+
+						<div class="review-input-container">
+							<textarea
+								class="review-textarea"
+								placeholder="Your Review...."
+								rows="4"
+								></textarea>
+							<button class="submit-review">Submit Review</button>
+						</div>
+					</div>
+
+					<div class="existing-reviews">
+						<h3>Customer Reviews</h3>
+
+						<!-- Example Review Item -->
+						<div class="review-item">
+							<div class="review-header">
+                <div>
+									<span class="review-author">John Doe</span>
+									<span class="review-meta">- May 15, 2024</span>
+                </div>
+                <div class="review-rating">
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-solid fa-star"></i>
+									<i class="fa-regular fa-star"></i>
+									<i class="fa-regular fa-star"></i>
+                </div>
+							</div>
+
+							<div class="review-content">
+                <div class="review-detail">
+									<p>Nice Good</p>
+                </div>
+							</div>
+						</div>
+
+						<!-- No Reviews Fallback -->
+						<p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+					</div>
 				</div>
-			</div>
 		</div>
 	</div>
 </body>

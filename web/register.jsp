@@ -20,7 +20,7 @@
 	<body>
 		<!-- title -->
 		<div class="title">
-			<h2>Profile</h2>
+			<h2>Register</h2>
 		</div>
 
 		<div class="container">
