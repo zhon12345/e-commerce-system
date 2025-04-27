@@ -16,19 +16,22 @@
 
 			<div class="in-navbar">
 				<a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-				<a href="${pageContext.request.contextPath}/shop.jsp">Shop</a>
+				<a href="${pageContext.request.contextPath}/products">Shop</a>
 				<a href="${pageContext.request.contextPath}/about.jsp">About Us</a>
 				<a href="${pageContext.request.contextPath}/contact.jsp">Contact</a>
 
 				<div class="search-container">
-					<input type="text" class="search-input" placeholder="Search products..." />
-					<i class="fa fa-search search-icon" id="searchIcon" onclick="toggleSearch()"></i>
-					<i class="fa fa-times close-icon" id="closeIcon" onclick="closeSearch()"></i>
+					<form action="${pageContext.request.contextPath}/products" method="get">
+						<input type="text" class="search-input" name="search" placeholder="Search products..." value="${param.search}" />
+						<i class="fa fa-search search-icon" id="searchIcon" onclick="toggleSearch()"></i>
+						<i class="fa fa-times close-icon" id="closeIcon" onclick="closeSearch()"></i>
+						<button type="submit" hidden></button>
+					</form>
 				</div>
 
 				<% if (session.getAttribute("user") !=null) { %>
 					<div class="icon-container">
-						<i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='${pageContext.request.contextPath}/cart.jsp'"></i>
+						<i class="fa-solid fa-cart-shopping nav-icon" onclick="location.href='${pageContext.request.contextPath}/cart'"></i>
 						<div class="user-dropdown">
 							<i class="fas fa-user-circle nav-icon"></i>
 							<div class="dropdown-content">
