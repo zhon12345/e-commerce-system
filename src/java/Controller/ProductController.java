@@ -19,33 +19,33 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class ProductController extends HttpServlet {
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	/**
-	 * Handles the HTTP <code>GET</code> method.
-	 *
-	 * @param request  servlet request
-	 * @param response servlet response
-	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException      if an I/O error occurs
-	 */
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		String productId = req.getParameter("id");
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request  servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        String productId = req.getParameter("id");
 
-		try {
-			Products product = em.createNamedQuery("Products.findById", Products.class)
-					.setParameter("id", Integer.parseInt(productId))
-					.getSingleResult();
+        try {
+            Products product = em.createNamedQuery("Products.findById", Products.class)
+                    .setParameter("id", Integer.parseInt(productId))
+                    .getSingleResult();
 
-			req.setAttribute("product", product);
-			req.getRequestDispatcher("/product.jsp").forward(req, res);
-		} catch (Exception e) {
-		}
-	}
+            req.setAttribute("product", product);
+            req.getRequestDispatcher("/product.jsp").forward(req, res);
+        } catch (Exception e) {
+        }
+    }
 
-	/**
+    /**
 	 * Handles the HTTP <code>POST</code> method.
 	 *
 	 * @param request  servlet request
@@ -57,34 +57,3 @@ public class ProductController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 	}
 }
-
- * 
- * 
-
-    
-    
-
-    
-     
-     
-     
-     
-     
-     
-     
-    
-    
-        
-
-        
-            
-                    
-                    
-
-            
-            
-        
-        
-    
-
-    
