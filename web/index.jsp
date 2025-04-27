@@ -52,20 +52,20 @@ Document   : index
 			<h2 class="category-title">Category</h2>
 
 			<div class="categories">
-				<div class="category-item">
+				<a href="${pageContext.request.contextPath}/products?category=IEM" class="category-item">
 					<img src="assets/home/iem.jpg" />
 					<span class="category-name">IEM</span>
-				</div>
+				</a>
 
-				<div class="category-item">
+				<a href="${pageContext.request.contextPath}/products?category=Mouse" class="category-item">
 					<img src="assets/home/mouse.png" />
 					<span class="category-name">Mouse</span>
-				</div>
+				</a>
 
-				<div class="category-item">
+				<a href="${pageContext.request.contextPath}/products?category=Keyboard" class="category-item">
 					<img src="assets/home/keyboard.png" />
 					<span class="category-name">Keyboard</span>
-				</div>
+				</a>
 			</div>
 		</div>
 

@@ -16,7 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import com.mvc.connection.DatabaseConnection;
+
+/**
+ *
+ * @author zhon12345
+ */
 public class Login extends HttpServlet {
 
 	@PersistenceContext
@@ -83,6 +87,7 @@ public class Login extends HttpServlet {
 			req.getRequestDispatcher("/login.jsp").forward(req, res);
 		}
 	}
+
 	private String hashPassword(String password) throws ServletException {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");

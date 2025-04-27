@@ -1,9 +1,3 @@
-<%--
-    Document   : login
-    Created on : 1 Apr 2025, 3:19:40 pm
-    Author     : yjee0
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -77,24 +71,24 @@
             </div>
         </div>
 
-                <script>
-                    function toggleForm() {
-                        const emailForm = document.getElementById('email-form');
-                        const usernameForm = document.getElementById('username-form');
+        <script>
+            function toggleForm() {
+                const emailForm = document.getElementById('email-form');
+                const usernameForm = document.getElementById('username-form');
 
-                        if (emailForm.style.display === 'none') {
-                            emailForm.style.display = 'block';
-                            usernameForm.style.display = 'none';
-                            document.getElementById('email').required = true;
-                            document.getElementById('username').required = false;
-                        } else {
-                            emailForm.style.display = 'none';
-                            usernameForm.style.display = 'block';
-                            document.getElementById('email').required = false;
-                            document.getElementById('username').required = true;
-                        }
-                    }
-                </script>
+                if (emailForm.style.display === 'none') {
+                    emailForm.style.display = 'block';
+                    usernameForm.style.display = 'none';
+                    document.getElementById('email').required = true;
+                    document.getElementById('username').required = false;
+                } else {
+                    emailForm.style.display = 'none';
+                    usernameForm.style.display = 'block';
+                    document.getElementById('email').required = false;
+                    document.getElementById('username').required = true;
+                }
+            }
+        </script>
     </body>
     <footer>
         <%@include file="components/footer.jsp" %>

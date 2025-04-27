@@ -10,8 +10,8 @@ INSERT INTO Categories(name, description) VALUES
 
 -- Dummy data for Products table
 INSERT INTO Products (name, description, price, stock, category_id) VALUES
-('AFUL Explorer Hybrid In-Ear Monitors', '', 550, 50, 1),
-('Logitech G Pro Hero Wired Gaming Mouse', '', 329, 100, 2),
+('AFUL Explorer', '', 550, 50, 1),
+('Logitech G Pro', '', 329, 100, 2),
 ('Kefine Klean', '', 160, 50, 1),
 ('SeeAudio Yume II', '', 750, 20, 1),
 ('ATK X1 Ultra', '', 270, 50, 2),

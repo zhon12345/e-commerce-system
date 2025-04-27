@@ -1,98 +1,90 @@
+/*  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package Controller;
 
-import Model.Product;
-import Model.Category;
+import java.io.IOException;
+
+import Model.Products;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import java.util.List;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@Path("/admin/products")
-@Produces(MediaType.APPLICATION_JSON)
-public class ProductController {
+/**
+ *
+ * @author zhon12345
+ */
+public class ProductController extends HttpServlet {
 
-    @PersistenceContext(unitName = "your-persistence-unit")
-    private EntityManager em;
+	@PersistenceContext
+	private EntityManager em;
 
-    @GET
-    public List<Product> getAllProducts() {
-        Query query = em.createNamedQuery("Products.findAll");
-        return query.getResultList();
-    }
+	/**
+	 * Handles the HTTP <code>GET</code> method.
+	 *
+	 * @param request  servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		String productId = req.getParameter("id");
 
-    @GET
-    @Path("/{id}")
-    public Product getProductById(@PathParam("id") Integer id) {
-        return em.find(Product.class, id);
-    }
+		try {
+			Products product = em.createNamedQuery("Products.findById", Products.class)
+					.setParameter("id", Integer.parseInt(productId))
+					.getSingleResult();
 
-    @POST
-    @Transactional
-    public Product createProduct(Product product) {
-        if (product.getIsActive() == null) {
-            product.setIsActive(true);
-        }
-        em.persist(product);
-        return product;
-    }
+			req.setAttribute("product", product);
+			req.getRequestDispatcher("/product.jsp").forward(req, res);
+		} catch (Exception e) {
+		}
+	}
 
-    @POST
-    @Path("/{id}")
-    @Transactional
-    public Product updateProduct(@PathParam("id") Integer id, Product productUpdates) {
-        Product existingProduct = em.find(Product.class, id);
-        if (existingProduct != null) {
-            if (productUpdates.getName() != null) {
-                existingProduct.setName(productUpdates.getName());
-            }
-            if (productUpdates.getDescription() != null) {
-                existingProduct.setDescription(productUpdates.getDescription());
-            }
-            if (productUpdates.getPrice() > 0) {
-                existingProduct.setPrice(productUpdates.getPrice());
-            }
-            if (productUpdates.getStock() >= 0) {
-                existingProduct.setStock(productUpdates.getStock());
-            }
-            if (productUpdates.getImageUrl() != null) {
-                existingProduct.setImageUrl(productUpdates.getImageUrl());
-            }
-            if (productUpdates.getIsActive() != null) {
-                existingProduct.setIsActive(productUpdates.getIsActive());
-            }
-            if (productUpdates.getCategory() != null) {
-                existingProduct.setCategory(productUpdates.getCategory());
-            }
-            em.merge(existingProduct);
-        }
-        return existingProduct;
-    }
-
-    @POST
-    @Path("/delete/{id}")
-    @Transactional
-    public String deleteProduct(@PathParam("id") Integer id) {
-        Product product = em.find(Product.class, id);
-        if (product != null) {
-            // Soft delete by setting isActive to false
-            product.setIsActive(false);
-            em.merge(product);
-            return "Product deactivated successfully";
-        }
-        return "Product not found";
-    }
-
-    @GET
-    @Path("/categories")
-    public List<Category> getAllCategories() {
-        Query query = em.createNamedQuery("Category.findAll");
-        return query.getResultList();
-    }
+	/**
+	 * Handles the HTTP <code>POST</code> method.
+	 *
+	 * @param request  servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	}
 }
+
+ * 
+ * 
+
+    
+    
+
+    
+     
+     
+     
+     
+     
+     
+     
+    
+    
+        
+
+        
+            
+                    
+                    
+
+            
+            
+        
+        
+    
+
+    
