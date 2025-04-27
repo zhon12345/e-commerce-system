@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author yjee0
+ * @author zhon12345
  */
 @Entity
 @Table(name = "ADDRESSES")
@@ -43,36 +43,36 @@ public class Addresses implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Basic(optional = false)
-  @Column(name = "ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "ID")
 	private Integer id;
 	@Basic(optional = false)
-  @Column(name = "RECEIVER_NAME")
+	@Column(name = "RECEIVER_NAME")
 	private String receiverName;
 	@Basic(optional = false)
-  @Column(name = "CONTACT_NUMBER")
+	@Column(name = "CONTACT_NUMBER")
 	private String contactNumber;
 	@Basic(optional = false)
-  @Column(name = "ADDRESS1")
+	@Column(name = "ADDRESS1")
 	private String address1;
 	@Column(name = "ADDRESS2")
 	private String address2;
 	@Basic(optional = false)
-  @Column(name = "CITY")
+	@Column(name = "CITY")
 	private String city;
 	@Basic(optional = false)
-  @Column(name = "STATE")
+	@Column(name = "STATE")
 	private String state;
 	@Basic(optional = false)
-  @Column(name = "POSTAL_CODE")
+	@Column(name = "POSTAL_CODE")
 	private String postalCode;
 	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
 	@OneToMany(mappedBy = "addressId")
 	private List<Orders> ordersList;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-  @ManyToOne
+	@ManyToOne
 	private Users userId;
 
 	public Addresses() {

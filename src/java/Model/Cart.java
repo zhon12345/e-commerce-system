@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author yjee0
+ * @author zhon12345
  */
 @Entity
 @Table(name = "CART")
@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Cart.findAll", query = "SELECT c FROM Cart c"),
 	@NamedQuery(name = "Cart.findById", query = "SELECT c FROM Cart c WHERE c.id = :id"),
 	@NamedQuery(name = "Cart.findByQuantity", query = "SELECT c FROM Cart c WHERE c.quantity = :quantity"),
-	@NamedQuery(name = "Cart.findByAddedDate", query = "SELECT c FROM Cart c WHERE c.addedDate = :addedDate")})
+	@NamedQuery(name = "Cart.findByAddedAt", query = "SELECT c FROM Cart c WHERE c.addedAt = :addedAt")})
 public class Cart implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -44,9 +44,9 @@ public class Cart implements Serializable {
 	@Basic(optional = false)
   @Column(name = "QUANTITY")
 	private int quantity;
-	@Column(name = "ADDED_DATE")
+	@Column(name = "ADDED_AT", insertable = false, updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
-	private Date addedDate;
+	private Date addedAt;
 	@JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Products productId;
@@ -82,12 +82,12 @@ public class Cart implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public Date getAddedDate() {
-		return addedDate;
+	public Date getAddedAt() {
+		return addedAt;
 	}
 
-	public void setAddedDate(Date addedDate) {
-		this.addedDate = addedDate;
+	public void setAddedAt(Date addedAt) {
+		this.addedAt = addedAt;
 	}
 
 	public Products getProductId() {
