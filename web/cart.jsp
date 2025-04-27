@@ -45,7 +45,12 @@
 				%>
 				<div class="item">
 					<a href="${pageContext.request.contextPath}/product?id=<%= product.getId() %>">
-						<img src="${pageContext.request.contextPath}/assets/products/<%= product.getName() %>/1.png" alt="Product" class="item-image">
+						<%
+							String productName = product.getName();
+							String imagePath = request.getContextPath() + "/assets/products/" + productName + "/1";
+						%>
+
+						<img src="<%= imagePath %>.png" onerror="this.onerror=null; this.src='<%= imagePath %>.jpg'" alt="Product" class="item-image">
 					</a>
 					<div class="item-details">
 						<div class="item-title"><%= product.getName() %></div>
