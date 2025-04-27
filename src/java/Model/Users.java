@@ -30,17 +30,17 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "USERS")
 @XmlRootElement
 @NamedQueries({
-		@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
-		@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
-		@NamedQuery(name = "Users.findByAvatar", query = "SELECT u FROM Users u WHERE u.avatar = :avatar"),
-		@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
-		@NamedQuery(name = "Users.findByName", query = "SELECT u FROM Users u WHERE u.name = :name"),
-		@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
-		@NamedQuery(name = "Users.findByContact", query = "SELECT u FROM Users u WHERE u.contact = :contact"),
-		@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
-		@NamedQuery(name = "Users.findByRole", query = "SELECT u FROM Users u WHERE u.role = :role"),
-		@NamedQuery(name = "Users.findByCreatedAt", query = "SELECT u FROM Users u WHERE u.createdAt = :createdAt"),
-		@NamedQuery(name = "Users.findByIsArchived", query = "SELECT u FROM Users u WHERE u.isArchived = :isArchived") })
+	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
+	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
+	@NamedQuery(name = "Users.findByAvatar", query = "SELECT u FROM Users u WHERE u.avatar = :avatar"),
+	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
+	@NamedQuery(name = "Users.findByName", query = "SELECT u FROM Users u WHERE u.name = :name"),
+	@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
+	@NamedQuery(name = "Users.findByContact", query = "SELECT u FROM Users u WHERE u.contact = :contact"),
+	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
+	@NamedQuery(name = "Users.findByRole", query = "SELECT u FROM Users u WHERE u.role = :role"),
+	@NamedQuery(name = "Users.findByCreatedAt", query = "SELECT u FROM Users u WHERE u.createdAt = :createdAt"),
+	@NamedQuery(name = "Users.findByIsArchived", query = "SELECT u FROM Users u WHERE u.isArchived = :isArchived")})
 public class Users implements Serializable {
 
 	private static final long serialVersionUID = 1L;

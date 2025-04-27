@@ -29,16 +29,16 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "ADDRESSES")
 @XmlRootElement
 @NamedQueries({
-		@NamedQuery(name = "Addresses.findAll", query = "SELECT a FROM Addresses a"),
-		@NamedQuery(name = "Addresses.findById", query = "SELECT a FROM Addresses a WHERE a.id = :id"),
-		@NamedQuery(name = "Addresses.findByReceiverName", query = "SELECT a FROM Addresses a WHERE a.receiverName = :receiverName"),
-		@NamedQuery(name = "Addresses.findByContactNumber", query = "SELECT a FROM Addresses a WHERE a.contactNumber = :contactNumber"),
-		@NamedQuery(name = "Addresses.findByAddress1", query = "SELECT a FROM Addresses a WHERE a.address1 = :address1"),
-		@NamedQuery(name = "Addresses.findByAddress2", query = "SELECT a FROM Addresses a WHERE a.address2 = :address2"),
-		@NamedQuery(name = "Addresses.findByCity", query = "SELECT a FROM Addresses a WHERE a.city = :city"),
-		@NamedQuery(name = "Addresses.findByState", query = "SELECT a FROM Addresses a WHERE a.state = :state"),
-		@NamedQuery(name = "Addresses.findByPostalCode", query = "SELECT a FROM Addresses a WHERE a.postalCode = :postalCode"),
-		@NamedQuery(name = "Addresses.findByIsArchived", query = "SELECT a FROM Addresses a WHERE a.isArchived = :isArchived") })
+	@NamedQuery(name = "Addresses.findAll", query = "SELECT a FROM Addresses a"),
+	@NamedQuery(name = "Addresses.findById", query = "SELECT a FROM Addresses a WHERE a.id = :id"),
+	@NamedQuery(name = "Addresses.findByReceiverName", query = "SELECT a FROM Addresses a WHERE a.receiverName = :receiverName"),
+	@NamedQuery(name = "Addresses.findByContactNumber", query = "SELECT a FROM Addresses a WHERE a.contactNumber = :contactNumber"),
+	@NamedQuery(name = "Addresses.findByAddress1", query = "SELECT a FROM Addresses a WHERE a.address1 = :address1"),
+	@NamedQuery(name = "Addresses.findByAddress2", query = "SELECT a FROM Addresses a WHERE a.address2 = :address2"),
+	@NamedQuery(name = "Addresses.findByCity", query = "SELECT a FROM Addresses a WHERE a.city = :city"),
+	@NamedQuery(name = "Addresses.findByState", query = "SELECT a FROM Addresses a WHERE a.state = :state"),
+	@NamedQuery(name = "Addresses.findByPostalCode", query = "SELECT a FROM Addresses a WHERE a.postalCode = :postalCode"),
+	@NamedQuery(name = "Addresses.findByIsArchived", query = "SELECT a FROM Addresses a WHERE a.isArchived = :isArchived")})
 public class Addresses implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -82,8 +82,7 @@ public class Addresses implements Serializable {
 		this.id = id;
 	}
 
-	public Addresses(Integer id, String receiverName, String contactNumber, String address1, String city, String state,
-			String postalCode) {
+	public Addresses(Integer id, String receiverName, String contactNumber, String address1, String city, String state, String postalCode) {
 		this.id = id;
 		this.receiverName = receiverName;
 		this.contactNumber = contactNumber;
