@@ -30,7 +30,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     padding: 15px;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     height: fit-content;
     position: sticky;
     top: 20px;
@@ -76,7 +76,7 @@ input[type="checkbox"] {
 }
 
 /* apply button */
-.apply {
+#reset {
     background: var(--primary-color);
     color: white;
     border: none;
@@ -87,7 +87,7 @@ input[type="checkbox"] {
     transition: all 0.3s;
 }
 
-.apply:hover {
+#reset:hover {
     transform: none;
     background: #fff;
     color: #4C60DF;
@@ -96,8 +96,6 @@ input[type="checkbox"] {
 
 /* star rating for filter */
 .star-rating {
-    display: flex;
-    gap: 5px;
     margin-top: -10px;
 }
 
@@ -108,7 +106,7 @@ input[type="checkbox"] {
     transition: color 0.2s;
 }
 
-.star.selected, .star.hovered {
+.star.fa-solid {
     color: #FFD700;
 }
 
@@ -133,13 +131,13 @@ input[type="checkbox"] {
     background: white;
     border-radius: 8px;
     padding: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .link {
