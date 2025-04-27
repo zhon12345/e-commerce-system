@@ -50,6 +50,8 @@
 					<h1 class="login-title">Login</h1>
 
 					<form onsubmit="return validateForm()" action="login" method="POST">
+						<input type="hidden" name="redirect" value="${param.redirect}" />
+
 						<div class="detail username">
 							<label for="username">Username / Email</label>
 							<div class="icon">

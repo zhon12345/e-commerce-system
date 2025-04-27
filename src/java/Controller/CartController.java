@@ -6,8 +6,7 @@ package Controller;
 
 import Model.Cart;
 import Model.Products;
-import java.io.IOException;
-
+import Model.Promotions;
 import Model.Users;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -18,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class CartController extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=cart");
 			return;
 		}
 
@@ -58,31 +58,6 @@ public class CartController extends HttpServlet {
 		}
 	}
 
-	private void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req) {
-		double subtotal = 0;
-		int totalItems = 0;
-
-		if (cartList != null && !cartList.isEmpty()) {
-			for (Cart item : cartList) {
-				subtotal += item.getProductId().getPrice().doubleValue() * item.getQuantity();
-				totalItems += item.getQuantity();
-			}
-		}
-
-		double tax = subtotal * 0.06;
-		double shipping = subtotal == 0 || subtotal > 1000 ? 0 : 25.00;
-		double total = subtotal + shipping + tax;
-
-		DecimalFormat df = new DecimalFormat("0.00");
-
-		// Add calculated values to request attributes
-		req.setAttribute("subtotal", df.format(subtotal));
-		req.setAttribute("tax", df.format(tax));
-		req.setAttribute("shipping", shipping == 0 ? "FREE" : "RM " + df.format(shipping));
-		req.setAttribute("total", df.format(total));
-		req.setAttribute("totalItems", totalItems);
-	}
-
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 *
@@ -97,7 +72,7 @@ public class CartController extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=cart");
 			return;
 		}
 
@@ -207,5 +182,38 @@ public class CartController extends HttpServlet {
 				.setParameter("user", user)
 				.setParameter("product", product)
 				.getResultList();
+	}
+
+	public static void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req) {
+		double subtotal = 0;
+		int totalItems = 0;
+		double discount = 0;
+
+		// Check both request and session for applied promo
+		Promotions appliedPromo = (Promotions) req.getAttribute("appliedPromo");
+
+		if (cartList != null && !cartList.isEmpty()) {
+			for (Cart item : cartList) {
+				subtotal += item.getProductId().getPrice().doubleValue() * item.getQuantity();
+				totalItems += item.getQuantity();
+			}
+		}
+
+		if (appliedPromo != null) {
+			discount = subtotal * appliedPromo.getDiscount().doubleValue();
+		}
+
+		double tax = subtotal * 0.06;
+		double shipping = subtotal == 0 || subtotal > 1000 ? 0 : 25.00;
+		double total = subtotal - discount + shipping + tax;
+
+		DecimalFormat df = new DecimalFormat("0.00");
+
+		req.setAttribute("discount", df.format(discount));
+		req.setAttribute("subtotal", df.format(subtotal));
+		req.setAttribute("tax", df.format(tax));
+		req.setAttribute("shipping", shipping == 0 ? "FREE" : "RM " + df.format(shipping));
+		req.setAttribute("total", df.format(total));
+		req.setAttribute("totalItems", totalItems);
 	}
 }

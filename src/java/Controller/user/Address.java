@@ -45,7 +45,7 @@ public class Address extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=address");
 			return;
 		}
 
@@ -67,6 +67,7 @@ public class Address extends HttpServlet {
 
 							address.setIsArchived(true);
 							em.merge(address);
+
 							utx.commit();
 
 							session.setAttribute("deleteSuccess", "true");
@@ -80,7 +81,7 @@ public class Address extends HttpServlet {
 						}
 
 						res.sendRedirect(req.getContextPath() + "/user/address");
-                                    return;
+						return;
 
 					case "edit":
 						req.setAttribute("editAddress", address);
@@ -101,7 +102,7 @@ public class Address extends HttpServlet {
 
 		loadAddresses(req, user);
 
-            req.getRequestDispatcher("/user/address.jsp").forward(req, res);
+		req.getRequestDispatcher("/user/address.jsp").forward(req, res);
 
 	}
 
@@ -119,7 +120,7 @@ public class Address extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=address");
 			return;
 		}
 
@@ -235,6 +236,6 @@ public class Address extends HttpServlet {
 				.getResultList();
 
 		req.setAttribute("addresses", addresses);
-    }
+	}
 
 }
