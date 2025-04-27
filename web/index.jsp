@@ -15,36 +15,12 @@ Document   : index
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css" />
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css" />
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
 	<body>
-		<!-- success message popup -->
-		<% if (session.getAttribute("loginSuccess") !=null && session.getAttribute("loginSuccess").equals("true")) { %>
-      <div class="overlay show" id="overlay"></div>
-      <div class="popup show" id="popup">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="success-title">Login Successful!</div>
-        <button class="close" onclick="closePopup()">OK</button>
-        <% session.removeAttribute("loginSuccess"); %>
-      </div>
-		<% } %>
-
-    <% if (session.getAttribute("logoutSuccess") !=null && session.getAttribute("logoutSuccess").equals("true")) { %>
-      <div class="overlay show" id="overlay"></div>
-      <div class="popup show" id="popup">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="success-title">Logout Successful!</div>
-        <button class="close" onclick="closePopup()">OK</button>
-        <% session.removeAttribute("logoutSuccess"); %>
-      </div>
-		<% } %>
-
 		<img src="assets/home/hero.jpg" class="web_img" />
 
 		<!--Categories-->
@@ -69,7 +45,30 @@ Document   : index
 			</div>
 		</div>
 
-		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
+				<script>
+					<% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Login Successful!',
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
+				timer: 1500
+			});
+			<% session.removeAttribute("loginSuccess"); %>
+			<% } %>
+
+			// Handle logout success
+			<% if (session.getAttribute("logoutSuccess") != null && session.getAttribute("logoutSuccess").equals("true")) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Logout Successful!',
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
+				timer: 1500
+			});
+			<% session.removeAttribute("logoutSuccess"); %>
+			<% } %>
+		</script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
 </html>

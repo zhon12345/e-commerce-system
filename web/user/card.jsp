@@ -141,7 +141,7 @@
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#d33',
-					cancelButtonColor: '#3085d6',
+					cancelButtonColor: '#4C60DF',
 					confirmButtonText: 'Yes, delete it!'
 				}).then((result) => {
 					if (result.isConfirmed) {
@@ -155,7 +155,8 @@
 				icon: 'success',
 				title: 'Deleted!',
 				text: 'Your card has been deleted.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("deleteSuccess"); %>
@@ -166,7 +167,8 @@
 				icon: 'success',
 				title: 'Added!',
 				text: 'Your card has been added successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("addSuccess"); %>
@@ -177,7 +179,8 @@
 				icon: 'success',
 				title: 'Updated!',
 				text: 'Your card has been updated successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("editSuccess"); %>

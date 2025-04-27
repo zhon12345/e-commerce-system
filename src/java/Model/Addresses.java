@@ -67,7 +67,7 @@ public class Addresses implements Serializable {
 	@Basic(optional = false)
   @Column(name = "POSTAL_CODE")
 	private String postalCode;
-	@Column(name = "IS_ARCHIVED")
+	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
 	@OneToMany(mappedBy = "addressId")
 	private List<Orders> ordersList;

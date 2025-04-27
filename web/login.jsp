@@ -14,23 +14,12 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css" />
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css" />
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
 	<body>
-		<% if (session.getAttribute("registerSuccess") !=null && session.getAttribute("registerSuccess").equals("true")) { %>
-      <div class="overlay show" id="overlay"></div>
-      <div class="popup show" id="popup">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="success-title">Register Successful!</div>
-        <button class="close" onclick="closePopup()">OK</button>
-        <% session.removeAttribute("registerSuccess"); %>
-      </div>
-		<% } %>
-
 		<!-- title -->
 		<div class="title">
 			<h2>Login</h2>
@@ -80,22 +69,34 @@
 				</div>
 			</div>
 		</div>
-		<script>
+
+							<script>
+								<% if (session.getAttribute("registerSuccess") != null && session.getAttribute("registerSuccess").equals("true")) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Registration Successful!',
+				text: 'You can now login with your credentials',
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
+				timer: 1500
+			});
+			<% session.removeAttribute("registerSuccess"); %>
+			<% } %>
+
 			window.addEventListener("DOMContentLoaded", () => {
-			  <%
-			    String[] errorFields = { "username", "password"};
-			    for (String field : errorFields) {
-			      String error = (String) request.getAttribute(field + "Error");
-			      if (error != null) {
-			  %>
-			      showError('<%= field %>', '<%= error %>');
-			  <%
-			      }
-			    }
-			  %>
-			})
+			<%
+					String[] errorFields = { "username", "password"};
+					for (String field : errorFields) {
+						String error = (String) request.getAttribute(field + "Error");
+						if (error != null) {
+			%>
+				showError('<%= field %>', '<%= error %>');
+			<%
+						}
+					}
+			%>
+			});
 		</script>
-		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
 	<script src="${pageContext.request.contextPath}/scripts/login.js" type="module"></script>

@@ -166,7 +166,7 @@ if (request.getAttribute("editAddress") != null) {
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#d33',
-					cancelButtonColor: '#3085d6',
+					cancelButtonColor: '#4C60DF',
 					confirmButtonText: 'Yes, delete it!'
 				}).then((result) => {
 					if (result.isConfirmed) {
@@ -180,7 +180,8 @@ if (request.getAttribute("editAddress") != null) {
 				icon: 'success',
 				title: 'Deleted!',
 				text: 'Your address has been deleted.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("deleteSuccess"); %>
@@ -190,7 +191,8 @@ if (request.getAttribute("editAddress") != null) {
 				icon: 'success',
 				title: 'Added!',
 				text: 'Your address has been added successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("addSuccess"); %>
@@ -201,7 +203,8 @@ if (request.getAttribute("editAddress") != null) {
 				icon: 'success',
 				title: 'Updated!',
 				text: 'Your address has been updated successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("editSuccess"); %>
