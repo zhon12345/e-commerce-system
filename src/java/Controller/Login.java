@@ -38,6 +38,7 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String input = req.getParameter("username").trim();
 		String password = req.getParameter("password").trim();
+		String redirect = req.getParameter("redirect");
 
 		req.setAttribute("username", input);
 
@@ -74,7 +75,9 @@ public class Login extends HttpServlet {
 				HttpSession session = req.getSession();
 				session.setAttribute("user", user);
 				session.setAttribute("loginSuccess", "true");
-				res.sendRedirect(req.getContextPath() + "/index.jsp");
+
+				String targetPath = validateRedirect(redirect);
+				res.sendRedirect(req.getContextPath() + targetPath);
 				return;
 			}
 		} catch (NoResultException e) {
@@ -101,5 +104,14 @@ public class Login extends HttpServlet {
 		} catch (NoSuchAlgorithmException e) {
 			throw new ServletException("Error hashing password", e);
 		}
+	}
+
+	private String validateRedirect(String redirect) {
+		if (redirect != null || !redirect.isEmpty()) {
+			String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-]", "");
+			return "/" + cleanPath;
+		}
+
+		return "/index.jsp";
 	}
 }

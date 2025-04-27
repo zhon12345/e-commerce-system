@@ -32,7 +32,7 @@ public class Card extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=card");
 			return;
 		}
 
@@ -49,20 +49,22 @@ public class Card extends HttpServlet {
 
 				switch (action) {
 					case "delete":
-                        try {
-						utx.begin();
-						card.setIsArchived(true);
-						em.merge(card);
-						utx.commit();
-						session.setAttribute("deleteSuccess", "true");
-					} catch (Exception e) {
 						try {
-							utx.rollback();
-						} catch (Exception ex) {
+							utx.begin();
+
+							card.setIsArchived(true);
+							em.merge(card);
+							utx.commit();
+
+							session.setAttribute("deleteSuccess", "true");
+						} catch (Exception e) {
+							try {
+								utx.rollback();
+							} catch (Exception ex) {
+							}
 						}
-					}
-					res.sendRedirect(req.getContextPath() + "/user/card");
-					return;
+						res.sendRedirect(req.getContextPath() + "/user/card");
+						return;
 
 					case "edit":
 						req.setAttribute("editCard", card);
@@ -88,7 +90,7 @@ public class Card extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=card");
 			return;
 		}
 
@@ -197,10 +199,11 @@ public class Card extends HttpServlet {
 
 	private void loadCard(HttpServletRequest req, Users user) {
 		List<Cardinfo> cards = em.createQuery(
-						"SELECT c FROM Cardinfo c WHERE c.userId = :user AND c.isArchived = :isArchived", Cardinfo.class)
-						.setParameter("user", user)
-						.setParameter("isArchived", false)
-						.getResultList();
+				"SELECT c FROM Cardinfo c WHERE c.userId = :user AND c.isArchived = :isArchived", Cardinfo.class)
+				.setParameter("user", user)
+				.setParameter("isArchived", false)
+				.getResultList();
+
 		req.setAttribute("card", cards);
 	}
 }

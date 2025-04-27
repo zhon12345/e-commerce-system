@@ -56,7 +56,7 @@ public class Profile extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (user == null) {
-			res.sendRedirect("/login.jsp");
+			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=profile.jsp");
 			return;
 		}
 
