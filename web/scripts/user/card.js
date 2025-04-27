@@ -36,8 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById('number').value = "";
         document.getElementById('name').value = "";
-        document.getElementById('expiryDate').value = "";
-        document.getElementById('cvv').value = "";
+		document.getElementById('expiryDate').value = "";
     });
 
     closePopupBtn.addEventListener('click', function () {
@@ -46,10 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Set up form validation
-    document.getElementById("number").addEventListener("input", () => validateName());
-    document.getElementById("name").addEventListener("input", () => validatePhone());
-    document.getElementById("expiryDate").addEventListener("input", () => validateLine());
-    document.getElementById("cvv").addEventListener("input", () => validateCity());
+	document.getElementById("number").addEventListener("input", () => validateNumber());
+	document.getElementById("name").addEventListener("input", () => validateName());
+	document.getElementById("expiryDate").addEventListener("input", () => validateExpiryDate());
 });
 
 function validateNumber() {
@@ -61,20 +59,16 @@ function validateName() {
 }
 
 function validateExpiryDate() {
-    return validateRequired('expiryDate', 'Expiry Date');
+	return validateRequired('expiryDate', 'Expiry Date');
 }
 
-function validateCvv() {
-    return validateRequired('cvv', 'Cvv');
-}
 
 function validateForm() {
     const isNumberValid = validateNumber();
     const isNameValid = validateName();
-    const isExpiryDateValid = validateExpiryDate();
-    const isCvvValid = validateCvv();
+	const isExpiryDateValid = validateExpiryDate();
 
-    return isNumberValid && isNameValid && isExpiryDateValid && isCvvValid;
+	return isNumberValid && isNameValid && isExpiryDateValid;
 }
 
 window.validateForm = validateForm;

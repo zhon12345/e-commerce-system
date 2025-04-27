@@ -16,17 +16,14 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.util.Collection;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author zhon12345
+ * @author yjee0
  */
 @Entity
 @Table(name = "CARDINFO")
@@ -35,9 +32,9 @@ import javax.xml.bind.annotation.XmlTransient;
 	@NamedQuery(name = "Cardinfo.findAll", query = "SELECT c FROM Cardinfo c"),
 	@NamedQuery(name = "Cardinfo.findById", query = "SELECT c FROM Cardinfo c WHERE c.id = :id"),
 	@NamedQuery(name = "Cardinfo.findByCardNumber", query = "SELECT c FROM Cardinfo c WHERE c.cardNumber = :cardNumber"),
-	@NamedQuery(name = "Cardinfo.findByCardHolderName", query = "SELECT c FROM Cardinfo c WHERE c.cardHolderName = :cardHolderName"),
-	@NamedQuery(name = "Cardinfo.findByExpirationDate", query = "SELECT c FROM Cardinfo c WHERE c.expirationDate = :expirationDate"),
-	@NamedQuery(name = "Cardinfo.findByCvv", query = "SELECT c FROM Cardinfo c WHERE c.cvv = :cvv"),
+	@NamedQuery(name = "Cardinfo.findByCardName", query = "SELECT c FROM Cardinfo c WHERE c.cardName = :cardName"),
+	@NamedQuery(name = "Cardinfo.findByExpMonth", query = "SELECT c FROM Cardinfo c WHERE c.expMonth = :expMonth"),
+	@NamedQuery(name = "Cardinfo.findByExpYear", query = "SELECT c FROM Cardinfo c WHERE c.expYear = :expYear"),
 	@NamedQuery(name = "Cardinfo.findByIsArchived", query = "SELECT c FROM Cardinfo c WHERE c.isArchived = :isArchived")})
 public class Cardinfo implements Serializable {
 
@@ -49,17 +46,18 @@ public class Cardinfo implements Serializable {
 	private Integer id;
 	@Column(name = "CARD_NUMBER")
 	private String cardNumber;
-	@Column(name = "CARD_HOLDER_NAME")
-	private String cardHolderName;
-	@Column(name = "EXPIRATION_DATE")
-  @Temporal(TemporalType.DATE)
-	private Date expirationDate;
-	@Column(name = "CVV")
-	private String cvv;
-	@Column(name = "IS_ARCHIVED")
+	@Column(name = "CARD_NAME")
+	private String cardName;
+	@Basic(optional = false)
+  @Column(name = "EXP_MONTH")
+	private short expMonth;
+	@Basic(optional = false)
+  @Column(name = "EXP_YEAR")
+	private short expYear;
+	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
 	@OneToMany(mappedBy = "cardInfoId")
-	private List<Orders> ordersList;
+	private Collection<Orders> ordersCollection;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Users userId;
@@ -69,6 +67,12 @@ public class Cardinfo implements Serializable {
 
 	public Cardinfo(Integer id) {
 		this.id = id;
+	}
+
+	public Cardinfo(Integer id, short expMonth, short expYear) {
+		this.id = id;
+		this.expMonth = expMonth;
+		this.expYear = expYear;
 	}
 
 	public Integer getId() {
@@ -87,28 +91,28 @@ public class Cardinfo implements Serializable {
 		this.cardNumber = cardNumber;
 	}
 
-	public String getCardHolderName() {
-		return cardHolderName;
+	public String getCardName() {
+		return cardName;
 	}
 
-	public void setCardHolderName(String cardHolderName) {
-		this.cardHolderName = cardHolderName;
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
 	}
 
-	public Date getExpirationDate() {
-		return expirationDate;
+	public short getExpMonth() {
+		return expMonth;
 	}
 
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
+	public void setExpMonth(short expMonth) {
+		this.expMonth = expMonth;
 	}
 
-	public String getCvv() {
-		return cvv;
+	public short getExpYear() {
+		return expYear;
 	}
 
-	public void setCvv(String cvv) {
-		this.cvv = cvv;
+	public void setExpYear(short expYear) {
+		this.expYear = expYear;
 	}
 
 	public Boolean getIsArchived() {
@@ -120,12 +124,12 @@ public class Cardinfo implements Serializable {
 	}
 
 	@XmlTransient
-	public List<Orders> getOrdersList() {
-		return ordersList;
+	public Collection<Orders> getOrdersCollection() {
+		return ordersCollection;
 	}
 
-	public void setOrdersList(List<Orders> ordersList) {
-		this.ordersList = ordersList;
+	public void setOrdersCollection(Collection<Orders> ordersCollection) {
+		this.ordersCollection = ordersCollection;
 	}
 
 	public Users getUserId() {

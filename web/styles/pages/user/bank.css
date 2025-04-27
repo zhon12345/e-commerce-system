@@ -101,30 +101,58 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-bottom: 5px;
 }
 
+/* Edit/Delete button styles */
 .card .actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
+	margin-top: 25px;
+	display: flex;
+	gap: 12px;
 }
 
-.card .actions button {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.card .actions button:hover {
-    background: rgba(255,255,255,0.3);
-}
-
+.card .actions a.edit,
 .card .actions button.delete {
-    background: rgba(231, 76, 60, 0.8);
+	flex: 1;
+	padding: 8px 10px;
+	border-radius: 6px;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	cursor: pointer;
+}
+
+/* Edit button */
+.card .actions a.edit {
+	background: rgba(255, 255, 255, 0.15);
+	color: white;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	text-decoration: none;
+}
+
+.card .actions a.edit:hover {
+	background: rgba(255, 255, 255, 0.25);
+	border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Delete button */
+.card .actions button.delete {
+	background: rgba(231, 76, 60, 0.15);
+	color: #ff8b80;
+	border: 1px solid rgba(231, 76, 60, 0.3);
 }
 
 .card .actions button.delete:hover {
-    background: rgba(231, 76, 60, 1);
+	background: rgba(231, 76, 60, 0.25);
+	color: #ff6b6b;
+	border-color: rgba(231, 76, 60, 0.5);
+}
+
+/* Add icons */
+.card .actions a.edit i {
+	font-size: 14px;
+}
+
+.card .actions button.delete i {
+	font-size: 14px;
 }
