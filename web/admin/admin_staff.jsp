@@ -4,7 +4,7 @@
     request.setAttribute("activeAdminPage", "staff");
     request.setAttribute("pageTitle", "Staff Management");
     // Specify the path to the content fragment for this page
-    request.setAttribute("mainContentPage", "${pageContext.request.contextPath}/admin/content/staff_content.jsp");
+    request.setAttribute("mainContentPage", "/admin/content/staff_content.jsp");
 
     // --- TODO: Add backend logic here to fetch staffList and set it as a request attribute ---
     // Example: List<Staff> staffList = staffDAO.getAllStaff();
