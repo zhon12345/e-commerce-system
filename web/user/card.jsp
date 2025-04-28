@@ -96,7 +96,7 @@
 
 					<div class="add-info number">
 						<label for="number">Card Number</label>
-						<input type="text" id="number" name="number" value="${number}">
+						<input type="text" id="number" name="number" value="${number}" maxlength="12">
 						<span class="error-message">${numberError}</span>
 					</div>
 					<div class="add-info name">
@@ -106,8 +106,7 @@
 					</div>
 					<div class="add-info expiryDate">
 						<label for="expiryDate">Expiry Date (MM/YY)</label>
-						<input type="text" id="expiryDate" name="expiryDate"
-									 placeholder="MM/YY" value="${expiryDate}">
+						<input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" value="${expiryDate}" maxlength="5">
 						<span class="error-message">${expiryDateError}</span>
 					</div>
 					<button type="submit" class="btn">
