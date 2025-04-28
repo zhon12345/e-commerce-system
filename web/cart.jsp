@@ -81,7 +81,7 @@
 					<i class="fas fa-shopping-cart"></i>
 					<h3>Your cart is empty</h3>
 					<p>Looks like you haven't added anything to your cart yet</p>
-					<a href="products.jsp" class="empty-btn">Continue Shopping</a>
+					<a href="${pageContext.request.contextPath}/products" class="empty-btn">Continue Shopping</a>
 				</div>
 			</div>
 			<% } %>
@@ -107,9 +107,9 @@
 				<span>Total</span>
 				<span>RM ${total}</span>
 			</div>
-			<form action="${pageContext.request.contextPath}/checkout.jsp" method="post">
+			<a href="${pageContext.request.contextPath}/checkout">
 				<button type="submit" class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
-			</form>
+			</a>
 			<a href="${pageContext.request.contextPath}/products" class="back">Continue Shopping</a>
 		</div>
 	</div>

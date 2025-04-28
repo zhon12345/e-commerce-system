@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author yjee0
+ * @author zhon12345
  */
 @Entity
 @Table(name = "CARDINFO")
@@ -56,7 +56,7 @@ public class Cardinfo implements Serializable {
 	private short expYear;
 	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;
-	@OneToMany(mappedBy = "cardInfoId")
+	@OneToMany(mappedBy = "cardId")
 	private List<Orders> ordersList;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne

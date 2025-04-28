@@ -45,30 +45,30 @@ public class Users implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Basic(optional = false)
-	@Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Basic(optional = false)
+  @Column(name = "ID")
 	private Integer id;
 	@Column(name = "AVATAR")
 	private String avatar;
 	@Basic(optional = false)
-	@Column(name = "USERNAME")
+  @Column(name = "USERNAME")
 	private String username;
 	@Column(name = "NAME")
 	private String name;
 	@Basic(optional = false)
-	@Column(name = "EMAIL")
+  @Column(name = "EMAIL")
 	private String email;
 	@Column(name = "CONTACT")
 	private String contact;
 	@Basic(optional = false)
-	@Column(name = "PASSWORD")
+  @Column(name = "PASSWORD")
 	private String password;
 	@Basic(optional = false)
-	@Column(name = "ROLE")
+  @Column(name = "ROLE")
 	private String role;
 	@Column(name = "CREATED_AT", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.TIMESTAMP)
 	private Date createdAt;
 	@Column(name = "IS_ARCHIVED", insertable = false)
 	private Boolean isArchived;

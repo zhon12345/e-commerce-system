@@ -19,3 +19,9 @@ INSERT INTO Products (name, description, price, stock, category_id) VALUES
 ('Varmilo VA87M', '', 200, 50, 3),
 ('Keychron K2', '', 329, 50, 3),
 ('Akko 3068', '', 329, 50, 3);
+
+INSERT INTO Promotions (promo_code, discount, valid_from, valid_to) VALUES
+('WINTER15', 0.15, '01.12.2025', '01.03.2025'),
+('SPRING10', 0.10, '01.03.2025', '01.06.2025'),
+('SUMMER25', 0.25, '01.06.2025', '01.09.2025'),
+('FALL20', 0.20, '01.09.2025', '01.12.2025');
