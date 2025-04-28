@@ -35,10 +35,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 	@NamedQuery(name = "Orders.findAll", query = "SELECT o FROM Orders o"),
 	@NamedQuery(name = "Orders.findById", query = "SELECT o FROM Orders o WHERE o.id = :id"),
-	@NamedQuery(name = "Orders.findByOrderDate", query = "SELECT o FROM Orders o WHERE o.orderDate = :orderDate"),
-	@NamedQuery(name = "Orders.findByTotalPrice", query = "SELECT o FROM Orders o WHERE o.totalPrice = :totalPrice"),
 	@NamedQuery(name = "Orders.findByPaymentMethod", query = "SELECT o FROM Orders o WHERE o.paymentMethod = :paymentMethod"),
-	@NamedQuery(name = "Orders.findByDeliveryCost", query = "SELECT o FROM Orders o WHERE o.deliveryCost = :deliveryCost")})
+	@NamedQuery(name = "Orders.findByTotalPrice", query = "SELECT o FROM Orders o WHERE o.totalPrice = :totalPrice"),
+	@NamedQuery(name = "Orders.findByDeliveryCost", query = "SELECT o FROM Orders o WHERE o.deliveryCost = :deliveryCost"),
+	@NamedQuery(name = "Orders.findByDiscount", query = "SELECT o FROM Orders o WHERE o.discount = :discount"),
+	@NamedQuery(name = "Orders.findByOrderDate", query = "SELECT o FROM Orders o WHERE o.orderDate = :orderDate")})
 public class Orders implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -47,24 +48,29 @@ public class Orders implements Serializable {
   @Basic(optional = false)
   @Column(name = "ID")
 	private Integer id;
-	@Column(name = "ORDER_DATE")
-  @Temporal(TemporalType.TIMESTAMP)
-	private Date orderDate;
+	@Basic(optional = false)
+  @Column(name = "PAYMENT_METHOD")
+	private String paymentMethod;
 	// @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
 	@Basic(optional = false)
   @Column(name = "TOTAL_PRICE")
 	private BigDecimal totalPrice;
-	@Basic(optional = false)
-  @Column(name = "PAYMENT_METHOD")
-	private String paymentMethod;
 	@Column(name = "DELIVERY_COST")
 	private BigDecimal deliveryCost;
+	@Column(name = "DISCOUNT")
+	private BigDecimal discount;
+	@Column(name = "ORDER_DATE")
+  @Temporal(TemporalType.TIMESTAMP)
+	private Date orderDate;
 	@JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Addresses addressId;
-	@JoinColumn(name = "CARD_INFO_ID", referencedColumnName = "ID")
+	@JoinColumn(name = "CARD_ID", referencedColumnName = "ID")
   @ManyToOne
-	private Cardinfo cardInfoId;
+	private Cardinfo cardId;
+	@JoinColumn(name = "PROMO_ID", referencedColumnName = "ID")
+  @ManyToOne
+	private Promotions promoId;
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Users userId;
@@ -78,10 +84,10 @@ public class Orders implements Serializable {
 		this.id = id;
 	}
 
-	public Orders(Integer id, BigDecimal totalPrice, String paymentMethod) {
+	public Orders(Integer id, String paymentMethod, BigDecimal totalPrice) {
 		this.id = id;
-		this.totalPrice = totalPrice;
 		this.paymentMethod = paymentMethod;
+		this.totalPrice = totalPrice;
 	}
 
 	public Integer getId() {
@@ -92,12 +98,12 @@ public class Orders implements Serializable {
 		this.id = id;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
+	public String getPaymentMethod() {
+		return paymentMethod;
 	}
 
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	public BigDecimal getTotalPrice() {
@@ -108,20 +114,28 @@ public class Orders implements Serializable {
 		this.totalPrice = totalPrice;
 	}
 
-	public String getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(String paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-
 	public BigDecimal getDeliveryCost() {
 		return deliveryCost;
 	}
 
 	public void setDeliveryCost(BigDecimal deliveryCost) {
 		this.deliveryCost = deliveryCost;
+	}
+
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
+	}
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
 	}
 
 	public Addresses getAddressId() {
@@ -132,12 +146,20 @@ public class Orders implements Serializable {
 		this.addressId = addressId;
 	}
 
-	public Cardinfo getCardInfoId() {
-		return cardInfoId;
+	public Cardinfo getCardId() {
+		return cardId;
 	}
 
-	public void setCardInfoId(Cardinfo cardInfoId) {
-		this.cardInfoId = cardInfoId;
+	public void setCardId(Cardinfo cardId) {
+		this.cardId = cardId;
+	}
+
+	public Promotions getPromoId() {
+		return promoId;
+	}
+
+	public void setPromoId(Promotions promoId) {
+		this.promoId = promoId;
 	}
 
 	public Users getUserId() {

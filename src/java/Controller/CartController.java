@@ -50,7 +50,7 @@ public class CartController extends HttpServlet {
 
 			req.setAttribute("cartList", cartList);
 
-			calculateOrderSummary(cartList, req);
+			calculateOrderSummary(cartList, req, session);
 
 			req.getRequestDispatcher("/cart.jsp").forward(req, res);
 		} catch (Exception e) {
@@ -184,13 +184,13 @@ public class CartController extends HttpServlet {
 				.getResultList();
 	}
 
-	public static void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req) {
+	public static void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req, HttpSession session) {
 		double subtotal = 0;
 		int totalItems = 0;
 		double discount = 0;
 
 		// Check both request and session for applied promo
-		Promotions appliedPromo = (Promotions) req.getAttribute("appliedPromo");
+		Promotions appliedPromo = (Promotions) session.getAttribute("appliedPromo");
 
 		if (cartList != null && !cartList.isEmpty()) {
 			for (Cart item : cartList) {

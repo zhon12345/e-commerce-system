@@ -37,6 +37,10 @@
         <servlet-class>Controller.CartController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>CheckoutController</servlet-name>
+        <servlet-class>Controller.CheckoutController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Card</servlet-name>
         <servlet-class>Controller.user.Card</servlet-class>
     </servlet>
@@ -79,5 +83,9 @@
     <servlet-mapping>
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckoutController</servlet-name>
+        <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
 </web-app>

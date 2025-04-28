@@ -19,7 +19,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background: #fff;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 900px;
     display: flex;
@@ -29,29 +29,101 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .section-title {
     font-size: 1.2rem;
+    margin-top: 0;
     margin-bottom: 15px;
     padding-bottom: 8px;
     border-bottom: 1px solid #eee;
     font-weight: 600;
 }
 
-.address-dropdown, .promo-code-input, .card-input {
+.address-dropdown {
     width: 100%;
     padding: 12px;
-    margin-top: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-sizing: border-box;
 }
 
+.address-details,
+.empty-status.address {
+    margin-bottom: 1rem;
+}
+
+.empty-status.address,
+.empty-status.card {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.payment-methods {
+    margin-bottom: 1rem;
+}
+
 .payment-methods label {
     display: inline-block;
-    margin-right: 20px; /* Space between radio buttons */
+    margin-right: 20px;
     font-size: 1rem;
 }
 
-.apply-promo {
+.credit-card {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.address-input,
+.card-input,
+.card-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.addressSelector,
+.cardSelector {
+    margin-bottom: 1rem;
+}
+
+.address-details,
+.card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.address-details .small,
+.card-details .small {
+    display: flex;
+    gap: 1rem;
+}
+
+.small .expDate,
+.small .cvv {
+    width: 100%;
+}
+
+.promoCode,
+.applied-promo {
+    margin-bottom: 15px;
+}
+
+.promoCode div,
+.applied-promo {
+    display: flex;
+    gap: 1rem;
+}
+
+.promo-code-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.apply-promo,
+.empty-status button {
     padding: 12px;
     background: #4C60DF;
     color: white;
@@ -62,11 +134,41 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     transition: background 0.2s;
 }
 
-.apply-promo:hover {
+.apply-promo:hover,
+.empty-status button:hover {
     transform: none;
     background: #fff;
     color: #4C60DF;
     border: #4C60DF 2px solid;
+}
+
+.remove-promo {
+    padding: 12px;
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.remove-promo:hover {
+    transform: none;
+    background: #fff;
+    color: #e63946;
+    border: #e63946 2px solid;
+}
+
+.error {
+    border: 1px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
 }
 
 .place-order {
@@ -105,10 +207,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 .summary-total {
+    display: flex;
+    justify-content: space-between;
     font-weight: 600;
     font-size: 1.1rem;
     margin-top: 20px;
     padding-top: 10px;
     border-top: 1px solid #eee;
 }
-
