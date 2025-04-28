@@ -26,7 +26,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background: white;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* filter */
@@ -109,12 +109,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .image {
     width: 80px;
     height: 80px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 4px;
 }
 
 .info {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .name {
@@ -122,14 +125,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-bottom: 5px;
 }
 
+.subtext {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.price {
+    margin-top: auto;
+    align-self: flex-end;
+}
+
+.category,
+.quantity,
 .price {
     color: #666;
 }
 
-.actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+.price,
+.summary-line {
+    text-align: right;
+}
+
+.empty-status {
+    background-color: var(--secondary-color);
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
 .btn {

@@ -256,8 +256,9 @@ public class CheckoutController extends HttpServlet {
 			utx.commit();
 
 			session.removeAttribute("appliedPromo");
+			session.setAttribute("orderSuccess", "true");
 
-			res.sendRedirect(req.getContextPath() + "/user/history.jsp");
+			res.sendRedirect(req.getContextPath() + "/user/history");
 		} catch (Exception e) {
 			try {
 				utx.rollback();

@@ -34,7 +34,7 @@
 				<li><a href="profile.jsp">Profile</a></li>
 				<li><a href="address" class="active">Address</a></li>
 				<li><a href="card">Bank & Card</a></li>
-				<li><a href="history.jsp">History</a></li>
+				<li><a href="history">History</a></li>
 			</ul>
 		</div>
 
