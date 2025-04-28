@@ -30,7 +30,7 @@
 					<li><a href="profile.jsp">Profile</a></li>
 					<li><a href="address">Address</a></li>
 					<li><a href="card" class="active">Bank & Card</a></li>
-					<li><a href="history.jsp">History</a></li>
+					<li><a href="history">History</a></li>
 				</ul>
 			</div>
 

@@ -4,88 +4,129 @@
     Author     : yjee0
 --%>
 
+<%@ page import="java.util.List, java.util.Map, java.text.SimpleDateFormat, Model.Orders, Model.Orderdetails, Model.Products"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Order History</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/history.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/empty_status.css">
-    </head>
-    <header>
-        <%@include file="../components/navbar.jsp"%>
-    </header>
-    <body>
-        <!-- title -->
-        <div class="title">
-            <h2>Order History</h2>
-        </div>
 
-        <div class="container">
-            <!-- Sidebar Navigation -->
-            <div class="sidebar">
-                <h3>My Account</h3>
-                <ul>
-                    <li><a href="profile.jsp">Profile</a></li>
-                    <li><a href="address">Address</a></li>
-                    <li><a href="card">Bank & Card</a></li>
-                    <li><a href="history.jsp" class="active">Order History</a></li>
-                </ul>
-            </div>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Order History</title>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/history.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/empty_status.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<header>
+	<%@include file="../components/navbar.jsp" %>
+</header>
 
-            <!-- content -->
-            <div class="content">
-                <div class="header-status">
-                    <h2>My Orders</h2>
-                    <div class="filter">
-                        <select>
-                            <option>All Status</option>
-                            <option>Completed</option>
-                            <option>Pending</option>
-                            <option>Cancelled</option>
-                        </select>
-                    </div>
-                </div>
+<body>
+	<!-- title -->
+	<div class="title">
+		<h2>Order History</h2>
+	</div>
 
-                <!-- order display sample -->
-                <div class="card">
-                    <div class="header">
-                        <div>
-                            <span class="id">Order #12345</span>
-                            <span class="date">• 12 April 2025</span>
-                        </div>
-                        <span class="status status-completed">Completed</span>
-                    </div>
+	<div class="container">
+		<!-- Sidebar Navigation -->
+		<div class="sidebar">
+			<h3>My Account</h3>
+			<ul>
+				<li><a href="profile.jsp">Profile</a></li>
+				<li><a href="address">Address</a></li>
+				<li><a href="card">Bank & Card</a></li>
+				<li><a href="history" class="active">Order History</a></li>
+			</ul>
+		</div>
 
-                    <div class="details">
-                        <img src="pic/jeramy.jpeg" alt="Product Image" class="image">
-                        <div class="info">
-                            <div class="name">Wireless Bluetooth Headphones</div>
-                            <div class="price">$99.99 × 1</div>
-                        </div>
-                    </div>
+		<!-- content -->
+		<div class="content">
+			<div class="header-status">
+				<h2>My Orders</h2>
+			</div>
 
-                    <div class="actions">
-                        <button class="btn btn-primary">Buy Again</button>
-                    </div>
-                </div>
+			<%
+				List<Orders> orderList = (List<Orders>) request.getAttribute("orderList");
+				Map<Integer, List<Orderdetails>> orderDetailsMap = (Map<Integer, List<Orderdetails>>) request.getAttribute("orderDetailsMap");
+				if (orderList == null || orderList.isEmpty()) {
+			%>
+			<div class="empty-status">
+				<h3>No orders yet</h3>
+				<p>You haven't placed any orders. Start shopping now!</p>
+				<a href="${pageContext.request.contextPath}/products">
+					<button class="btn btn-primary" style="margin-top: 15px;">Shop Now</button>
+				</a>
+			</div>
+			<%
+				} else {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+					for (Orders order : orderList) {
+						List<Orderdetails> detailsList = orderDetailsMap.get(order.getId());
+			%>
+			<div class="card">
+				<div class="header">
+					<div>
+						<span class="id">Order #<%= order.getId() %></span>
+						<span class="date"> • <%= dateFormat.format(order.getOrderDate()) %></span>
+					</div>
+					<span class="status status-completed">Completed</span>
+				</div>
 
-                <!-- empty state sample -->
-                <!--
-                <div class="empty-status">
-                    <h3>No orders yet</h3>
-                    <p>You haven't placed any orders. Start shopping now!</p>
-                    <button class="btn btn-primary" style="margin-top: 15px;">Shop Now</button>
-                </div>
-                -->
-            </div>
-        </div>
-    </body>
-    <footer>
-        <%@include file="../components/footer.jsp"%>
-    </footer>
+				<%
+					int totalItems = 0;
+					for (Orderdetails detail : detailsList) {
+						Products product = detail.getProductId();
+						totalItems += detail.getQuantity();
+				%>
+				<div class="details">
+					<a href="${pageContext.request.contextPath}/product?id=<%= product.getId() %>">
+						<%
+							String imagePath = request.getContextPath() + "/assets/products/" + product.getName() + "/1";
+						%>
+
+						<img src="<%= imagePath %>.png" onerror="this.onerror=null; this.src='<%= imagePath %>.jpg'" alt="<%= product.getName() %>" class="image">
+					</a>
+					<div class="info">
+						<div class="name"><%= product.getName() %></div>
+						<div class="subtext">
+							<div class="category"><%= product.getCategoryId().getName() %></div>
+							<div class="quantity">x<%= detail.getQuantity() %></div>
+						</div>
+						<div class="price">RM <%= String.format("%.2f", detail.getPrice().doubleValue()) %></div>
+					</div>
+				</div>
+				<% } %>
+
+				<div class="summary-line">
+					<span>Total <%= totalItems > 1 ? totalItems + " items" : totalItems + " item" %>:</span>
+					<span>RM <%= String.format("%.2f", order.getTotalPrice()) %></span>
+				</div>
+			</div>
+			<%
+					}
+				}
+			%>
+		</div>
+	</div>
+
+	<script>
+		<% if (session.getAttribute("orderSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Success!',
+				text: 'Your order has been completed successfully.',
+				showConfirmButton: false,
+				timer: 1500
+			});
+			<% session.removeAttribute("orderSuccess"); %>
+		<% } %>
+	</script>
+</body>
+<footer>
+	<%@include file="../components/footer.jsp" %>
+</footer>
+
 </html>
