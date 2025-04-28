@@ -5,9 +5,6 @@
 package Controller;
 
 import Model.Users;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -16,6 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -109,7 +111,17 @@ public class Login extends HttpServlet {
 	private String validateRedirect(String redirect) {
 		if (redirect != null || !redirect.isEmpty()) {
 			String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-]", "");
-			return "/" + cleanPath;
+
+			String[] segments = cleanPath.split("/");
+			String lastSegment = segments.length > 0 ? segments[segments.length - 1] : "";
+
+			List<String> userPages = Arrays.asList("profile", "address", "card", "history");
+
+			if (userPages.contains(lastSegment)) {
+				return "/user/" + lastSegment;
+			} else {
+				return "/" + cleanPath;
+			}
 		}
 
 		return "/index.jsp";
