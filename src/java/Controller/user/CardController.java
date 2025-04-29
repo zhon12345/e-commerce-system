@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
 
-public class Card extends HttpServlet {
+public class CardController extends HttpServlet {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -191,7 +191,7 @@ public class Card extends HttpServlet {
 				utx.rollback();
 			} catch (Exception ex) {
 			}
-			
+
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}

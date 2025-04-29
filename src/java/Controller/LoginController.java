@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author zhon12345
  */
-public class Login extends HttpServlet {
+public class LoginController extends HttpServlet {
 
 	@PersistenceContext
 	EntityManager em;

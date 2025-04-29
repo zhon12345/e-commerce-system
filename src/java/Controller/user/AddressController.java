@@ -23,7 +23,7 @@ import jakarta.transaction.UserTransaction;
  *
  * @author zhon12345
  */
-public class Address extends HttpServlet {
+public class AddressController extends HttpServlet {
 
 	@PersistenceContext
 	private EntityManager em;

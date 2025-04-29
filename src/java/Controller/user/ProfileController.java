@@ -33,7 +33,7 @@ import jakarta.transaction.UserTransaction;
  *
  * @author zhon12345
  */
-public class Profile extends HttpServlet {
+public class ProfileController extends HttpServlet {
 	private static final String UPLOAD_DIR = "uploads/avatars";
 
 	@PersistenceContext

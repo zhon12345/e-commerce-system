@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
     <servlet>
-        <servlet-name>Register</servlet-name>
-        <servlet-class>Controller.Register</servlet-class>
+        <servlet-name>RegisterController</servlet-name>
+        <servlet-class>Controller.RegisterController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Login</servlet-name>
-        <servlet-class>Controller.Login</servlet-class>
+        <servlet-name>LoginController</servlet-name>
+        <servlet-class>Controller.LoginController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductsController</servlet-name>
         <servlet-class>Controller.ProductsController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Logout</servlet-name>
-        <servlet-class>Controller.Logout</servlet-class>
+        <servlet-name>LogoutController</servlet-name>
+        <servlet-class>Controller.LogoutController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Profile</servlet-name>
-        <servlet-class>Controller.user.Profile</servlet-class>
+        <servlet-name>ProfileController</servlet-name>
+        <servlet-class>Controller.user.ProfileController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>FetchUploads</servlet-name>
-        <servlet-class>Controller.FetchUploads</servlet-class>
+        <servlet-name>UploadsController</servlet-name>
+        <servlet-class>Controller.UploadsController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Address</servlet-name>
-        <servlet-class>Controller.user.Address</servlet-class>
+        <servlet-name>AddressController</servlet-name>
+        <servlet-class>Controller.user.AddressController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductController</servlet-name>
@@ -41,8 +41,8 @@
         <servlet-class>Controller.CheckoutController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Card</servlet-name>
-        <servlet-class>Controller.user.Card</servlet-class>
+        <servlet-name>CardController</servlet-name>
+        <servlet-class>Controller.user.CardController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HistoryController</servlet-name>
@@ -57,27 +57,27 @@
         <servlet-class>Controller.IndexController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Register</servlet-name>
+        <servlet-name>RegisterController</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Login</servlet-name>
+        <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Logout</servlet-name>
+        <servlet-name>LogoutController</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Profile</servlet-name>
+        <servlet-name>ProfileController</servlet-name>
         <url-pattern>/user/profile</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>FetchUploads</servlet-name>
+        <servlet-name>UploadsController</servlet-name>
         <url-pattern>/uploads/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Address</servlet-name>
+        <servlet-name>AddressController</servlet-name>
         <url-pattern>/user/address</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -89,7 +89,7 @@
         <url-pattern>/product</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Card</servlet-name>
+        <servlet-name>CardController</servlet-name>
         <url-pattern>/user/card</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

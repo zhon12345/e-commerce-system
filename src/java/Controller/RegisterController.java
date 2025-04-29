@@ -22,7 +22,7 @@ import jakarta.transaction.UserTransaction;
  *
  * @author zhon12345
  */
-public class Register extends HttpServlet {
+public class RegisterController extends HttpServlet {
 
 	/**
 	 * Handles the HTTP <code>POST</code> method.
