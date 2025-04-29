@@ -79,7 +79,7 @@
 			</p>
 
 			<div class="button-group">
-				<a href="${pageContext.request.contextPath}/index.jsp" class="btn btn-primary">
+				<a href="${pageContext.request.contextPath}/index" class="btn btn-primary">
 					<i class="fas fa-home"></i> Return Home
 				</a>
 				<button onclick="history.back()" class="btn btn-outline-secondary">

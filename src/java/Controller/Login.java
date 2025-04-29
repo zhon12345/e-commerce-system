@@ -126,6 +126,6 @@ public class Login extends HttpServlet {
 			}
 		}
 
-		return "/index.jsp";
+		return "/index";
 	}
 }

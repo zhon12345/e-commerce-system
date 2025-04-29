@@ -10,12 +10,12 @@
 
 	<body>
 		<div class="navbar">
-			<a href="${pageContext.request.contextPath}/index.jsp">
+			<a href="${pageContext.request.contextPath}/index">
 				<img src="${pageContext.request.contextPath}/assets/logo/text.png" class="logo" />
 			</a>
 
 			<div class="in-navbar">
-				<a href="${pageContext.request.contextPath}/index.jsp">Home</a>
+				<a href="${pageContext.request.contextPath}/index">Home</a>
 				<a href="${pageContext.request.contextPath}/products">Shop</a>
 				<a href="${pageContext.request.contextPath}/about.jsp">About Us</a>
 				<a href="${pageContext.request.contextPath}/contact.jsp">Contact</a>
