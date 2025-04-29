@@ -52,11 +52,11 @@
         <servlet-name>ReviewController</servlet-name>
         <servlet-class>Controller.ReviewController</servlet-class>
     </servlet>
-		<servlet>
-			<servlet-name>HomeController</servlet-name>
-			<servlet-class>Controller.HomeController</servlet-class>
-		</servlet>
-		<servlet-mapping>
+    <servlet>
+        <servlet-name>IndexController</servlet-name>
+        <servlet-class>Controller.IndexController</servlet-class>
+    </servlet>
+    <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
@@ -109,8 +109,8 @@
         <url-pattern>/user/reviews</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>HomeController</servlet-name>
-        <url-pattern>/HomeController</url-pattern>
+        <servlet-name>IndexController</servlet-name>
+        <url-pattern>/index</url-pattern>
 	</servlet-mapping>
     <error-page>
         <error-code>403</error-code>
