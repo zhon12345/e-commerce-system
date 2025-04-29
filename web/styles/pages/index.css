@@ -73,3 +73,95 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-top: 5px;
     font-weight: 500;
 }
+
+/* Voucher Section */
+.voucher-section {
+	max-width: 1200px;
+	margin: 40px auto;
+	padding: 0 20px;
+}
+
+.section-title {
+	text-align: center;
+	font-size: 28px;
+	margin-bottom: 40px;
+	color: #333;
+}
+
+.voucher-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 30px;
+}
+
+.voucher-item {
+	background: white;
+	border-radius: 12px;
+	padding: 25px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border: 1px solid #eee;
+	transition: transform 0.3s ease;
+}
+
+.voucher-item:hover {
+	transform: translateY(-5px);
+}
+
+.voucher-header {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	margin-bottom: 20px;
+}
+
+.voucher-icon {
+	font-size: 1.8rem;
+	color: var(--primary-color);
+	background: rgba(76, 96, 223, 0.1);
+	padding: 12px;
+	border-radius: 50%;
+}
+
+.voucher-title {
+	margin: 0;
+	font-size: 1.1rem;
+	color: #333;
+}
+
+.voucher-desc {
+	margin: 0 0 5px 0;
+	color: #666;
+	font-size: 0.9rem;
+}
+
+.voucher-code {
+	font-size: 1.4rem;
+	font-weight: bold;
+	color: var(--primary-color);
+	margin: 10px 0;
+	letter-spacing: 1px;
+}
+
+.voucher-expiry {
+	color: #888;
+	font-size: 0.85rem;
+	margin-bottom: 20px;
+}
+
+.redeem-btn {
+	width: 100%;
+	padding: 12px;
+	background: var(--primary-color);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.redeem-btn:hover {
+	transform: none;
+	background: #fff;
+	color: #4C60DF;
+	border: #4C60DF 1px solid;
+}

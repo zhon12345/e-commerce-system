@@ -8,7 +8,6 @@
 	<title>My Address</title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/empty_status.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/address.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
@@ -172,7 +171,7 @@
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#d33',
-				cancelButtonColor: '#3085d6',
+				cancelButtonColor: '#4C60DF',
 				confirmButtonText: 'Yes, delete it!'
 			}).then((result) => {
 				if (result.isConfirmed) {
@@ -182,39 +181,40 @@
 		}
 
 		<% if (session.getAttribute("deleteSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Deleted!',
-				text: 'Your address has been deleted.',
-				showConfirmButton: false,
-				timer: 1500
-			});
-			<% session.removeAttribute("deleteSuccess"); %>
+		Swal.fire({
+			icon: 'success',
+			title: 'Deleted!',
+			text: 'Your address has been deleted.',
+			confirmButtonColor: '#4C60DF',
+			showConfirmButton: true,
+			timer: 1500
+		});
+		<% session.removeAttribute("deleteSuccess"); %>
 		<% } %>
-
 		<% if (session.getAttribute("addSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Added!',
-				text: 'Your address has been added successfully.',
-				showConfirmButton: false,
-				timer: 1500
-			});
-			<% session.removeAttribute("addSuccess"); %>
+		Swal.fire({
+			icon: 'success',
+			title: 'Added!',
+			text: 'Your address has been added successfully.',
+			confirmButtonColor: '#4C60DF',
+			showConfirmButton: true,
+			timer: 1500
+		});
+		<% session.removeAttribute("addSuccess"); %>
 		<% } %>
 
 		<% if (session.getAttribute("editSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Updated!',
-				text: 'Your address has been updated successfully.',
-				showConfirmButton: false,
-				timer: 1500
-			});
-			<% session.removeAttribute("editSuccess"); %>
+		Swal.fire({
+			icon: 'success',
+			title: 'Updated!',
+			text: 'Your address has been updated successfully.',
+			confirmButtonColor: '#4C60DF',
+			showConfirmButton: true,
+			timer: 1500
+		});
+		<% session.removeAttribute("editSuccess"); %>
 		<% } %>
 	</script>
-	<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 </body>
 <footer>
 	<%@include file="../components/footer.jsp" %>
