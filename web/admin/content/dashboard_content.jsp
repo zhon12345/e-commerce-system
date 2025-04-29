@@ -1,6 +1,8 @@
-<%-- /admin/content/dashboard_content.jsp --%>
-<%-- This file contains only the content specific to the Dashboard page --%>
-
+<%--
+    Document   : dashboard_content.jsp
+    Created on : 20 Apr 2025, 11:01:40 pm
+    Author     : jeremyxuanlim
+--%>
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
 <p class="text-body-secondary">Overview of the system.</p>
 
@@ -67,3 +69,4 @@
      or specifically on pages that require it.
      Ensure the JS checks if the required elements (e.g., #salesChart) exist before running.
 --%>
+

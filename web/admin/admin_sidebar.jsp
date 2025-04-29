@@ -10,7 +10,7 @@
 
     // Check if the logged-in user is a manager
     Users user = (Users) session.getAttribute("user");
-    boolean isManager = false;
+    boolean isManager = false; 
     if (user != null && user.getRole() != null) {
         isManager = user.getRole().equalsIgnoreCase("manager");
     }
@@ -25,17 +25,15 @@
         <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_users.jsp">
             <i class="fas fa-users-cog"></i> Users
         </a>
-        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_products.jsp">
+        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/FetchCategories">
             <i class="fas fa-box-open"></i> Products
         </a>
-        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_promotions.jsp">
+        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" 
+           href="${pageContext.request.contextPath}/admin/managepromo">
             <i class="fas fa-tags"></i> Promotions
         </a>
-        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/orders">
+        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_orders.jsp">
             <i class="fas fa-receipt"></i> Orders
-        </a>
-        <a class="nav-link <%= "reviews".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/reviews">
-            <i class="fas fa-star"></i> Reviews
         </a>
         <a class="nav-link <%= "reports".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_reports.jsp">
             <i class="fas fa-file-alt"></i> Reports
