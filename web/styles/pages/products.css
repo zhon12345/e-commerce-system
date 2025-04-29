@@ -76,7 +76,8 @@ input[type="checkbox"] {
 }
 
 /* apply button */
-#reset {
+#reset,
+.empty-status .btn {
     background: var(--primary-color);
     color: white;
     border: none;
@@ -87,7 +88,8 @@ input[type="checkbox"] {
     transition: all 0.3s;
 }
 
-#reset:hover {
+#reset:hover,
+.empty-status .btn:hover {
     transform: none;
     background: #fff;
     color: #4C60DF;
@@ -119,6 +121,20 @@ input[type="checkbox"] {
 /* Products */
 .products-section {
     flex: 1;
+}
+
+.empty-status {
+    height: 100%;
+    align-content: center;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.empty-status .btn {
+    font-size: 16px;
 }
 
 .products-grid {
@@ -202,27 +218,4 @@ input[type="checkbox"] {
     background: #fff;
     color: var(--primary-color);
     border: #4C60DF 2px solid;
-}
-
-/* @media */
-@media (max-width: 1200px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .section {
-        width: 100%;
-        position: static;
-        margin-bottom: 20px;
-    }
-
-    .products-grid {
-        grid-template-columns: 1fr;
-    }
 }

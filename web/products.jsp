@@ -8,8 +8,8 @@
 	<title>Shop Page</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/empty_status.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/products.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
 </head>
 <header>
 	<%@ include file="components/navbar.jsp" %>
@@ -79,59 +79,68 @@
 
 		<!-- Products -->
 		<div class="products-section">
+			<% List<Products> products = (List<Products>) request.getAttribute("products");
+				if (products != null && !products.isEmpty()) {
+			%>
 			<div class="products-grid">
-				<% List<Products> products = (List<Products>) request.getAttribute("products");
-					if (products != null && !products.isEmpty()) {
-						for (Products product : products) {
-				%>
-						<div class="card">
-							<a href="${pageContext.request.contextPath}/product?id=<%= product.getId() %>" class="link">
-								<div class="image">
-									<%
-										String productName = product.getName();
-										String imagePath = request.getContextPath() + "/assets/products/" + productName + "/1";
-									%>
+				<% for (Products product : products) { %>
+				<div class="card">
+					<a href="${pageContext.request.contextPath}/product?id=<%= product.getId() %>" class="link">
+						<div class="image">
+							<%
+								String productName = product.getName();
+								String imagePath = request.getContextPath() + "/assets/products/" + productName + "/1";
+							%>
 
-									<img src="<%= imagePath %>.png" onerror="this.onerror=null; this.src='<%= imagePath %>.jpg'">
-								</div>
-								<div class="name"><%= product.getName() %></div>
-								<div class="price">RM <%= product.getPrice() %></div>
-								<div class="product-rating">
-									<%
-										Map<Integer, Double> averageRatings = (Map<Integer, Double>) request.getAttribute("averageRatings");
-										Double avgRating = null;
-
-										if (averageRatings != null) avgRating = averageRatings.get(product.getId());
-										if (avgRating == null) avgRating = 0.0;
-
-										for (int i = 0; i < 5; i++) {
-											double starLower = i + 0.5;
-											double starUpper = i + 1.0;
-											String iconClass;
-
-											if (avgRating >= starUpper) {
-												iconClass = "fa-solid fa-star";	
-											} else if (avgRating >= starLower) {
-												iconClass = "fa-regular fa-star-half-stroke";
-											} else {
-												iconClass = "fa-regular fa-star";
-											}
-									%>
-										<i class="<%= iconClass %>"></i>
-									<% } %>
-								</div>
-							</a>
-							<form action="${pageContext.request.contextPath}/cart" method="post">
-								<input type="hidden" name="action" value="add">
-								<input type="hidden" name="productId" value="<%= product.getId() %>">
-								<button class="add-to-cart">Add to Cart</button>
-							</form>
+							<img src="<%= imagePath %>.png" onerror="this.onerror=null; this.src='<%= imagePath %>.jpg'">
 						</div>
-				<%
-						}
-					}
-				%>
+						<div class="name"><%= product.getName() %></div>
+						<div class="price">RM <%= product.getPrice() %></div>
+						<div class="product-rating">
+							<%
+								Map<Integer, Double> averageRatings = (Map<Integer, Double>) request.getAttribute("averageRatings");
+								Double avgRating = null;
+
+								if (averageRatings != null) avgRating = averageRatings.get(product.getId());
+								if (avgRating == null) avgRating = 0.0;
+
+								for (int i = 0; i < 5; i++) {
+									double starLower = i + 0.5;
+									double starUpper = i + 1.0;
+									String iconClass;
+
+									if (avgRating >= starUpper) {
+										iconClass = "fa-solid fa-star";
+									} else if (avgRating >= starLower) {
+										iconClass = "fa-regular fa-star-half-stroke";
+									} else {
+										iconClass = "fa-regular fa-star";
+									}
+							%>
+								<i class="<%= iconClass %>"></i>
+							<% } %>
+						</div>
+					</a>
+					<form action="${pageContext.request.contextPath}/cart" method="post">
+						<input type="hidden" name="action" value="add">
+						<input type="hidden" name="productId" value="<%= product.getId() %>">
+						<button class="add-to-cart">Add to Cart</button>
+					</form>
+				</div>
+				<% } %>
 			</div>
+			<%
+				} else {
+			%>
+			<div class="empty-status">
+				<i class="fa-solid fa-filter-circle-xmark"></i>
+				<h3>No results...</h3>
+				<p>No results found, please try again.</p>
+				<a href="${pageContext.request.contextPath}/products">
+					<button class="btn btn-primary">Reset</button>
+				</a>
+			</div>
+			<% } %>
 		</div>
 	</div>
 	<script>
