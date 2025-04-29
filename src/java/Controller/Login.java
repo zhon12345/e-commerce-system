@@ -117,8 +117,6 @@ public class Login extends HttpServlet {
 
 			List<String> userPages = Arrays.asList("profile", "address", "card", "history", "reviews");
 
-			session.removeAttribute("loginSuccess");
-
 			if (userPages.contains(lastSegment)) {
 				return "/user/" + lastSegment;
 			} else {

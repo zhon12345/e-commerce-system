@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/empty_status.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/bank.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/card.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -133,7 +133,7 @@
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#d33',
-					cancelButtonColor: '#3085d6',
+					cancelButtonColor: '#4C60DF',
 					confirmButtonText: 'Yes, delete it!'
 				}).then((result) => {
 					if (result.isConfirmed) {
@@ -147,7 +147,8 @@
 				icon: 'success',
 				title: 'Deleted!',
 				text: 'Your card has been deleted.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("deleteSuccess"); %>
@@ -158,7 +159,8 @@
 				icon: 'success',
 				title: 'Added!',
 				text: 'Your card has been added successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("addSuccess"); %>
@@ -169,7 +171,8 @@
 				icon: 'success',
 				title: 'Updated!',
 				text: 'Your card has been updated successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("editSuccess"); %>

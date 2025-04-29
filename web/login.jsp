@@ -12,25 +12,13 @@
 		<title>Login Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css" />
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
 	<body>
-		<% if (session.getAttribute("registerSuccess") !=null && session.getAttribute("registerSuccess").equals("true")) { %>
-      <div class="overlay show" id="overlay"></div>
-      <div class="popup show" id="popup">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="success-title">Register Successful!</div>
-        <button class="close" onclick="closePopup()">OK</button>
-        <% session.removeAttribute("registerSuccess"); %>
-      </div>
-		<% } %>
-
-		<!-- title -->
 		<div class="title">
 			<h2>Login</h2>
 		</div>
@@ -83,20 +71,28 @@
 		</div>
 		<script>
 			window.addEventListener("DOMContentLoaded", () => {
-			  <%
-			    String[] errorFields = { "username", "password"};
-			    for (String field : errorFields) {
-			      String error = (String) request.getAttribute(field + "Error");
-			      if (error != null) {
-			  %>
-			      showError('<%= field %>', '<%= error %>');
-			  <%
-			      }
-			    }
-			  %>
+			<%
+				String[] errorFields = { "username", "password"};
+				for (String field : errorFields) {
+					String error = (String) request.getAttribute(field + "Error");
+					if (error != null) {
+			%>
+						showError('<%= field %>', '<%= error %>');
+			<%
+					}
+				}
+			%>
+
+			<% if (session.getAttribute("registerSuccess") != null && session.getAttribute("registerSuccess").equals("true")) { %>
+				Swal.fire({
+					icon: 'success',
+					title: 'Register Successful!',
+					confirmButtonText: 'OK'
+				});
+				<% session.removeAttribute("registerSuccess"); %>
+			<% } %>
 			})
 		</script>
-		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
 	<script src="${pageContext.request.contextPath}/scripts/login.js" type="module"></script>
