@@ -13,9 +13,8 @@ Document   : index
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Home Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css" />
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css" />
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css" />
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 

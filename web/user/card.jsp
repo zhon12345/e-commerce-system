@@ -7,11 +7,10 @@
 		<title>Bank & Cards</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/bank.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/empty_status.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/bank.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
