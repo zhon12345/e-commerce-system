@@ -6,9 +6,10 @@
 	<title>My Profile</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/profile.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <header>
 	<%@include file="../components/navbar.jsp" %>
@@ -17,17 +18,17 @@
 <body>
 	<jsp:useBean id="user" class="Model.Users" scope="session" />
 
-	<!-- success message popup -->
-	<% if (session.getAttribute("editSuccess") !=null && session.getAttribute("editSuccess").equals("true")) { %>
-		<div class="overlay show" id="overlay"></div>
-		<div class="popup show" id="popup">
-			<div class="success-icon">
-				<i class="fas fa-check-circle"></i>
-			</div>
-			<div class="success-title">Edit Successful!</div>
-			<button class="close" onclick="closePopup()">OK</button>
-			<% session.removeAttribute("editSuccess"); %>
-		</div>
+	<% if (session.getAttribute("editSuccess") != null && session.getAttribute("editSuccess").equals("true")) { %>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			Swal.fire({
+				icon: 'success',
+				title: 'Edit Successful!',
+				confirmButtonText: 'OK'
+			});
+		});
+	</script>
+	<% session.removeAttribute("editSuccess"); %>
 	<% } %>
 
 	<!-- title -->
@@ -39,7 +40,7 @@
 		<!-- sidebar -->
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="profile"/>
-    </jsp:include>
+		</jsp:include>
 
 		<!-- content of avatar -->
 		<div class="content">
@@ -107,7 +108,6 @@
 			%>
 		})
 	</script>
-	<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 </body>
 <footer>
 	<%@include file="../components/footer.jsp" %>

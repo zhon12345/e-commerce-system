@@ -27,9 +27,15 @@
 
 	<div class="container">
 		<!-- sidebar  -->
-		<jsp:include page="/components/sidebar.jsp">
-			<jsp:param name="activePage" value="address"/>
-    </jsp:include>
+		<div class="sidebar">
+			<h3>My Account</h3>
+			<ul>
+				<li><a href="profile.jsp">Profile</a></li>
+				<li><a href="address" class="active">Address</a></li>
+				<li><a href="card">Bank & Card</a></li>
+				<li><a href="history.jsp">History</a></li>
+			</ul>
+		</div>
 
 		<!-- content -->
 		<div class="content">
@@ -41,30 +47,22 @@
 			<!-- address display sample -->
 			<div class="list">
 				<%
-					List<Addresses> addresses = (List<Addresses>) request.getAttribute("addresses");
-					if (addresses != null && !addresses.isEmpty()) {
-						for (Addresses addr : addresses) {
-							String fullAddress = addr.getAddress1();
-
-							if (addr.getAddress2() != null && !addr.getAddress2().isEmpty()) {
-								fullAddress += ", " + addr.getAddress2();
-							}
-
-							fullAddress += ", " + addr.getCity() + ", " + addr.getPostalCode() + ", " + addr.getState();
+				List<Addresses> addresses = (List<Addresses>) request.getAttribute("addresses");
+				if (addresses != null && !addresses.isEmpty()) {
+								for (Addresses addr : addresses) {
+												String fullAddress = addr.getAddress1();
+												if (addr.getAddress2() != null && !addr.getAddress2().isEmpty()) {
+																fullAddress += ", " + addr.getAddress2();
+												}
+												fullAddress += ", " + addr.getCity() + ", " + addr.getPostalCode() + ", " + addr.getState();
 				%>
 				<div class="card">
 					<div class="details">
-						<span>
-							<%= addr.getReceiverName() %>
-						</span>
+						<span><%= addr.getReceiverName() %></span>
 						<div class="separator"></div>
-						<span>
-							<%= addr.getContactNumber() %>
-						</span>
+						<span><%= addr.getContactNumber() %></span>
 					</div>
-					<div class="address">
-						<%= fullAddress %>
-					</div>
+					<div class="address"><%= fullAddress %></div>
 
 					<div class="actions">
 						<button class="edit-btn" onclick="window.location.href = '${pageContext.request.contextPath}/user/address?action=edit&id=<%= addr.getId() %>'">Edit</button>
@@ -72,36 +70,32 @@
 					</div>
 				</div>
 				<%
-						}
-					} else {
+								}
+				} else {
 				%>
-					<div class="empty-status">
-						<i class="fas fa-map-marker-alt"></i>
-						<h3>No Saved Addresses</h3>
-						<p>You haven't added any addresses yet. Add your first address to get started.</p>
-					</div>
+				<div class="empty-status">
+					<i class="fas fa-map-marker-alt"></i>
+					<h3>No Saved Addresses</h3>
+					<p>You haven't added any addresses yet. Add your first address to get started.</p>
+				</div>
 				<% } %>
 			</div>
 
 		</div>
 	</div>
 
-	<!-- edit profile -->
-	<div class="add-container" id="addPopup">
-		<div class="add-content">
-			<span class="close-btn" id="closePopupBtn">&times;</span>
-			<h2>
-				<%= request.getAttribute("editAddress") !=null ? "Edit Address" : "Add New Address" %>
-			</h2>
-			<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/address" method="POST">
-				<%
-					if (request.getAttribute("editAddress") !=null) {
-						Addresses editAddress=(Addresses)
-						request.getAttribute("editAddress");
-				%>
-				<input type="hidden" name="action" value="edit">
-				<input type="hidden" name="id" value="<%= editAddress.getId() %>">
-				<% } %>
+				<!-- edit profile -->
+				<div class="add-container" id="addPopup">
+					<div class="add-content">
+						<span class="close-btn" id="closePopupBtn">&times;</span>
+						<h2><%= request.getAttribute("editAddress") != null ? "Edit Address" :  "Add New Address" %></h2>
+						<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/address" method="POST">
+							<% if (request.getAttribute("editAddress") != null) {
+											Addresses editAddress = (Addresses) request.getAttribute("editAddress");
+							%>
+							<input type="hidden" name="action" value="edit">
+							<input type="hidden" name="id" value="<%= editAddress.getId() %>">
+							<% } %>
 
 				<div class="add-info name">
 					<label for="name">Receiver Name</label>
@@ -110,7 +104,7 @@
 				</div>
 				<div class="add-info phone">
 					<label for="phone">Contact Number</label>
-					<input type="tel" id="phone" name="phone" value="${phone}" maxlength="11">
+					<input type="tel" id="phone" name="phone" value="${phone}">
 					<span class="error-message">${phoneError}</span>
 				</div>
 				<div class="add-info line1">
@@ -124,7 +118,7 @@
 				</div>
 				<div class="add-info postcode">
 					<label for="postcode">Postal Code</label>
-					<input type="text" id="postcode" name="postcode" value="${postcode}" maxlength="5">
+					<input type="text" id="postcode" name="postcode" value="${postcode}">
 					<span class="error-message">${postcodeError}</span>
 				</div>
 				<div class="add-info city">
@@ -137,33 +131,32 @@
 					<input type="text" id="state" name="state" value="${state}">
 					<span class="error-message">${stateError}</span>
 				</div>
-				<button type="submit" class="btn">
-					<%= request.getAttribute("editAddress") !=null ? "Save" : "Add" %>
-				</button>
+				<button type="submit" class="btn"><%= request.getAttribute("editAddress") != null ? "Save" : "Add" %></button>
 			</form>
 		</div>
 	</div>
 
-	<script>
+				<script>
 		window.addEventListener("DOMContentLoaded", () => {
 			const addPopup = document.getElementById('addPopup');
-			<%
-				String[] errorFields = { "name", "phone", "line1", "postcode", "city", "state"};
-				for (String field : errorFields) {
-					String error = (String) request.getAttribute(field + "Error");
-					if (error != null) {
-			%>
-						addPopup.style.display = 'flex';
-						showError('<%= field %>', '<%= error %>');
-			<%
-					}
-				}
+					<%
+																String[] errorFields = {"name", "phone", "line1", "postcode", "city","state"};
+																for (String field : errorFields) {
+																				String error = (String) request.getAttribute(field + "Error");
+																				if (error != null) {
+					%>
+			addPopup.style.display = 'flex';
+			showError('<%= field %>', '<%= error %>');
+					<%
+}
+}
 
-				if (request.getAttribute("editAddress") != null) {
-			%>
-				addPopup.style.display = 'flex';
-			<% } %>
-			});
+if (request.getAttribute("editAddress") != null) {
+		%>
+			addPopup.style.display = 'flex';
+		<% } %>
+
+		});
 
 		function confirmDelete(url) {
 			Swal.fire({
@@ -172,7 +165,7 @@
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonColor: '#d33',
-				cancelButtonColor: '#3085d6',
+				cancelButtonColor: '#4C60DF',
 				confirmButtonText: 'Yes, delete it!'
 			}).then((result) => {
 				if (result.isConfirmed) {
@@ -182,38 +175,40 @@
 		}
 
 		<% if (session.getAttribute("deleteSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Deleted!',
-				text: 'Your address has been deleted.',
-				showConfirmButton: false,
-				timer: 1500
-			});
-			<% session.removeAttribute("deleteSuccess"); %>
+		Swal.fire({
+			icon: 'success',
+			title: 'Deleted!',
+			text: 'Your address has been deleted.',
+			confirmButtonColor: '#4C60DF',
+			showConfirmButton: true,
+			timer: 1500
+		});
+		<% session.removeAttribute("deleteSuccess"); %>
 		<% } %>
-
 		<% if (session.getAttribute("addSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Added!',
-				text: 'Your address has been added successfully.',
-				showConfirmButton: false,
-				timer: 1500
-			});
-			<% session.removeAttribute("addSuccess"); %>
+		Swal.fire({
+			icon: 'success',
+			title: 'Added!',
+			text: 'Your address has been added successfully.',
+			confirmButtonColor: '#4C60DF',
+			showConfirmButton: true,
+			timer: 1500
+		});
+		<% session.removeAttribute("addSuccess"); %>
 		<% } %>
 
 		<% if (session.getAttribute("editSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Updated!',
-				text: 'Your address has been updated successfully.',
-				showConfirmButton: false,
-				timer: 1500
-			});
-			<% session.removeAttribute("editSuccess"); %>
+		Swal.fire({
+			icon: 'success',
+			title: 'Updated!',
+			text: 'Your address has been updated successfully.',
+			confirmButtonColor: '#4C60DF',
+			showConfirmButton: true,
+			timer: 1500
+		});
+		<% session.removeAttribute("editSuccess"); %>
 		<% } %>
-	</script>
+				</script>
 	<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
 </body>
 <footer>

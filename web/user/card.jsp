@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/empty_status.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/bank.css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/card.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -23,9 +23,15 @@
 			<h2>Bank & Cards</h2>
 		</div>
 		<div class="container">
-			<jsp:include page="/components/sidebar.jsp">
-				<jsp:param name="activePage" value="card"/>
-    	</jsp:include>
+			<div class="sidebar">
+				<h3>My Account</h3>
+				<ul>
+					<li><a href="profile.jsp">Profile</a></li>
+					<li><a href="address">Address</a></li>
+					<li><a href="card" class="active">Bank & Card</a></li>
+					<li><a href="history.jsp">History</a></li>
+				</ul>
+			</div>
 
 			<div class="content">
 				<div class="header">
@@ -89,7 +95,7 @@
 
 					<div class="add-info number">
 						<label for="number">Card Number</label>
-						<input type="text" id="number" name="number" value="${number}" maxlength="12">
+						<input type="text" id="number" name="number" value="${number}">
 						<span class="error-message">${numberError}</span>
 					</div>
 					<div class="add-info name">
@@ -99,7 +105,8 @@
 					</div>
 					<div class="add-info expiryDate">
 						<label for="expiryDate">Expiry Date (MM/YY)</label>
-						<input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" value="${expiryDate}" maxlength="5">
+						<input type="text" id="expiryDate" name="expiryDate"
+									 placeholder="MM/YY" value="${expiryDate}">
 						<span class="error-message">${expiryDateError}</span>
 					</div>
 					<button type="submit" class="btn">
@@ -133,7 +140,7 @@
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#d33',
-					cancelButtonColor: '#3085d6',
+					cancelButtonColor: '#4C60DF',
 					confirmButtonText: 'Yes, delete it!'
 				}).then((result) => {
 					if (result.isConfirmed) {
@@ -147,7 +154,8 @@
 				icon: 'success',
 				title: 'Deleted!',
 				text: 'Your card has been deleted.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("deleteSuccess"); %>
@@ -158,7 +166,8 @@
 				icon: 'success',
 				title: 'Added!',
 				text: 'Your card has been added successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("addSuccess"); %>
@@ -169,7 +178,8 @@
 				icon: 'success',
 				title: 'Updated!',
 				text: 'Your card has been updated successfully.',
-				showConfirmButton: false,
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
 				timer: 1500
 			});
 			<% session.removeAttribute("editSuccess"); %>

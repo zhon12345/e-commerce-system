@@ -67,6 +67,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     gap: 1rem;
 }
 
+.card,
+.empty-status {
+    background-color: var(--secondary-color);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
 .details {
     display: flex;
 }
@@ -92,14 +100,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 /* Edit button specific styling */
-.edit-btn,
-.delete {
+.edit-btn, .delete {
     background-color: var(--primary-color);
     color: #fff;
 }
 
-.edit-btn:hover,
-.delete:hover {
+.edit-btn:hover, .delete:hover {
     transform: none;
     background-color: #fff;
     color: var(--primary-color);
@@ -110,3 +116,4 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .delete {
     margin-left: 10px;
 }
+

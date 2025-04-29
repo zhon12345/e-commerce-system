@@ -13,38 +13,56 @@ Document   : index
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Home Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css" />
+		<!-- Add SweetAlert2 CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css" />
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
 	<body>
-		<!-- success message popup -->
-		<% if (session.getAttribute("loginSuccess") !=null && session.getAttribute("loginSuccess").equals("true")) { %>
-      <div class="overlay show" id="overlay"></div>
-      <div class="popup show" id="popup">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="success-title">Login Successful!</div>
-        <button class="close" onclick="closePopup()">OK</button>
-        <% session.removeAttribute("loginSuccess"); %>
-      </div>
-		<% } %>
-
-    <% if (session.getAttribute("logoutSuccess") !=null && session.getAttribute("logoutSuccess").equals("true")) { %>
-      <div class="overlay show" id="overlay"></div>
-      <div class="popup show" id="popup">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="success-title">Logout Successful!</div>
-        <button class="close" onclick="closePopup()">OK</button>
-        <% session.removeAttribute("logoutSuccess"); %>
-      </div>
-		<% } %>
-
 		<img src="assets/home/hero.jpg" class="web_img" />
+
+		<!-- Voucher Section -->
+		<div class="voucher-section">
+			<h2 class="section-title">Available Vouchers</h2>
+			<div class="voucher-grid">
+        <!-- Voucher 1 -->
+        <div class="voucher-item">
+					<div class="voucher-header">
+						<i class="fas fa-ticket-alt voucher-icon"></i>
+						<h3 class="voucher-title">15% OFF on all products</h3>
+					</div>
+					<p class="voucher-desc">Use code:</p>
+					<div class="voucher-code">SPRING15</div>
+					<div class="voucher-expiry">Valid until 30 June 2025</div>
+					<button class="redeem-btn">Redeem Now</button>
+        </div>
+
+        <!-- Voucher 2 -->
+        <div class="voucher-item">
+					<div class="voucher-header">
+						<i class="fas fa-ticket-alt voucher-icon"></i>
+						<h3 class="voucher-title">Free Shipping Nationwide</h3>
+					</div>
+					<p class="voucher-desc">Use code:</p>
+					<div class="voucher-code">FREESHIP</div>
+					<div class="voucher-expiry">Valid until 31 May 2025</div>
+					<button class="redeem-btn">Redeem Now</button>
+        </div>
+
+        <!-- Voucher 3 -->
+        <div class="voucher-item">
+					<div class="voucher-header">
+						<i class="fas fa-ticket-alt voucher-icon"></i>
+						<h3 class="voucher-title">20% OFF for new users</h3>
+					</div>
+					<p class="voucher-desc">Use code:</p>
+					<div class="voucher-code">NEWUSER20</div>
+					<div class="voucher-expiry">Valid until 31 Dec 2025</div>
+					<button class="redeem-btn">Redeem Now</button>
+        </div>
+			</div>
+		</div>
 
 		<!--Categories-->
 		<div class="category-section">
@@ -68,7 +86,32 @@ Document   : index
 			</div>
 		</div>
 
-		<script src="${pageContext.request.contextPath}/scripts/components/popup.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+		<% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
+		<script>
+			Swal.fire({
+				icon: 'success',
+				title: 'Login Successful!',
+				showConfirmButton: true,
+				timer: 3000
+			});
+			<% session.removeAttribute("loginSuccess"); %>
+		</script>
+		<% } %>
+
+		<% if (session.getAttribute("logoutSuccess") != null && session.getAttribute("logoutSuccess").equals("true")) { %>
+		<script>
+			Swal.fire({
+				icon: 'success',
+				title: 'Logout Successful!',
+				showConfirmButton: true,
+				timer: 3000
+			});
+			<% session.removeAttribute("logoutSuccess"); %>
+		</script>
+		<% } %>
+
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
 </html>
