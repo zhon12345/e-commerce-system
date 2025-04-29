@@ -172,8 +172,7 @@ public class Profile extends HttpServlet {
 			} catch (Exception ex) {
 			}
 
-			req.setAttribute("error", "An error occurred, please try again.");
-			req.getRequestDispatcher("/user/profile.jsp").forward(req, res);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

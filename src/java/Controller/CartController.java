@@ -54,7 +54,7 @@ public class CartController extends HttpServlet {
 
 			req.getRequestDispatcher("/cart.jsp").forward(req, res);
 		} catch (Exception e) {
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -111,10 +111,9 @@ public class CartController extends HttpServlet {
 			try {
 				utx.rollback();
 			} catch (Exception ex) {
-				// Ignore
 			}
-			e.printStackTrace();
-			res.sendRedirect(req.getContextPath() + "/error.jsp");
+			
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

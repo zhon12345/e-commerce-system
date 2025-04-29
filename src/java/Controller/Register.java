@@ -101,10 +101,7 @@ public class Register extends HttpServlet {
 			session.setAttribute("registerSuccess", "true");
 			res.sendRedirect(req.getContextPath() + "/login.jsp");
 		} catch (Exception e) {
-			e.printStackTrace();
-
-			req.setAttribute("error", "Registration failed. Please try again.");
-			req.getRequestDispatcher("/register.jsp").forward(req, res);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

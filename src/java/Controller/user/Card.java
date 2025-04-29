@@ -75,7 +75,7 @@ public class Card extends HttpServlet {
 						break;
 				}
 			} catch (Exception e) {
-				res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				return;
 			}
 		}
@@ -191,9 +191,8 @@ public class Card extends HttpServlet {
 				utx.rollback();
 			} catch (Exception ex) {
 			}
-			req.setAttribute("error", "Failed to save card: " + e.getMessage());
-			loadCard(req, user);
-			req.getRequestDispatcher("/user/card.jsp").forward(req, res);
+			
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

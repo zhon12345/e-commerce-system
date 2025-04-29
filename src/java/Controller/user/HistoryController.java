@@ -71,7 +71,7 @@ public class HistoryController extends HttpServlet {
 			req.setAttribute("orderDetailsMap", orderDetailsMap);
 			req.getRequestDispatcher("/user/history.jsp").forward(req, res);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new ServletException(e);
 		}
 	}
 }
