@@ -13,8 +13,8 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/empty_status.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/popup.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/popup_form.css">
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<header>
 		<%@include file="../components/navbar.jsp" %>
@@ -24,15 +24,9 @@
 			<h2>Bank & Cards</h2>
 		</div>
 		<div class="container">
-			<div class="sidebar">
-				<h3>My Account</h3>
-				<ul>
-					<li><a href="profile.jsp">Profile</a></li>
-					<li><a href="address">Address</a></li>
-					<li><a href="card" class="active">Bank & Card</a></li>
-					<li><a href="history">History</a></li>
-				</ul>
-			</div>
+			<jsp:include page="/components/sidebar.jsp">
+				<jsp:param name="activePage" value="card"/>
+    	</jsp:include>
 
 			<div class="content">
 				<div class="header">

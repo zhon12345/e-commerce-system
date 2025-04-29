@@ -28,15 +28,9 @@
 
 	<div class="container">
 		<!-- sidebar  -->
-		<div class="sidebar">
-			<h3>My Account</h3>
-			<ul>
-				<li><a href="profile.jsp">Profile</a></li>
-				<li><a href="address" class="active">Address</a></li>
-				<li><a href="card">Bank & Card</a></li>
-				<li><a href="history">History</a></li>
-			</ul>
-		</div>
+		<jsp:include page="/components/sidebar.jsp">
+			<jsp:param name="activePage" value="address"/>
+    </jsp:include>
 
 		<!-- content -->
 		<div class="content">
