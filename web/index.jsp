@@ -23,6 +23,48 @@ Document   : index
 	<body>
 		<img src="assets/home/hero.jpg" class="web_img" />
 
+		<!-- Voucher Section -->
+		<div class="voucher-section">
+			<h2 class="section-title">Available Vouchers</h2>
+			<div class="voucher-grid">
+        <!-- Voucher 1 -->
+        <div class="voucher-item">
+					<div class="voucher-header">
+						<i class="fas fa-ticket-alt voucher-icon"></i>
+						<h3 class="voucher-title">15% OFF on all products</h3>
+					</div>
+					<p class="voucher-desc">Use code:</p>
+					<div class="voucher-code">SPRING15</div>
+					<div class="voucher-expiry">Valid until 30 June 2025</div>
+					<button class="redeem-btn">Redeem Now</button>
+        </div>
+
+        <!-- Voucher 2 -->
+        <div class="voucher-item">
+					<div class="voucher-header">
+						<i class="fas fa-ticket-alt voucher-icon"></i>
+						<h3 class="voucher-title">Free Shipping Nationwide</h3>
+					</div>
+					<p class="voucher-desc">Use code:</p>
+					<div class="voucher-code">FREESHIP</div>
+					<div class="voucher-expiry">Valid until 31 May 2025</div>
+					<button class="redeem-btn">Redeem Now</button>
+        </div>
+
+        <!-- Voucher 3 -->
+        <div class="voucher-item">
+					<div class="voucher-header">
+						<i class="fas fa-ticket-alt voucher-icon"></i>
+						<h3 class="voucher-title">20% OFF for new users</h3>
+					</div>
+					<p class="voucher-desc">Use code:</p>
+					<div class="voucher-code">NEWUSER20</div>
+					<div class="voucher-expiry">Valid until 31 Dec 2025</div>
+					<button class="redeem-btn">Redeem Now</button>
+        </div>
+			</div>
+		</div>
+
 		<!--Categories-->
 		<div class="category-section">
 			<h2 class="category-title">Category</h2>
@@ -47,25 +89,25 @@ Document   : index
 
 				<script>
 					<% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Login Successful!',
-				confirmButtonColor: '#4C60DF',
-				showConfirmButton: true,
-				timer: 1500
-			});
+					Swal.fire({
+						icon: 'success',
+						title: 'Login Successful!',
+						confirmButtonColor: '#4C60DF',
+						showConfirmButton: true,
+						timer: 1500
+					});
 			<% session.removeAttribute("loginSuccess"); %>
 			<% } %>
 
-			// Handle logout success
+					// Handle logout success
 			<% if (session.getAttribute("logoutSuccess") != null && session.getAttribute("logoutSuccess").equals("true")) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Logout Successful!',
-				confirmButtonColor: '#4C60DF',
-				showConfirmButton: true,
-				timer: 1500
-			});
+					Swal.fire({
+						icon: 'success',
+						title: 'Logout Successful!',
+						confirmButtonColor: '#4C60DF',
+						showConfirmButton: true,
+						timer: 1500
+					});
 			<% session.removeAttribute("logoutSuccess"); %>
 			<% } %>
 		</script>
