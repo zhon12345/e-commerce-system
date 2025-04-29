@@ -10,7 +10,7 @@
 
     // Check if the logged-in user is a manager
     Users user = (Users) session.getAttribute("user");
-    boolean isManager = false; 
+    boolean isManager = false;
     if (user != null && user.getRole() != null) {
         isManager = user.getRole().equalsIgnoreCase("manager");
     }
@@ -25,7 +25,7 @@
         <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_users.jsp">
             <i class="fas fa-users-cog"></i> Users
         </a>
-        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/FetchCategories">
+        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_products.jsp">
             <i class="fas fa-box-open"></i> Products
         </a>
         <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_promotions.jsp">
