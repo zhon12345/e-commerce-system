@@ -13,8 +13,8 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/login.css" />
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
@@ -72,30 +72,26 @@
 		<script>
 			window.addEventListener("DOMContentLoaded", () => {
 			<%
-					String[] errorFields = { "username", "password"};
-					for (String field : errorFields) {
-						String error = (String) request.getAttribute(field + "Error");
-						if (error != null) {
+				String[] errorFields = { "username", "password"};
+				for (String field : errorFields) {
+					String error = (String) request.getAttribute(field + "Error");
+					if (error != null) {
 			%>
-				showError('<%= field %>', '<%= error %>');
+						showError('<%= field %>', '<%= error %>');
 			<%
-						}
 					}
+				}
 			%>
-			})
 
 			<% if (session.getAttribute("registerSuccess") != null && session.getAttribute("registerSuccess").equals("true")) { %>
-			document.addEventListener('DOMContentLoaded', function () {
 				Swal.fire({
 					icon: 'success',
 					title: 'Register Successful!',
 					confirmButtonText: 'OK'
 				});
-			});
-			<%
-			session.removeAttribute("registerSuccess");
-			}
-			%>
+				<% session.removeAttribute("registerSuccess"); %>
+			<% } %>
+			})
 		</script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>

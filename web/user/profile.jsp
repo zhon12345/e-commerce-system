@@ -8,8 +8,8 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/sidebar.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/user/profile.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <header>
 	<%@include file="../components/navbar.jsp" %>
@@ -40,7 +40,7 @@
 		<!-- sidebar -->
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="profile"/>
-		</jsp:include>
+    </jsp:include>
 
 		<!-- content of avatar -->
 		<div class="content">

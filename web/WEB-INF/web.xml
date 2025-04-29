@@ -108,8 +108,8 @@
         <servlet-name>ReviewController</servlet-name>
         <url-pattern>/user/reviews</url-pattern>
     </servlet-mapping>
-		<servlet-mapping>
-			<servlet-name>HomeController</servlet-name>
-			<url-pattern>/HomeController</url-pattern>
-		</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeController</servlet-name>
+        <url-pattern>/HomeController</url-pattern>
+	</servlet-mapping>
 </web-app>

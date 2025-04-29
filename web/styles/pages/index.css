@@ -165,10 +165,3 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 	color: #4C60DF;
 	border: #4C60DF 1px solid;
 }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-	.voucher-grid {
-		grid-template-columns: 1fr;
-	}
-}

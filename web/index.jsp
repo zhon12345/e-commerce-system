@@ -13,9 +13,9 @@ Document   : index
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Home Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-		<!-- Add SweetAlert2 CSS -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/index.css" />
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
@@ -86,10 +86,8 @@ Document   : index
 			</div>
 		</div>
 
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-		<% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
 		<script>
+		<% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
 			Swal.fire({
 				icon: 'success',
 				title: 'Login Successful!',
@@ -97,11 +95,9 @@ Document   : index
 				timer: 3000
 			});
 			<% session.removeAttribute("loginSuccess"); %>
-		</script>
 		<% } %>
 
 		<% if (session.getAttribute("logoutSuccess") != null && session.getAttribute("logoutSuccess").equals("true")) { %>
-		<script>
 			Swal.fire({
 				icon: 'success',
 				title: 'Logout Successful!',
@@ -109,9 +105,8 @@ Document   : index
 				timer: 3000
 			});
 			<% session.removeAttribute("logoutSuccess"); %>
-		</script>
 		<% } %>
-
+		</script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>
 </html>

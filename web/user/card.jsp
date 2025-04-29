@@ -23,15 +23,9 @@
 			<h2>Bank & Cards</h2>
 		</div>
 		<div class="container">
-			<div class="sidebar">
-				<h3>My Account</h3>
-				<ul>
-					<li><a href="profile.jsp">Profile</a></li>
-					<li><a href="address">Address</a></li>
-					<li><a href="card" class="active">Bank & Card</a></li>
-					<li><a href="history.jsp">History</a></li>
-				</ul>
-			</div>
+			<jsp:include page="/components/sidebar.jsp">
+				<jsp:param name="activePage" value="card"/>
+    	</jsp:include>
 
 			<div class="content">
 				<div class="header">
@@ -95,7 +89,7 @@
 
 					<div class="add-info number">
 						<label for="number">Card Number</label>
-						<input type="text" id="number" name="number" value="${number}">
+						<input type="text" id="number" name="number" value="${number}" maxlength="12">
 						<span class="error-message">${numberError}</span>
 					</div>
 					<div class="add-info name">
@@ -105,8 +99,7 @@
 					</div>
 					<div class="add-info expiryDate">
 						<label for="expiryDate">Expiry Date (MM/YY)</label>
-						<input type="text" id="expiryDate" name="expiryDate"
-									 placeholder="MM/YY" value="${expiryDate}">
+						<input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" value="${expiryDate}" maxlength="5">
 						<span class="error-message">${expiryDateError}</span>
 					</div>
 					<button type="submit" class="btn">
