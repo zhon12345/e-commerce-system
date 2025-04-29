@@ -1,4 +1,4 @@
-<%@ page import="java.util.List, Model.Products, Model.Categories"%>
+<%@ page import="java.util.List, java.util.Map, Model.Products, Model.Categories"%>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -97,8 +97,27 @@
 								<div class="name"><%= product.getName() %></div>
 								<div class="price">RM <%= product.getPrice() %></div>
 								<div class="product-rating">
-									<% for (int i=0; i < 5; i++) { %>
-										<i class="fa-regular fa-star"></i>
+									<%
+										Map<Integer, Double> averageRatings = (Map<Integer, Double>) request.getAttribute("averageRatings");
+										Double avgRating = null;
+
+										if (averageRatings != null) avgRating = averageRatings.get(product.getId());
+										if (avgRating == null) avgRating = 0.0;
+
+										for (int i = 0; i < 5; i++) {
+											double starLower = i + 0.5;
+											double starUpper = i + 1.0;
+											String iconClass;
+
+											if (avgRating >= starUpper) {
+												iconClass = "fa-solid fa-star";	
+											} else if (avgRating >= starLower) {
+												iconClass = "fa-regular fa-star-half-stroke";
+											} else {
+												iconClass = "fa-regular fa-star";
+											}
+									%>
+										<i class="<%= iconClass %>"></i>
 									<% } %>
 								</div>
 							</a>

@@ -71,6 +71,11 @@ public class ProductController extends HttpServlet {
 					.setParameter("id", Integer.parseInt(productId))
 					.getSingleResult();
 
+			Double averageRating = em.createQuery(
+					"SELECT AVG(CAST(r.rating AS float)) FROM Reviews r WHERE r.productId.id = :productId",
+					Double.class).setParameter("productId", Integer.parseInt(productId))
+					.getSingleResult();
+
 			List<Reviews> reviews = em.createQuery(
 					"SELECT r FROM Reviews r LEFT JOIN FETCH r.userId WHERE r.productId.id = :productId AND r.isArchived = :isArchived ORDER BY r.reviewDate DESC",
 					Reviews.class)
@@ -78,10 +83,14 @@ public class ProductController extends HttpServlet {
 					.setParameter("isArchived", false)
 					.getResultList();
 
+			if (averageRating == null) averageRating = 0.0;
+
 			req.setAttribute("product", product);
+			req.setAttribute("averageRating", averageRating);
 			req.setAttribute("reviewList", reviews);
 			req.getRequestDispatcher("/product.jsp").forward(req, res);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -78,7 +78,7 @@ public class Login extends HttpServlet {
 				session.setAttribute("user", user);
 				session.setAttribute("loginSuccess", "true");
 
-				String targetPath = validateRedirect(redirect);
+				String targetPath = validateRedirect(redirect, session);
 				res.sendRedirect(req.getContextPath() + targetPath);
 				return;
 			}
@@ -108,14 +108,16 @@ public class Login extends HttpServlet {
 		}
 	}
 
-	private String validateRedirect(String redirect) {
+	private String validateRedirect(String redirect, HttpSession session) {
 		if (redirect != null || !redirect.isEmpty()) {
-			String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-]", "");
+			String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-?=]", "");
 
 			String[] segments = cleanPath.split("/");
 			String lastSegment = segments.length > 0 ? segments[segments.length - 1] : "";
 
-			List<String> userPages = Arrays.asList("profile", "address", "card", "history");
+			List<String> userPages = Arrays.asList("profile", "address", "card", "history", "reviews");
+
+			session.removeAttribute("loginSuccess");
 
 			if (userPages.contains(lastSegment)) {
 				return "/user/" + lastSegment;

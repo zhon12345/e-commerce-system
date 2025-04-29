@@ -41,7 +41,30 @@
 
 			<!-- Right Box (Product Details) -->
 			<div class="right-box">
-				<div class="product-header">${product.name}</div>
+				<div class="product-header">
+				${product.name}
+					<div class="product-rating">
+					<%
+						Double avgRating = (Double) request.getAttribute("averageRating");
+						if (avgRating == null) avgRating = 0.0;
+
+						for (int i = 0; i < 5; i++) {
+							double starLower = i + 0.5;
+							double starUpper = i + 1.0;
+							String iconClass;
+
+							if (avgRating >= starUpper) {
+								iconClass = "fa-solid fa-star";
+							} else if (avgRating >= starLower) {
+								iconClass = "fa-regular fa-star-half-stroke";
+							} else {
+								iconClass = "fa-regular fa-star";
+							}
+					%>
+						<i class="<%= iconClass %>"></i>
+					<% } %>
+					</div>
+				</div>
 				<div class="product-price">RM ${product.price}</div>
 
 				<div class="quantity">
