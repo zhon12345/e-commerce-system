@@ -14,7 +14,6 @@
 	<title>${product.name} - Product Details</title>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/product.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/body.css">
 </head>
 <header>
 	<%@include file="components/navbar.jsp" %>
