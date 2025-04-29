@@ -1,4 +1,5 @@
 <%-- /WEB-INF/views/admin/admin_layout.jsp --%>
+<%@ page import="java.util.List, Model.Products, Model.Categories"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%-- <%@ page import="Model.Staff" %> --%> <%-- Needed if checking roles directly in layout --%>
 <!DOCTYPE html>
@@ -9,11 +10,11 @@
     <%-- Dynamically set title based on the specific page --%>
     <title>Admin Panel - ${param.pageTitle != null ? param.pageTitle : 'Dashboard'}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <link rel="stylesheet" href="/styles/admin_dashboard_styles.css"> <%-- Adjust path as needed --%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/admin_dashboard_styles.css"> <%-- Adjust path as needed --%>
 
     <%--
     <%
@@ -104,13 +105,40 @@
         <div class="modal-content">
           <div class="modal-header"> <h1 class="modal-title fs-5" id="addProductModalLabel"><i class="fas fa-plus-circle me-2"></i>Add New Product</h1> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> </div>
           <div class="modal-body">
-            <form id="addProductForm">
-              <div class="mb-3"> <label for="addProductName" class="form-label">Product Name</label> <input type="text" class="form-control" id="addProductName" required> </div>
-              <div class="mb-3"> <label for="addProductCategory" class="form-label">Category</label> <input type="text" class="form-control" id="addProductCategory"> </div>
-              <div class="mb-3"> <label for="addProductPrice" class="form-label">Price (RM)</label> <input type="number" step="0.01" min="0" class="form-control" id="addProductPrice" required> </div>
-              <div class="mb-3"> <label for="addProductStock" class="form-label">Stock Quantity</label> <input type="number" min="0" class="form-control" id="addProductStock" required> </div>
-              <div class="mb-3"> <label for="addProductDescription" class="form-label">Description</label> <textarea class="form-control" id="addProductDescription" rows="3"></textarea> </div>
-              <div class="mb-3"> <label for="addProductPicture" class="form-label">Product Picture</label> <input class="form-control" type="file" id="addProductPicture" accept="image/png, image/jpeg, image/webp"> <div id="pictureHelp" class="form-text">Upload PNG, JPG, or WEBP images.</div> </div>
+            <form id="addProductForm" action="AddProducts" method="post" enctype="multipart/form-data" >
+              <div class="mb-3"> <label for="addProductName" class="form-label">Product Name</label> <input type="text" class="form-control" id="addProductName" name="addProductName" required> </div>
+              
+              
+              <div class="mb-3"> <label for="addProductCategory" class="form-label">Category</label> </div>
+                  <!--<input type="text" class="form-control" id="addProductCategory" name="addProductCategory">--> 
+              <select class="form-select form-select-lg mb-3" id="addProductCategory" name="addProductCategory">
+                <%                                     
+                    List<Categories> categories = (List<Categories>) request.getAttribute("categories");
+                        if (categories != null && !categories.isEmpty()) {
+                                for (Categories category : categories) {
+                                        if (category.getId() == 1) {
+                %>
+                                            <option value="<%= category.getId() %>" selected><%= category.getName() %></option>
+                <% 
+                                        } else {
+                %>                   
+                        <option value="<%= category.getId() %>"><%= category.getName() %></option>
+                <%
+                                        }
+                                }
+                        } else {
+                %>
+                        <div>No categories found</div>
+                <%
+                        }
+                %>
+              </select>
+              
+              
+              <div class="mb-3"> <label for="addProductPrice" class="form-label">Price (RM)</label> <input type="number" step="0.01" min="0" class="form-control" id="addProductPrice" name="addProductPrice"required> </div>
+              <div class="mb-3"> <label for="addProductStock" class="form-label">Stock Quantity</label> <input type="number" min="0" class="form-control" id="addProductStock" name="addProductStock" required> </div>
+              <div class="mb-3"> <label for="addProductDescription" class="form-label">Description</label> <textarea class="form-control" id="addProductDescription" name="addProductDescription" rows="3"></textarea> </div>
+              <div class="mb-3"> <label for="addProductPicture" class="form-label">Product Picture</label> <input class="form-control" type="file" id="addProductPicture" name="addProductPicture" accept="image/png, image/jpeg, image/webp"> <div id="pictureHelp" class="form-text">Upload PNG, JPG, or WEBP images.</div> </div>
             </form>
           </div>
           <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="submit" class="btn btn-primary" form="addProductForm">Save Product</button> </div>
