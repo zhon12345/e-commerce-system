@@ -109,7 +109,6 @@ function switchTab(tabName, event) {
 		document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
 	}
 
-	document.getElementById('activeTab').value = tabName;
 }
 
 window.updateQuantity = updateQuantity;

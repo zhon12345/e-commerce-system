@@ -61,8 +61,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .product-header {
     font-size: 28px;
     font-weight: 700;
-    margin-bottom: 10px;
     color: var(--primary-color);
+}
+
+.product-rating {
+    font-size: 18px;
+    color: #FFD700;
+    margin-top: 10px;
 }
 
 .product-subheader {

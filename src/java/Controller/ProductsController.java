@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Products;
+import Model.Reviews;
 import Model.Categories;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,7 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductsController extends HttpServlet {
 
@@ -25,10 +28,20 @@ public class ProductsController extends HttpServlet {
 			String[] categoryParams = req.getParameterValues("category");
 			String minPriceParam = req.getParameter("min");
 			String maxPriceParam = req.getParameter("max");
+			String ratingParam = req.getParameter("rating");
 			String search = req.getParameter("search");
 
 			BigDecimal minPrice = parsePrice(minPriceParam);
 			BigDecimal maxPrice = parsePrice(maxPriceParam);
+			Integer selectedRating = null;
+
+			if (ratingParam != null && !ratingParam.isEmpty()) {
+				try {
+					selectedRating = Integer.parseInt(ratingParam);
+				} catch (NumberFormatException e) {
+					// Handle invalid rating parameter (e.g., log error)
+				}
+			}
 
 			CriteriaBuilder cb = em.getCriteriaBuilder();
 			CriteriaQuery<Products> cq = cb.createQuery(Products.class);
@@ -50,6 +63,14 @@ public class ProductsController extends HttpServlet {
 				}
 
 				predicates.add(cb.and(pricePredicates.toArray(new Predicate[0])));
+			}
+
+			if (selectedRating != null) {
+				Subquery<Double> avgSubquery = cq.subquery(Double.class);
+				Root<Reviews> reviewRoot = avgSubquery.from(Reviews.class);
+				avgSubquery.select(cb.avg(reviewRoot.get("rating")));
+				avgSubquery.where(cb.equal(reviewRoot.get("productId"), product));
+				predicates.add(cb.ge(avgSubquery, selectedRating.doubleValue()));
 			}
 
 			if (search != null && !search.trim().isEmpty()) {
@@ -75,18 +96,25 @@ public class ProductsController extends HttpServlet {
 				cq.where(cb.and(predicates.toArray(new Predicate[0])));
 			}
 
-			// Order by product name
 			cq.orderBy(cb.asc(product.get("name")));
 
-			// Get results
 			List<Products> productsList = em.createQuery(cq).getResultList();
-
-			// Get categories for filter display
 			List<Categories> categoriesList = em.createNamedQuery("Categories.findAll", Categories.class)
 					.getResultList();
 
-			req.setAttribute("categories", categoriesList);
+			String avgQuery = "SELECT r.productId.id, AVG(CAST(r.rating as float)) FROM Reviews r GROUP BY r.productId.id";
+			List<Object[]> avgResults = em.createQuery(avgQuery, Object[].class).getResultList();
+
+			Map<Integer, Double> averageRatings = new HashMap<>();
+			for (Object[] result : avgResults) {
+				Integer productId = (Integer) result[0];
+				Double avg = (Double) result[1];
+				averageRatings.put(productId, avg);
+			}
+
 			req.setAttribute("products", productsList);
+			req.setAttribute("categories", categoriesList);
+			req.setAttribute("averageRatings", averageRatings);
 			req.getRequestDispatcher("/products.jsp").forward(req, res);
 
 		} catch (Exception e) {
