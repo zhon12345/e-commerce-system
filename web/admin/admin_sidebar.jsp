@@ -31,8 +31,11 @@
         <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_promotions.jsp">
             <i class="fas fa-tags"></i> Promotions
         </a>
-        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_orders.jsp">
+        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/orders">
             <i class="fas fa-receipt"></i> Orders
+        </a>
+        <a class="nav-link <%= "reviews".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/reviews">
+            <i class="fas fa-star"></i> Reviews
         </a>
         <a class="nav-link <%= "reports".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_reports.jsp">
             <i class="fas fa-file-alt"></i> Reports
