@@ -48,6 +48,10 @@
         <servlet-name>HistoryController</servlet-name>
         <servlet-class>Controller.user.HistoryController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReviewController</servlet-name>
+        <servlet-class>Controller.ReviewController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Register</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -95,5 +99,9 @@
     <servlet-mapping>
         <servlet-name>HistoryController</servlet-name>
         <url-pattern>/user/history</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewController</servlet-name>
+        <url-pattern>/user/reviews</url-pattern>
     </servlet-mapping>
 </web-app>

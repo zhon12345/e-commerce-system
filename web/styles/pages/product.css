@@ -20,13 +20,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .product-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
+    gap: 20px;
     margin-bottom: 30px;
 }
 
 .left-box {
-    flex: 0 0 40%;
+    flex: 1;
     min-width: 300px;
     background-color: #fff;
     border-radius: 8px;
@@ -40,6 +39,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .right-box {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     min-width: 300px;
     background-color: #fff;
     border-radius: 8px;
@@ -53,7 +55,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border-radius: 8px;
     box-shadow: var(--box-shadow);
     padding: 30px;
-    margin: 0 auto 40px;
+    margin: 20px auto 40px;
 }
 
 .product-header {
@@ -102,8 +104,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background-color: #e9ecef;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
     transition: all 0.3s ease;
 }
 
@@ -112,15 +112,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 .quantity-input {
-    width: 60px;
-    height: 36px;
+    width: 40px;
+    height: 30px;
     text-align: center;
-    border: 1px solid #e9ecef;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    margin: 0 8px;
+    margin: 0 5px;
 }
 
-.add-to-cart {
+.add-to-cart,
+.submit-review {
     background-color: var(--primary-color);
     color: #fff;
     border: none;
@@ -134,7 +135,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     max-width: 150px;
 }
 
-.add-to-cart:hover {
+.add-to-cart:hover,
+.submit-review:hover {
     transform: none;
     background: #fff;
     color: var(--primary-color);
@@ -143,7 +145,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .tab-container {
     display: flex;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
 }
 
 .tab {
@@ -174,7 +177,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border-radius: 4px;
 }
 
-.product-description h3 {
+.product-description h3,
+.review-section h3 {
     font-size: 20px;
     margin-bottom: 15px;
     color: var(--primary-color);
@@ -184,23 +188,120 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-bottom: 15px;
 }
 
-@media (max-width: 768px) {
-    .product-container {
-        flex-direction: column;
-    }
+.content-section {
+    padding: 10px;
+}
 
-    .left-box,
-    .right-box {
-        width: 100%;
-        max-width: 100%;
-        flex: 1 1 100%;
-    }
+/* Review section styles */
+.review-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
 
-    .bottom-box {
-        width: 100%;
-    }
+.rating {
+    margin-bottom: 15px;
+}
 
-    .add-to-cart {
-        max-width: 100%;
-    }
+.stars {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.rating-label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.star {
+    font-size: 18px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star.fa-solid {
+    color: #FFD700;
+}
+
+.review {
+    margin-bottom: 15px;
+}
+
+.review-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+#review.error {
+    border: 1px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.existing-reviews {
+    margin-top: 30px;
+}
+
+.reviews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-item {
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.review-header .right {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.reviewer-name {
+    font-weight: bold;
+}
+
+.review-stars {
+    color: #f8d64e;
+}
+
+.review-date {
+    color: #777;
+    font-size: 0.9em;
+}
+
+.review-content {
+    line-height: 1.5;
+}
+
+.no-reviews {
+    font-style: italic;
+    color: #777;
+    text-align: center;
+    padding: 20px;
 }
