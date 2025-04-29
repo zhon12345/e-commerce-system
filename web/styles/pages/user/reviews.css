@@ -96,12 +96,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 	color: #e63946;
 }
 
-.empty-status {
-	background-color: var(--secondary-color);
-	border: 1px solid #ddd;
-	border-radius: 5px;
-}
-
 .btn {
 	padding: 8px 16px;
 	border-radius: 4px;

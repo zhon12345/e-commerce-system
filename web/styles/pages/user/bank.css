@@ -73,11 +73,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     gap: 20px;
 }
 
-.empty-status {
-    background-color: var(--secondary-color);
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+
 
 .card {
     border: 1px solid #ddd;

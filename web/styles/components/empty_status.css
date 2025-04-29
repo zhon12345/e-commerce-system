@@ -10,6 +10,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .empty-status {
     text-align: center;
     padding: 50px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
     color: #666;
 }
 
