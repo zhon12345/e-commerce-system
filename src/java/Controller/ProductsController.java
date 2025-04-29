@@ -118,7 +118,7 @@ public class ProductsController extends HttpServlet {
 			req.getRequestDispatcher("/products.jsp").forward(req, res);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

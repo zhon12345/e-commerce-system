@@ -95,7 +95,7 @@ public class Address extends HttpServlet {
 						break;
 				}
 			} catch (Exception e) {
-				res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				return;
 			}
 		}
@@ -222,8 +222,7 @@ public class Address extends HttpServlet {
 			} catch (Exception ex) {
 			}
 
-			req.setAttribute("error", "Failed to save address: " + e.getMessage());
-			req.getRequestDispatcher("/user/address.jsp").forward(req, res);
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

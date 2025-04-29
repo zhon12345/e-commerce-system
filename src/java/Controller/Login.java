@@ -109,13 +109,15 @@ public class Login extends HttpServlet {
 	}
 
 	private String validateRedirect(String redirect, HttpSession session) {
-		if (redirect != null || !redirect.isEmpty()) {
-			String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-?=]", "");
+		String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-?=]", "");
 
+		if (cleanPath != null && !cleanPath.isEmpty()) {
 			String[] segments = cleanPath.split("/");
 			String lastSegment = segments.length > 0 ? segments[segments.length - 1] : "";
 
 			List<String> userPages = Arrays.asList("profile", "address", "card", "history", "reviews");
+
+			session.removeAttribute("loginSuccess");
 
 			if (userPages.contains(lastSegment)) {
 				return "/user/" + lastSegment;

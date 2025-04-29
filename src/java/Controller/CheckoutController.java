@@ -111,9 +111,9 @@ public class CheckoutController extends HttpServlet {
 			try {
 				utx.rollback();
 			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
-			e.printStackTrace();
+
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -263,10 +263,9 @@ public class CheckoutController extends HttpServlet {
 			try {
 				utx.rollback();
 			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
 
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 

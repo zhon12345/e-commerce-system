@@ -50,7 +50,7 @@ public class ReviewController extends HttpServlet {
 			req.setAttribute("reviewList", reviewList);
 			req.getRequestDispatcher("/user/reviews.jsp").forward(req, res);
 		} catch (Exception e) {
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class ReviewController extends HttpServlet {
 				session.setAttribute("deleteError", "true");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		res.sendRedirect(req.getContextPath() + "/user/reviews");
 	}
@@ -167,7 +167,7 @@ public class ReviewController extends HttpServlet {
 			session.removeAttribute("selectedRating");
 			session.removeAttribute("reviewText");
 		} catch (Exception e) {
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 
 		res.sendRedirect(req.getContextPath() + "/product?id=" + productId + "&tab=" + (activeTab != null ? activeTab : "reviews"));

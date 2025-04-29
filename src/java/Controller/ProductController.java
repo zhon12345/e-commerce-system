@@ -90,7 +90,7 @@ public class ProductController extends HttpServlet {
 			req.setAttribute("reviewList", reviews);
 			req.getRequestDispatcher("/product.jsp").forward(req, res);
 		} catch (Exception e) {
-			e.printStackTrace();
+			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
