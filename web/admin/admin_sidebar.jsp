@@ -1,17 +1,18 @@
 <%-- /admin/admin_sidebar.jsp --%>
+<%@ page import="Model.Users" %>
+
 <%
-    // Get the active page name set by the including JSP
     String activePage = (String) request.getAttribute("activeAdminPage");
     if (activePage == null) {
         activePage = "dashboard"; // Default if not set
     }
 
-    // Check manager status (needed to conditionally show staff link)
-    // Staff loggedInStaff = (Staff) session.getAttribute("loggedInStaff");
-    boolean isManager = false; // Placeholder
-    // if (loggedInStaff != null) {
-    //     // isManager = loggedInStaff.getIsManager();
-    // }
+    // Check if the logged-in user is a manager
+    Users user = (Users) session.getAttribute("user");
+    boolean isManager = false;
+    if (user != null && user.getRole() != null) {
+        isManager = user.getRole().equalsIgnoreCase("manager");
+    }
 %>
 <div class="sidebar mb-3">
     <h3 class="d-flex align-items-center gap-2"><i class="fas fa-tachometer-alt"></i> Menu</h3>
@@ -38,11 +39,10 @@
         <a class="nav-link <%= "reports".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_reports.jsp">
             <i class="fas fa-file-alt"></i> Reports
         </a>
-        <%-- Conditionally show Staff Management for Managers --%>
-        <%-- <% if (isManager) { %> --%>
-            <a class="nav-link <%= "staff".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_staff.jsp">
+        <% if (isManager) { %>
+            <a class="nav-link <%= "staff".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/staff">
                 <i class="fas fa-user-shield"></i> Staff
             </a>
-        <%-- <% } %> --%>
+        <% } %>
     </nav>
 </div>

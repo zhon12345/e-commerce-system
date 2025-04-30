@@ -67,4 +67,3 @@
      or specifically on pages that require it.
      Ensure the JS checks if the required elements (e.g., #salesChart) exist before running.
 --%>
-
