@@ -2,7 +2,6 @@
 <%@ page import="Model.Users" %>
 
 <%
- // Get the active page name set by the including JSP
     String activePage = (String) request.getAttribute("activeAdminPage");
     if (activePage == null) {
         activePage = "dashboard"; // Default if not set
@@ -10,7 +9,7 @@
 
     // Check if the logged-in user is a manager
     Users user = (Users) session.getAttribute("user");
-    boolean isManager = false; 
+    boolean isManager = false;
     if (user != null && user.getRole() != null) {
         isManager = user.getRole().equalsIgnoreCase("manager");
     }
@@ -25,15 +24,17 @@
         <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_users.jsp">
             <i class="fas fa-users-cog"></i> Users
         </a>
-        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/FetchCategories">
+        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_products.jsp">
             <i class="fas fa-box-open"></i> Products
         </a>
-        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" 
-           href="${pageContext.request.contextPath}/admin/managepromo">
+        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_promotions.jsp">
             <i class="fas fa-tags"></i> Promotions
         </a>
-        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_orders.jsp">
+        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/orders">
             <i class="fas fa-receipt"></i> Orders
+        </a>
+        <a class="nav-link <%= "reviews".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/reviews">
+            <i class="fas fa-star"></i> Reviews
         </a>
         <a class="nav-link <%= "reports".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_reports.jsp">
             <i class="fas fa-file-alt"></i> Reports

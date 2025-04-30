@@ -47,12 +47,12 @@
                     <%= staff.getRole() %>
                 </span></td>
                 <td>
-                    <button class="btn btn-sm btn-info action-btn" 
+                    <button class="btn btn-sm btn-info action-btn"
                             onclick="editStaff('<%= staff.getId() %>', '<%= staff.getUsername() %>', '<%= staff.getEmail() %>', '<%= staff.getRole() %>')"
                             data-bs-toggle="modal" data-bs-target="#editStaffModal">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger action-btn" 
+                    <button class="btn btn-sm btn-danger action-btn"
                             onclick="archiveStaff(<%= staff.getId() %>)">
                         <i class="fas fa-archive"></i>
                     </button>
@@ -82,30 +82,23 @@
             <div class="modal-body">
                 <form id="addStaffForm" action="${pageContext.request.contextPath}/admin/staff" method="POST">
                     <input type="hidden" name="action" value="add">
-                    
+                    <input type="hidden" name="role" value="staff">
+
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Role</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="role" id="roleStaff" value="staff" checked>
-                            <label class="form-check-label" for="roleStaff">Staff</label>
-                        </div>
-                    </div>
-                
+
                     <div class="modal-footer px-0 pb-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Add Staff</button>
@@ -128,25 +121,18 @@
                 <form id="editStaffForm" action="${pageContext.request.contextPath}/admin/staff" method="POST">
                     <input type="hidden" name="action" value="edit">
                     <input type="hidden" id="editStaffId" name="id">
-                    
+                    <input type="hidden" name="role" value="staff">
+
                     <div class="mb-3">
                         <label for="editUsername" class="form-label">Username</label>
                         <input type="text" class="form-control" id="editUsername" name="username" required>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="editEmail" class="form-label">Email</label>
                         <input type="email" class="form-control" id="editEmail" name="email" required>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Role</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="role" value="staff" id="editRoleStaff">
-                            <label class="form-check-label" for="editRoleStaff">Staff</label>
-                        </div>
-                    </div>
-                
+
                     <div class="modal-footer px-0 pb-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Update Staff</button>
