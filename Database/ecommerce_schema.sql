@@ -44,6 +44,7 @@ CREATE TABLE Categories (
 
 CREATE TABLE Products (
 	id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	image_path VARCHAR(255),
 	name VARCHAR(255) NOT NULL,
 	description VARCHAR(255),
 	price DECIMAL(10,2) NOT NULL CHECK (price >= 0),

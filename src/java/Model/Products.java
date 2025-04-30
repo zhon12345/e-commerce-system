@@ -27,183 +27,194 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author zhon12345
+ * @author kyanl
  */
 @Entity
 @Table(name = "PRODUCTS")
 @XmlRootElement
 @NamedQueries({
-	@NamedQuery(name = "Products.findAll", query = "SELECT p FROM Products p"),
-	@NamedQuery(name = "Products.findById", query = "SELECT p FROM Products p WHERE p.id = :id"),
-	@NamedQuery(name = "Products.findByName", query = "SELECT p FROM Products p WHERE p.name = :name"),
-	@NamedQuery(name = "Products.findByDescription", query = "SELECT p FROM Products p WHERE p.description = :description"),
-	@NamedQuery(name = "Products.findByPrice", query = "SELECT p FROM Products p WHERE p.price = :price"),
-	@NamedQuery(name = "Products.findByStock", query = "SELECT p FROM Products p WHERE p.stock = :stock"),
-	@NamedQuery(name = "Products.findByCreatedAt", query = "SELECT p FROM Products p WHERE p.createdAt = :createdAt"),
-	@NamedQuery(name = "Products.findByIsArchived", query = "SELECT p FROM Products p WHERE p.isArchived = :isArchived")})
+    @NamedQuery(name = "Products.findAll", query = "SELECT p FROM Products p"),
+    @NamedQuery(name = "Products.findById", query = "SELECT p FROM Products p WHERE p.id = :id"),
+    @NamedQuery(name = "Products.findByImagePath", query = "SELECT p FROM Products p WHERE p.imagePath = :imagePath"),
+    @NamedQuery(name = "Products.findByName", query = "SELECT p FROM Products p WHERE p.name = :name"),
+    @NamedQuery(name = "Products.findByDescription", query = "SELECT p FROM Products p WHERE p.description = :description"),
+    @NamedQuery(name = "Products.findByPrice", query = "SELECT p FROM Products p WHERE p.price = :price"),
+    @NamedQuery(name = "Products.findByStock", query = "SELECT p FROM Products p WHERE p.stock = :stock"),
+    @NamedQuery(name = "Products.findByCreatedAt", query = "SELECT p FROM Products p WHERE p.createdAt = :createdAt"),
+    @NamedQuery(name = "Products.findByIsArchived", query = "SELECT p FROM Products p WHERE p.isArchived = :isArchived")})
 public class Products implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	@Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Basic(optional = false)
-  @Column(name = "ID")
-	private Integer id;
-	@Basic(optional = false)
-  @Column(name = "NAME")
-	private String name;
-	@Column(name = "DESCRIPTION")
-	private String description;
-	// @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-	@Basic(optional = false)
-  @Column(name = "PRICE")
-	private BigDecimal price;
-	@Basic(optional = false)
-  @Column(name = "STOCK")
-	private int stock;
-	@Column(name = "CREATED_AT", insertable = false, updatable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
-	@Column(name = "IS_ARCHIVED", insertable = false)
-	private Boolean isArchived;
-	@OneToMany(mappedBy = "productId")
-	private List<Reviews> reviewsList;
-	@JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
-  @ManyToOne
-	private Categories categoryId;
-	@OneToMany(mappedBy = "productId")
-	private List<Orderdetails> orderdetailsList;
-	@OneToMany(mappedBy = "productId")
-	private List<Cart> cartList;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "IMAGE_PATH")
+    private String imagePath;
+    @Basic(optional = false)
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "DESCRIPTION")
+    private String description;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @Column(name = "PRICE")
+    private BigDecimal price;
+    @Basic(optional = false)
+    @Column(name = "STOCK")
+    private int stock;
+    @Column(name = "CREATED_AT")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @Column(name = "IS_ARCHIVED")
+    private Boolean isArchived;
+    @OneToMany(mappedBy = "productId")
+    private List<Reviews> reviewsList;
+    @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private Categories categoryId;
+    @OneToMany(mappedBy = "productId")
+    private List<Orderdetails> orderdetailsList;
+    @OneToMany(mappedBy = "productId")
+    private List<Cart> cartList;
 
-	public Products() {
-	}
+    public Products() {
+    }
 
-	public Products(Integer id) {
-		this.id = id;
-	}
+    public Products(Integer id) {
+        this.id = id;
+    }
 
-	public Products(Integer id, String name, BigDecimal price, int stock) {
-		this.id = id;
-		this.name = name;
-		this.price = price;
-		this.stock = stock;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
+    public Products(String name, String description, BigDecimal price, int stock) {
+        this.name = name;
 		this.description = description;
-	}
+        this.price = price;
+        this.stock = stock;
+    }
 
-	public BigDecimal getPrice() {
-		return price;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public int getStock() {
-		return stock;
-	}
+    public String getImagePath() {
+        return imagePath;
+    }
 
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Boolean getIsArchived() {
-		return isArchived;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setIsArchived(Boolean isArchived) {
-		this.isArchived = isArchived;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@XmlTransient
-	public List<Reviews> getReviewsList() {
-		return reviewsList;
-	}
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-	public void setReviewsList(List<Reviews> reviewsList) {
-		this.reviewsList = reviewsList;
-	}
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-	public Categories getCategoryId() {
-		return categoryId;
-	}
+    public int getStock() {
+        return stock;
+    }
 
-	public void setCategoryId(Categories categoryId) {
-		this.categoryId = categoryId;
-	}
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
 
-	@XmlTransient
-	public List<Orderdetails> getOrderdetailsList() {
-		return orderdetailsList;
-	}
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setOrderdetailsList(List<Orderdetails> orderdetailsList) {
-		this.orderdetailsList = orderdetailsList;
-	}
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	@XmlTransient
-	public List<Cart> getCartList() {
-		return cartList;
-	}
+    public Boolean getIsArchived() {
+        return isArchived;
+    }
 
-	public void setCartList(List<Cart> cartList) {
-		this.cartList = cartList;
-	}
+    public void setIsArchived(Boolean isArchived) {
+        this.isArchived = isArchived;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash += (id != null ? id.hashCode() : 0);
-		return hash;
-	}
+    @XmlTransient
+    public List<Reviews> getReviewsList() {
+        return reviewsList;
+    }
 
-	@Override
-	public boolean equals(Object object) {
-		// TODO: Warning - this method won't work in the case the id fields are not set
-		if (!(object instanceof Products)) {
-			return false;
-		}
-		Products other = (Products) object;
-		if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-			return false;
-		}
-		return true;
-	}
+    public void setReviewsList(List<Reviews> reviewsList) {
+        this.reviewsList = reviewsList;
+    }
 
-	@Override
-	public String toString() {
-		return "Model.Products[ id=" + id + " ]";
-	}
+    public Categories getCategoryId() {
+        return categoryId;
+    }
 
+    public void setCategoryId(Categories categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    @XmlTransient
+    public List<Orderdetails> getOrderdetailsList() {
+        return orderdetailsList;
+    }
+
+    public void setOrderdetailsList(List<Orderdetails> orderdetailsList) {
+        this.orderdetailsList = orderdetailsList;
+    }
+
+    @XmlTransient
+    public List<Cart> getCartList() {
+        return cartList;
+    }
+
+    public void setCartList(List<Cart> cartList) {
+        this.cartList = cartList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Products)) {
+            return false;
+        }
+        Products other = (Products) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Model.Products[ id=" + id + " ]";
+    }
+    
 }

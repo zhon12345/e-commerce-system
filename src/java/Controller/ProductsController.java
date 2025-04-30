@@ -5,6 +5,7 @@ import Model.Reviews;
 import Model.Categories;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -39,7 +40,6 @@ public class ProductsController extends HttpServlet {
 				try {
 					selectedRating = Integer.parseInt(ratingParam);
 				} catch (NumberFormatException e) {
-					// Handle invalid rating parameter (e.g., log error)
 				}
 			}
 
@@ -50,6 +50,11 @@ public class ProductsController extends HttpServlet {
 			cq.select(product).distinct(true);
 
 			List<Predicate> predicates = new ArrayList<>();
+
+			 // Use a TypedQuery to filter by isArchived
+			TypedQuery<Products> query = em.createNamedQuery("Products.findByIsArchived", Products.class);
+			query.setParameter("isArchived", false);
+			List<Products> productsList = query.getResultList();
 
 			if (minPrice != null || maxPrice != null) {
 				Path<BigDecimal> pricePath = product.get("price");
@@ -69,7 +74,7 @@ public class ProductsController extends HttpServlet {
 				Subquery<Double> avgSubquery = cq.subquery(Double.class);
 				Root<Reviews> reviewRoot = avgSubquery.from(Reviews.class);
 				avgSubquery.select(cb.avg(reviewRoot.get("rating")));
-				avgSubquery.where(cb.equal(reviewRoot.get("productId"), product));
+				avgSubquery.where(cb.equal(reviewRoot.get("productId").get("id"), product.get("id")));
 				predicates.add(cb.ge(avgSubquery, selectedRating.doubleValue()));
 			}
 
@@ -98,7 +103,6 @@ public class ProductsController extends HttpServlet {
 
 			cq.orderBy(cb.asc(product.get("name")));
 
-			List<Products> productsList = em.createQuery(cq).getResultList();
 			List<Categories> categoriesList = em.createNamedQuery("Categories.findAll", Categories.class)
 					.getResultList();
 
@@ -118,7 +122,7 @@ public class ProductsController extends HttpServlet {
 			req.getRequestDispatcher("/products.jsp").forward(req, res);
 
 		} catch (Exception e) {
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			throw new ServletException(e);
 		}
 	}
 
