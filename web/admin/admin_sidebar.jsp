@@ -25,13 +25,13 @@
         <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_users.jsp">
             <i class="fas fa-users-cog"></i> Users
         </a>
-        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/FetchCategories">
+        <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/admin/products">
             <i class="fas fa-box-open"></i> Products
         </a>
         <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/promotions">
             <i class="fas fa-tags"></i> Promotions
         </a>
-        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_orders.jsp">
+        <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/orders">
             <i class="fas fa-receipt"></i> Orders
         </a>
         <% if (isManager) { %>

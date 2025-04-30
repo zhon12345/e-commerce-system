@@ -78,7 +78,7 @@ public class LoginController extends HttpServlet {
 				session.setAttribute("user", user);
 
 				if (!user.getRole().equals("customer")) {
-					res.sendRedirect(req.getContextPath() + "/admin/admin_dashboard.jsp");
+					res.sendRedirect(req.getContextPath() + "/admin/dashboard");
 					return;
 				}
 

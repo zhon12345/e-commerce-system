@@ -15,7 +15,7 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.text.SimpleDateFormat;
 
-public class AdminDashboard extends HttpServlet {
+public class DashboardController extends HttpServlet {
     
     @PersistenceContext
     private EntityManager em;
