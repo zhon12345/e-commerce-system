@@ -225,6 +225,7 @@ public class CheckoutController extends HttpServlet {
 			order.setAddressId(address);
 			order.setPaymentMethod(paymentMethod);
 			order.setCardId(card);
+			order.setStatus("packaging");
 			order.setTotalPrice(BigDecimal.valueOf(total));
 			order.setDeliveryCost(BigDecimal.valueOf(shipping));
 			order.setPromoId(appliedPromo);
