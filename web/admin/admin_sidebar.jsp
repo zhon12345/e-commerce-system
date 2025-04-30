@@ -10,7 +10,7 @@
 
     // Check if the logged-in user is a manager
     Users user = (Users) session.getAttribute("user");
-    boolean isManager = false; 
+    boolean isManager = false;
     if (user != null && user.getRole() != null) {
         isManager = user.getRole().equalsIgnoreCase("manager");
     }
@@ -18,7 +18,7 @@
 <div class="sidebar mb-3">
     <h3 class="d-flex align-items-center gap-2"><i class="fas fa-tachometer-alt"></i> Menu</h3>
     <nav class="nav nav-pills flex-column" id="admin-sidebar-nav">
-        <a class="nav-link <%= "dashboard".equals(activePage) ? "active" : "" %>" 
+        <a class="nav-link <%= "dashboard".equals(activePage) ? "active" : "" %>"
            href="${pageContext.request.contextPath}/admin/dashboard">
             <i class="fas fa-chart-line"></i> Dashboard
         </a>
@@ -28,8 +28,7 @@
         <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/FetchCategories">
             <i class="fas fa-box-open"></i> Products
         </a>
-        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" 
-           href="${pageContext.request.contextPath}/admin/managepromo">
+        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/promotions">
             <i class="fas fa-tags"></i> Promotions
         </a>
         <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_orders.jsp">

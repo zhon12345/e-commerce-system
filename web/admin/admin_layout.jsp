@@ -1,5 +1,5 @@
 <%-- /WEB-INF/views/admin/admin_layout.jsp --%>
-<%@ page import="java.util.List, Model.Products, Model.Categories,Model.Users"%>
+<%@ page import="java.util.List, Model.Products, Model.Categories, Model.Users"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%-- <%@ page import="Model.Staff" %> --%> <%-- Needed if checking roles directly in layout --%>
 <!DOCTYPE html>
@@ -114,21 +114,21 @@
           <div class="modal-body">
             <form id="addProductForm" action="AddProducts" method="post" enctype="multipart/form-data" >
               <div class="mb-3"> <label for="addProductName" class="form-label">Product Name</label> <input type="text" class="form-control" id="addProductName" name="addProductName" required> </div>
-              
-              
+
+
               <div class="mb-3"> <label for="addProductCategory" class="form-label">Category</label> </div>
-                  <!--<input type="text" class="form-control" id="addProductCategory" name="addProductCategory">--> 
+                  <!--<input type="text" class="form-control" id="addProductCategory" name="addProductCategory">-->
               <select class="form-select form-select-lg mb-3" id="addProductCategory" name="addProductCategory">
-                <%                                     
+                <%
                     List<Categories> categories = (List<Categories>) request.getAttribute("categories");
                         if (categories != null && !categories.isEmpty()) {
                                 for (Categories category : categories) {
                                         if (category.getId() == 1) {
                 %>
                                             <option value="<%= category.getId() %>" selected><%= category.getName() %></option>
-                <% 
+                <%
                                         } else {
-                %>                   
+                %>
                         <option value="<%= category.getId() %>"><%= category.getName() %></option>
                 <%
                                         }
@@ -140,8 +140,8 @@
                         }
                 %>
               </select>
-              
-              
+
+
               <div class="mb-3"> <label for="addProductPrice" class="form-label">Price (RM)</label> <input type="number" step="0.01" min="0" class="form-control" id="addProductPrice" name="addProductPrice"required> </div>
               <div class="mb-3"> <label for="addProductStock" class="form-label">Stock Quantity</label> <input type="number" min="0" class="form-control" id="addProductStock" name="addProductStock" required> </div>
               <div class="mb-3"> <label for="addProductDescription" class="form-label">Description</label> <textarea class="form-control" id="addProductDescription" name="addProductDescription" rows="3"></textarea> </div>
