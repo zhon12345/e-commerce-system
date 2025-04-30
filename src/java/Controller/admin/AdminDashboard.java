@@ -1,8 +1,6 @@
 package Controller.admin;
 
-import Model.Orders;
-import Model.Products;
-import Model.Users;
+import Model.*;
 import java.io.IOException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -12,6 +10,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.UserTransaction;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.text.SimpleDateFormat;
 
 public class AdminDashboard extends HttpServlet {
     
@@ -25,9 +27,12 @@ public class AdminDashboard extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            // Check if EntityManager and UserTransaction are available
-            if (em == null || utx == null) {
-                throw new ServletException("Database connection not available");
+            String action = request.getParameter("action");
+            Users user = (Users) request.getSession().getAttribute("user");
+            
+            if ("generate".equals(action)) {
+                generateReport(request, response);
+                return;
             }
             
             utx.begin();
@@ -47,17 +52,30 @@ public class AdminDashboard extends HttpServlet {
                 .getSingleResult()
                 .intValue();
             
-            // Get total orders
+            // Get total active orders
             int totalOrders = em.createQuery(
                 "SELECT COUNT(o) FROM Orders o WHERE o.status IN ?1", Long.class)
-                .setParameter(1, java.util.Arrays.asList("packaging", "shipping", "delivery"))
+                .setParameter(1, Arrays.asList("packaging", "shipping", "delivery"))
                 .getSingleResult()
                 .intValue();
+
+            // Calculate total revenue
+            BigDecimal totalRevenue = (BigDecimal) em.createQuery(
+                "SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o")
+                .getSingleResult();
+            request.setAttribute("totalRevenue", totalRevenue);
+                
+            // Get recent reports
+            List<Reports> recentReports = em.createQuery(
+                "SELECT r FROM Reports r ORDER BY r.generatedDate DESC", Reports.class)
+                .setMaxResults(5)
+                .getResultList();
                 
             // Set attributes
             request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("totalProducts", totalProducts);
             request.setAttribute("totalOrders", totalOrders);
+            request.setAttribute("recentReports", recentReports);
             
             utx.commit();
             
@@ -77,5 +95,104 @@ public class AdminDashboard extends HttpServlet {
             request.setAttribute("error", "Error loading dashboard data: " + e.getMessage());
             request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
         }
+    }
+    
+    private void generateReport(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        try {
+            utx.begin();
+            Users user = (Users) request.getSession().getAttribute("user");
+
+            // Get and parse dates
+            String startDateStr = request.getParameter("startDate");
+            String endDateStr = request.getParameter("endDate");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = dateFormat.parse(startDateStr);
+            Date endDate = dateFormat.parse(endDateStr);
+
+            // Query orders
+            List<Orders> orders = em.createQuery(
+                "SELECT o FROM Orders o " +
+                "LEFT JOIN FETCH o.orderdetailsList od " +
+                "WHERE o.orderDate BETWEEN :startDate AND :endDate", Orders.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
+
+            // Calculate metrics
+            BigDecimal totalRevenue = BigDecimal.ZERO;
+            BigDecimal totalDiscounts = BigDecimal.ZERO;
+            Set<Integer> uniqueCustomers = new HashSet<>();
+            int totalProducts = 0;
+
+            for (Orders order : orders) {
+                totalRevenue = totalRevenue.add(order.getTotalPrice());
+                if (order.getDiscount() != null) {
+                    totalDiscounts = totalDiscounts.add(order.getDiscount());
+                }
+                uniqueCustomers.add(order.getUserId().getId());
+                
+                for (Orderdetails detail : order.getOrderdetailsList()) {
+                    totalProducts += detail.getQuantity();
+                }
+            }
+
+            BigDecimal averageOrderValue = orders.isEmpty() ? BigDecimal.ZERO :
+                totalRevenue.divide(new BigDecimal(orders.size()), 2, RoundingMode.HALF_UP);
+
+            // Create and save report
+            Reports report = new Reports();
+            report.setReportType("Sales Report");
+            report.setGeneratedDate(new Date());
+            report.setGeneratedById(user);
+            report.setDetails(formatReportDetails(
+                startDate, endDate, orders.size(),
+                totalRevenue, averageOrderValue,
+                totalDiscounts, totalProducts,
+                uniqueCustomers.size()
+            ));
+
+            em.persist(report);
+            utx.commit();
+            
+            request.getSession().setAttribute("success", "Report generated successfully!");
+            
+        } catch (Exception e) {
+            handleError(e, request, response);
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+    }
+    
+    private String formatReportDetails(Date startDate, Date endDate, int totalOrders,
+            BigDecimal totalRevenue, BigDecimal averageOrderValue,
+            BigDecimal totalDiscounts, int totalProducts, int uniqueCustomers) {
+        return String.format(
+            "Period: %s to %s\n" +
+            "Total Orders: %d\n" +
+            "Total Revenue: RM %.2f\n" +
+            "Average Order Value: RM %.2f\n" +
+            "Total Discounts: RM %.2f\n" +
+            "Total Products Sold: %d\n" +
+            "Unique Customers: %d",
+            new SimpleDateFormat("yyyy-MM-dd").format(startDate),
+            new SimpleDateFormat("yyyy-MM-dd").format(endDate),
+            totalOrders, totalRevenue, averageOrderValue,
+            totalDiscounts, totalProducts, uniqueCustomers
+        );
+    }
+    
+    private void handleError(Exception e, HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        try {
+            if (utx != null) {
+                utx.rollback();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        e.printStackTrace();
+        request.setAttribute("error", "Error: " + e.getMessage());
+        request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
     }
 }
