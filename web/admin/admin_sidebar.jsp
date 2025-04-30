@@ -27,7 +27,7 @@
         <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_products.jsp">
             <i class="fas fa-box-open"></i> Products
         </a>
-        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_promotions.jsp">
+        <a class="nav-link <%= "promotions".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/promotions">
             <i class="fas fa-tags"></i> Promotions
         </a>
         <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/orders">
