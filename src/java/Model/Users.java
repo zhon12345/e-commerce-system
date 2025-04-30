@@ -81,8 +81,6 @@ public class Users implements Serializable {
 	@OneToMany(mappedBy = "userId")
 	private List<Addresses> addressesList;
 	@OneToMany(mappedBy = "userId")
-	private List<Reply> replyList;
-	@OneToMany(mappedBy = "userId")
 	private List<Cardinfo> cardinfoList;
 	@OneToMany(mappedBy = "userId")
 	private List<Cart> cartList;
@@ -94,7 +92,8 @@ public class Users implements Serializable {
 		this.id = id;
 	}
 
-	public Users(String username, String email, String password, String role) {
+	public Users(Integer id, String username, String email, String password, String role) {
+		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -215,15 +214,6 @@ public class Users implements Serializable {
 
 	public void setAddressesList(List<Addresses> addressesList) {
 		this.addressesList = addressesList;
-	}
-
-	@XmlTransient
-	public List<Reply> getReplyList() {
-		return replyList;
-	}
-
-	public void setReplyList(List<Reply> replyList) {
-		this.replyList = replyList;
 	}
 
 	@XmlTransient
