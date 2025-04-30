@@ -4,6 +4,7 @@
         <servlet-name>RegisterController</servlet-name>
         <servlet-class>Controller.RegisterController</servlet-class>
     </servlet>
+
     <servlet>
         <servlet-name>LoginController</servlet-name>
         <servlet-class>Controller.LoginController</servlet-class>
@@ -35,6 +36,10 @@
     <servlet>
         <servlet-name>CartController</servlet-name>
         <servlet-class>Controller.CartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminDashboard</servlet-name>
+        <servlet-class>Controller.admin.AdminDashboard</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CheckoutController</servlet-name>
@@ -71,6 +76,10 @@
     <servlet-mapping>
         <servlet-name>StaffController</servlet-name>
         <url-pattern>/admin/staff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboard</servlet-name>
+        <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterController</servlet-name>
