@@ -42,11 +42,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     font-size: 24px;
 }
 
-.filter {
+#statusForm {
     display: flex;
 }
 
-.filter select {
+#statusForm select {
     padding: 8px 12px;
     border-radius: 8px;
     border: 1px solid #ddd;

@@ -39,6 +39,14 @@
 		<div class="content">
 			<div class="header-status">
 				<h2>My Orders</h2>
+				<form action="${pageContext.request.contextPath}/user/history" method="GET" id="statusForm">
+					<select name="status" onchange="submitForm(this.value)">
+						<option value="" ${empty status ? 'selected' : ''}>All Status</option>
+						<option value="packaging" ${status eq 'packaging' ? 'selected' : ''}>Packaging</option>
+						<option value="shipping" ${status eq 'shipping' ? 'selected' : ''}>Shipping</option>
+						<option value="delivery" ${status eq 'delivery' ? 'selected' : ''}>Delivered</option>
+					</select>
+				</form>
 			</div>
 
 			<%
@@ -58,6 +66,14 @@
 					SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
 					for (Orders order : orderList) {
 						List<Orderdetails> detailsList = orderDetailsMap.get(order.getId());
+						String badge = "";
+						if ("packaging".equals(order.getStatus())) {
+							badge = "cancelled";
+						} else if ("shipping".equals(order.getStatus())) {
+							badge = "pending";
+						} else if ("delivery".equals(order.getStatus())) {
+							badge = "completed";
+						}
 			%>
 			<div class="card">
 				<div class="header">
@@ -65,7 +81,7 @@
 						<span class="id">Order #<%= order.getId() %></span>
 						<span class="date"> • <%= dateFormat.format(order.getOrderDate()) %></span>
 					</div>
-					<span class="status status-completed">Completed</span>
+					<span class="status status-<%= badge %>"><%= order.getStatus() %></span>
 				</div>
 
 				<%
@@ -116,6 +132,15 @@
 			});
 			<% session.removeAttribute("orderSuccess"); %>
 		<% } %>
+
+		function submitForm(status) {
+			const form = document.getElementById('statusForm');
+			if (status === '') {
+				const statusInput = form.querySelector('select[name="status"]');
+				statusInput.removeAttribute('name');
+			}
+			form.submit();
+		}
 	</script>
 </body>
 <footer>
