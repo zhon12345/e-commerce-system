@@ -14,6 +14,7 @@ import Model.Orders;
 import Model.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,11 +50,22 @@ public class HistoryController extends HttpServlet {
 		}
 
 		try {
-			List<Orders> orders = em.createQuery(
-					"SELECT o FROM Orders o WHERE o.userId.id = :userId ORDER BY o.orderDate DESC",
-					Orders.class)
-					.setParameter("userId", user.getId())
-					.getResultList();
+			String status = req.getParameter("status");
+
+			String jpql = "SELECT o FROM Orders o WHERE o.userId.id = :userId";
+			if (status != null) {
+				jpql += " AND o.status = :status";
+			}
+			jpql += " ORDER BY o.orderDate DESC";
+
+			TypedQuery<Orders> query = em.createQuery(jpql, Orders.class)
+					.setParameter("userId", user.getId());
+
+			if (status != null) {
+				query.setParameter("status", status);
+			}
+
+			List<Orders> orders = query.getResultList();
 
 			Map<Integer, List<Orderdetails>> orderDetailsMap = new HashMap<>();
 
@@ -67,6 +79,7 @@ public class HistoryController extends HttpServlet {
 				orderDetailsMap.put(order.getId(), orderDetails);
 			}
 
+			req.setAttribute("status", status);
 			req.setAttribute("orderList", orders);
 			req.setAttribute("orderDetailsMap", orderDetailsMap);
 			req.getRequestDispatcher("/user/history.jsp").forward(req, res);
