@@ -8,7 +8,7 @@
     // Check if the logged-in user is a manager
     Users user = (Users) session.getAttribute("user");
     if (user == null || !"manager".equalsIgnoreCase(user.getRole())) {
-        response.sendRedirect(request.getContextPath() + "/admin/admin_dashboard.jsp");
+        response.sendRedirect(request.getContextPath() + "/admin/dasboard");
         return;
     }
 %>

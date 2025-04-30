@@ -37,7 +37,7 @@
     <%-- <jsp:include page="/WEB-INF/views/components/navbar.jsp" /> --%>
     <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 shadow-sm">
       <div class="container-fluid">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/admin_dashboard.jsp"> <%-- Link back to dashboard --%>
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/dashboard"> <%-- Changed to point to servlet --%>
             <i class="fas fa-shield-alt me-2"></i>Admin Panel
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,21 +114,21 @@
           <div class="modal-body">
             <form id="addProductForm" action="AddProducts" method="post" enctype="multipart/form-data" >
               <div class="mb-3"> <label for="addProductName" class="form-label">Product Name</label> <input type="text" class="form-control" id="addProductName" name="addProductName" required> </div>
-              
-              
+
+
               <div class="mb-3"> <label for="addProductCategory" class="form-label">Category</label> </div>
-                  <!--<input type="text" class="form-control" id="addProductCategory" name="addProductCategory">--> 
+                  <!--<input type="text" class="form-control" id="addProductCategory" name="addProductCategory">-->
               <select class="form-select form-select-lg mb-3" id="addProductCategory" name="addProductCategory">
-                <%                                     
+                <%
                     List<Categories> categories = (List<Categories>) request.getAttribute("categories");
                         if (categories != null && !categories.isEmpty()) {
                                 for (Categories category : categories) {
                                         if (category.getId() == 1) {
                 %>
                                             <option value="<%= category.getId() %>" selected><%= category.getName() %></option>
-                <% 
+                <%
                                         } else {
-                %>                   
+                %>
                         <option value="<%= category.getId() %>"><%= category.getName() %></option>
                 <%
                                         }
@@ -140,8 +140,8 @@
                         }
                 %>
               </select>
-              
-              
+
+
               <div class="mb-3"> <label for="addProductPrice" class="form-label">Price (RM)</label> <input type="number" step="0.01" min="0" class="form-control" id="addProductPrice" name="addProductPrice"required> </div>
               <div class="mb-3"> <label for="addProductStock" class="form-label">Stock Quantity</label> <input type="number" min="0" class="form-control" id="addProductStock" name="addProductStock" required> </div>
               <div class="mb-3"> <label for="addProductDescription" class="form-label">Description</label> <textarea class="form-control" id="addProductDescription" name="addProductDescription" rows="3"></textarea> </div>

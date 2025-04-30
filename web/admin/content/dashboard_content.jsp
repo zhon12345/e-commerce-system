@@ -1,69 +1,200 @@
-<%-- /admin/content/dashboard_content.jsp --%>
-<%-- This file contains only the content specific to the Dashboard page --%>
+<%@ page import="java.util.List, Model.*, java.text.*, java.math.BigDecimal" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
-<h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
-<p class="text-body-secondary">Overview of the system.</p>
+<%-- Get values from request with null checks --%>
+<%
+    Integer totalUsers = (Integer) request.getAttribute("totalUsers");
+    Integer totalProducts = (Integer) request.getAttribute("totalProducts");
+    Integer totalOrders = (Integer) request.getAttribute("totalOrders");
+    BigDecimal totalRevenue = (BigDecimal) request.getAttribute("totalRevenue");
+    List<Reports> recentReports = (List<Reports>) request.getAttribute("recentReports");
+    DecimalFormat df = new DecimalFormat("#,##0.00");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+%>
 
-<div class="row g-3 mb-4">
+<%-- Display messages --%>
+<% if (request.getAttribute("error") != null) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= request.getAttribute("error") %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<% } %>
+
+<% if (session.getAttribute("success") != null) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= session.getAttribute("success") %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <% session.removeAttribute("success"); %>
+<% } %>
+
+<h2 class="mb-3 border-bottom pb-2">
+    <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+</h2>
+<p class="text-muted mb-4">Overview of the system statistics</p>
+
+<%-- Statistics Cards --%>
+<div class="row g-4 mb-4">
+    <%-- Users Card --%>
     <div class="col-xl-3 col-md-6">
-         <div class="card bg-body border-start border-primary border-4 h-100">
+        <div class="card h-100 border-start border-primary border-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="card-title text-body-secondary fw-normal mb-1">Total Users</h5>
-                        <p class="card-text fs-4 fw-bold mb-0 text-body" id="total-users">Loading...</p>
+                        <h6 class="text-muted mb-2">Total Customers</h6>
+                        <h2 class="mb-0 fw-bold"><%= totalUsers != null ? totalUsers : 0 %></h2>
                     </div>
-                    <i class="fas fa-users card-icon text-primary"></i>
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-     <div class="col-xl-3 col-md-6">
-        <div class="card bg-body border-start border-success border-4 h-100">
+
+    <%-- Products Card --%>
+    <div class="col-xl-3 col-md-6">
+        <div class="card h-100 border-start border-success border-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="card-title text-body-secondary fw-normal mb-1">Total Products</h5>
-                        <p class="card-text fs-4 fw-bold mb-0 text-body" id="total-products">Loading...</p>
+                        <h6 class="text-muted mb-2">Total Products</h6>
+                        <h2 class="mb-0 fw-bold"><%= totalProducts != null ? totalProducts : 0 %></h2>
                     </div>
-                    <i class="fas fa-box-open card-icon text-success"></i>
+                    <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-box-open fa-2x text-success"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-     <div class="col-xl-3 col-md-6">
-        <div class="card bg-body border-start border-info border-4 h-100">
+
+    <%-- Orders Card --%>
+    <div class="col-xl-3 col-md-6">
+        <div class="card h-100 border-start border-info border-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="card-title text-body-secondary fw-normal mb-1">Total Orders</h5>
-                        <p class="card-text fs-4 fw-bold mb-0 text-body" id="total-orders">Loading...</p>
+                        <h6 class="text-muted mb-2">Active Orders</h6>
+                        <h2 class="mb-0 fw-bold"><%= totalOrders != null ? totalOrders : 0 %></h2>
                     </div>
-                    <i class="fas fa-receipt card-icon text-info"></i>
+                    <div class="bg-info bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-shopping-cart fa-2x text-info"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-     <div class="col-xl-3 col-md-6">
-        <div class="card bg-body border-start border-warning border-4 h-100">
+
+    <%-- Revenue Card --%>
+    <div class="col-xl-3 col-md-6">
+        <div class="card h-100 border-start border-warning border-4">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="card-title text-body-secondary fw-normal mb-1">Sales (Month)</h5>
-                        <p class="card-text fs-4 fw-bold mb-0 text-body" id="total-sales">Loading...</p>
+                        <h6 class="text-muted mb-2">Total Revenue</h6>
+                        <h2 class="mb-0 fw-bold">
+                            RM <%= totalRevenue != null ? df.format(totalRevenue) : "0.00" %>
+                        </h2>
                     </div>
-                    <i class="fas fa-dollar-sign card-icon text-warning"></i>
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+                        <i class="fas fa-dollar-sign fa-2x text-warning"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div><h3 class="mt-4 mb-3 text-body">Sales Statistics (Last 7 Days)</h3>
- <div class="chart-container bg-body-secondary p-3 rounded">
-    <canvas id="salesChart"></canvas>
 </div>
 
-<%-- Note: The corresponding JavaScript (fetchSalesChartData, fetchSummaryData)
-     needs to be included in the main layout (admin_layout.jsp)
-     or specifically on pages that require it.
-     Ensure the JS checks if the required elements (e.g., #salesChart) exist before running.
---%>
+<%-- Report Generation Section --%>
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Sales Reports</h5>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#reportForm">
+                    <i class="fas fa-plus me-1"></i>Generate New Report
+                </button>
+            </div>
+            <div class="collapse" id="reportForm">
+                <div class="card-body border-bottom">
+                    <form class="row g-3" method="GET" action="${pageContext.request.contextPath}/admin/dashboard">
+                        <input type="hidden" name="action" value="generate">
+                        <div class="col-md-4">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" name="startDate" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">End Date</label>
+                            <input type="date" class="form-control" name="endDate" required>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-file-alt me-2"></i>Generate Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Generated Date</th>
+                                <th>Type</th>
+                                <th>Generated By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (recentReports != null && !recentReports.isEmpty()) {
+                                for (Reports report : recentReports) { %>
+                            <tr>
+                                <td><%= sdf.format(report.getGeneratedDate()) %></td>
+                                <td><%= report.getReportType() %></td>
+                                <td><%= report.getGeneratedById().getUsername() %></td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" 
+                                            onclick="showReport(`<%= report.getDetails().replace("`", "\\`") %>`)"
+                                            title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <% }
+                            } else { %>
+                            <tr>
+                                <td colspan="4" class="text-center">No reports available</td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Details Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Report Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="reportDetails" class="bg-light p-3 rounded"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showReport(details) {
+    document.getElementById('reportDetails').textContent = details;
+    new bootstrap.Modal(document.getElementById('reportModal')).show();
+}
+</script>
+

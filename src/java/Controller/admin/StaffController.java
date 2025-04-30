@@ -42,7 +42,7 @@ public class StaffController extends HttpServlet {
             request.getRequestDispatcher("/admin/admin_staff.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin/admin_dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
         }
     }
 
