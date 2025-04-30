@@ -15,73 +15,70 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.text.SimpleDateFormat;
 
-public class DashboardController extends HttpServlet {
-
+public class AdminDashboard extends HttpServlet {
+    
     @PersistenceContext
     private EntityManager em;
-
+    
     @Resource
     private UserTransaction utx;
-
+    
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
             String action = request.getParameter("action");
             Users user = (Users) request.getSession().getAttribute("user");
-
+            
             if ("generate".equals(action)) {
                 generateReport(request, response);
                 return;
             }
-
+            
             utx.begin();
-
+            
             // Get total customers
-            int totalUsers = em.createQuery(
-                "SELECT COUNT(u) FROM Users u WHERE u.isArchived = ?1 AND u.role = ?2", Long.class)
-                .setParameter(1, false)
-                .setParameter(2, "customer")
-                .getSingleResult()
-                .intValue();
-
+            int totalUsers = ((Number) em.createQuery(
+                "SELECT COUNT(u) FROM Users u WHERE u.isArchived = :archived AND u.role = :role")
+                .setParameter("archived", false)
+                .setParameter("role", "customer")
+                .getSingleResult()).intValue();
+            
             // Get total products
-            int totalProducts = em.createQuery(
-                "SELECT COUNT(p) FROM Products p WHERE p.isArchived = ?1", Long.class)
-                .setParameter(1, false)
-                .getSingleResult()
-                .intValue();
+            int totalProducts = ((Number) em.createQuery(
+                "SELECT COUNT(p) FROM Products p WHERE p.isArchived = :archived")
+                .setParameter("archived", false)
+                .getSingleResult()).intValue();
+            
+            // Get total active orders - using DISTINCT
+            int totalOrders = ((Number) em.createQuery(
+                "SELECT COUNT(DISTINCT o.id) FROM Orders o WHERE o.status IN :statuses")
+                .setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
+                .getSingleResult()).intValue();
 
-            // Get total active orders
-            int totalOrders = em.createQuery(
-                "SELECT COUNT(o) FROM Orders o WHERE o.status IN ?1", Long.class)
-                .setParameter(1, Arrays.asList("packaging", "shipping", "delivery"))
-                .getSingleResult()
-                .intValue();
-
-            // Calculate total revenue
+            // Calculate total revenue - using DISTINCT and grouping by order ID
             BigDecimal totalRevenue = (BigDecimal) em.createQuery(
-                "SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o")
+                "SELECT COALESCE(SUM(DISTINCT o.totalPrice), 0) FROM Orders o WHERE o.status IN :statuses")
+                .setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
                 .getSingleResult();
-            request.setAttribute("totalRevenue", totalRevenue);
-
+                
             // Get recent reports
             List<Reports> recentReports = em.createQuery(
                 "SELECT r FROM Reports r ORDER BY r.generatedDate DESC", Reports.class)
                 .setMaxResults(5)
                 .getResultList();
-
+                
             // Set attributes
             request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("totalProducts", totalProducts);
             request.setAttribute("totalOrders", totalOrders);
+            request.setAttribute("totalRevenue", totalRevenue);
             request.setAttribute("recentReports", recentReports);
-
+            
             utx.commit();
-
-            // Forward to dashboard
+            
             request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
-
+            
         } catch (Exception e) {
             try {
                 if (utx != null) {
@@ -96,8 +93,8 @@ public class DashboardController extends HttpServlet {
             request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
         }
     }
-
-    private void generateReport(HttpServletRequest request, HttpServletResponse response)
+    
+    private void generateReport(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
             utx.begin();
@@ -112,12 +109,19 @@ public class DashboardController extends HttpServlet {
 
             // Query orders
             List<Orders> orders = em.createQuery(
-                "SELECT o FROM Orders o " +
-                "LEFT JOIN FETCH o.orderdetailsList od " +
+                "SELECT DISTINCT o FROM Orders o " +
                 "WHERE o.orderDate BETWEEN :startDate AND :endDate", Orders.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .getResultList();
+
+            // Then fetch order details separately to avoid multiplication
+            for (Orders order : orders) {
+                em.refresh(order); // Ensure we have fresh data
+                if (order.getOrderdetailsList() != null) {
+                    order.getOrderdetailsList().size(); // Initialize the collection
+                }
+            }
 
             // Calculate metrics
             BigDecimal totalRevenue = BigDecimal.ZERO;
@@ -131,7 +135,7 @@ public class DashboardController extends HttpServlet {
                     totalDiscounts = totalDiscounts.add(order.getDiscount());
                 }
                 uniqueCustomers.add(order.getUserId().getId());
-
+                
                 for (Orderdetails detail : order.getOrderdetailsList()) {
                     totalProducts += detail.getQuantity();
                 }
@@ -154,16 +158,16 @@ public class DashboardController extends HttpServlet {
 
             em.persist(report);
             utx.commit();
-
+            
             request.getSession().setAttribute("success", "Report generated successfully!");
-
+            
         } catch (Exception e) {
             handleError(e, request, response);
         }
-
+        
         response.sendRedirect(request.getContextPath() + "/admin/dashboard");
     }
-
+    
     private String formatReportDetails(Date startDate, Date endDate, int totalOrders,
             BigDecimal totalRevenue, BigDecimal averageOrderValue,
             BigDecimal totalDiscounts, int totalProducts, int uniqueCustomers) {
@@ -181,8 +185,8 @@ public class DashboardController extends HttpServlet {
             totalDiscounts, totalProducts, uniqueCustomers
         );
     }
-
-    private void handleError(Exception e, HttpServletRequest request, HttpServletResponse response)
+    
+    private void handleError(Exception e, HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
             if (utx != null) {
