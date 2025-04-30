@@ -1,4 +1,5 @@
 <%-- /WEB-INF/views/admin/admin_layout.jsp --%>
+<%@ page import="java.util.List, Model.Products, Model.Categories"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%-- <%@ page import="Model.Staff" %> --%> <%-- Needed if checking roles directly in layout --%>
 <!DOCTYPE html>
@@ -9,11 +10,11 @@
     <%-- Dynamically set title based on the specific page --%>
     <title>Admin Panel - ${param.pageTitle != null ? param.pageTitle : 'Dashboard'}</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <link rel="stylesheet" href="/styles/admin_dashboard_styles.css"> <%-- Adjust path as needed --%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/admin_dashboard_styles.css"> <%-- Adjust path as needed --%>
 
     <%--
     <%
