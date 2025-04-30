@@ -76,6 +76,12 @@ public class LoginController extends HttpServlet {
 			if (!hasErrors) {
 				HttpSession session = req.getSession();
 				session.setAttribute("user", user);
+
+				if (!user.getRole().equals("customer")) {
+					res.sendRedirect(req.getContextPath() + "/admin/admin_dashboard.jsp");
+					return;
+				}
+
 				session.setAttribute("loginSuccess", "true");
 
 				String targetPath = validateRedirect(redirect, session);
