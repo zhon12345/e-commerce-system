@@ -18,7 +18,6 @@
 <div class="sidebar mb-3">
     <h3 class="d-flex align-items-center gap-2"><i class="fas fa-tachometer-alt"></i> Menu</h3>
     <nav class="nav nav-pills flex-column" id="admin-sidebar-nav">
-        <%-- Use standard links to other JSP pages --%>
         <a class="nav-link <%= "dashboard".equals(activePage) ? "active" : "" %>" 
            href="${pageContext.request.contextPath}/admin/dashboard">
             <i class="fas fa-chart-line"></i> Dashboard
@@ -35,9 +34,6 @@
         </a>
         <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_orders.jsp">
             <i class="fas fa-receipt"></i> Orders
-        </a>
-        <a class="nav-link <%= "reports".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_reports.jsp">
-            <i class="fas fa-file-alt"></i> Reports
         </a>
         <% if (isManager) { %>
             <a class="nav-link <%= "staff".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/staff">
