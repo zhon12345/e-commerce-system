@@ -31,16 +31,14 @@ public class ProductsController extends HttpServlet {
 
 			BigDecimal minPrice = parsePrice(minPriceParam);
 			BigDecimal maxPrice = parsePrice(maxPriceParam);
-			// Parse the rating parameter up front
-			final Integer selectedRating;
+			// Parse the rating parameter
+			Integer selectedRating = null;
 			if (ratingParam != null && !ratingParam.isEmpty()) {
 				try {
 					selectedRating = Integer.parseInt(ratingParam);
 				} catch (NumberFormatException e) {
-					selectedRating = null;
+					// Keep selectedRating as null
 				}
-			} else {
-				selectedRating = null;
 			}
 
 			// Use the findByIsArchived named query with false to only get non-archived
@@ -110,11 +108,12 @@ public class ProductsController extends HttpServlet {
 
 			// Apply rating filter if needed - using the final selectedRating
 			if (selectedRating != null) {
+				final Integer finalSelectedRating = selectedRating; // Create a final copy
 				final Map<Integer, Double> finalRatings = averageRatings; // Create a final copy
 				productsList = productsList.stream()
 						.filter(p -> {
 							Double avgRating = finalRatings.get(p.getId());
-							return avgRating != null && Math.round(avgRating) == selectedRating;
+							return avgRating != null && Math.round(avgRating) == finalSelectedRating;
 						})
 						.collect(java.util.stream.Collectors.toList());
 			}

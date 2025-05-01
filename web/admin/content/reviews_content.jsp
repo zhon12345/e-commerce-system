@@ -31,7 +31,6 @@
 				<td><%= review.getReviewDate() %></td>
 				<td>
 					<a href="${pageContext.request.contextPath}/product?id=<%= review.getProductId().getId() %>&tab=reviews" class="btn btn-sm btn-success action-btn" title="View Details"><i class="fas fa-eye"></i></a>
-					<a href="#" class="btn btn-sm btn-info action-btn" title="Reply"><i class="fas fa-edit"></i></a>
 				</td>
 			</tr>
 			<%

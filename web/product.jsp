@@ -102,7 +102,7 @@
 			<div id="reviews-content" class="content-section" style="display: <%= "reviews".equals(request.getAttribute("activeTab")) ? "block" : "none" %>;">
 				<div class="review-section">
 					<h3>Your Review</h3>
-					<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/review" method="post" id="reviewForm">
+					<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/reviews" method="post" id="reviewForm">
 						<input type="hidden" name="productId" value="${product.id}">
 						<input type="hidden" name="activeTab" value="reviews">
 						<input type="hidden" name="action" value="add">

@@ -34,6 +34,9 @@
         <a class="nav-link <%= "orders".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/orders">
             <i class="fas fa-receipt"></i> Orders
         </a>
+        <a class="nav-link <%= "reviews".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/reviews">
+            <i class="fas fa-receipt"></i> Reviews
+        </a>
         <% if (isManager) { %>
             <a class="nav-link <%= "staff".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/staff">
                 <i class="fas fa-user-shield"></i> Staff
