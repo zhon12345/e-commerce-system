@@ -5,12 +5,14 @@
 package Controller.admin;
 
 import Model.Reviews;
+import Model.Users;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,7 +35,18 @@ public class ReviewsController extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		// Check if user is logged in and has appropriate role
+		HttpSession session = req.getSession();
+		Users user = (Users) session.getAttribute("user");
+
+		// If user is not logged in or is not staff/manager, throw a 403 error
+		if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+			return;
+		}
+
 		try {
+			// User is authorized, proceed with normal flow
 			List<Reviews> ReviewsList = em.createQuery(
 					"SELECT r FROM Reviews r LEFT JOIN FETCH r.userId LEFT JOIN FETCH r.productId WHERE r.isArchived = :isArchived",
 					Reviews.class)
@@ -57,6 +70,16 @@ public class ReviewsController extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-	}
+		// Check if user is logged in and has appropriate role
+		HttpSession session = req.getSession();
+		Users user = (Users) session.getAttribute("user");
 
+		// If user is not logged in or is not staff/manager, throw a 403 error
+		if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+			return;
+		}
+
+		// Continue with normal POST processing
+	}
 }

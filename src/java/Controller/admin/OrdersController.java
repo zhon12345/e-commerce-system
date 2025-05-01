@@ -5,6 +5,7 @@
 package Controller.admin;
 
 import Model.Orders;
+import Model.Users;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -40,10 +41,21 @@ public class OrdersController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		try {
+			// Check if user is logged in and has appropriate role
+			HttpSession session = req.getSession();
+			Users user = (Users) session.getAttribute("user");
+
+			// If user is not logged in or is not staff/manager, throw a 403 error
+			if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+				res.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+				return;
+			}
+
 			// First fetch all orders with their basic info without orderdetails to avoid
 			// duplication
 			List<Orders> ordersList = em.createQuery(
-					"SELECT DISTINCT o FROM Orders o LEFT JOIN FETCH o.userId LEFT JOIN FETCH o.promoId LEFT JOIN FETCH o.orderdetailsList od LEFT JOIN FETCH od.productId ORDER BY o.orderDate DESC", Orders.class)
+					"SELECT DISTINCT o FROM Orders o LEFT JOIN FETCH o.userId LEFT JOIN FETCH o.promoId LEFT JOIN FETCH o.orderdetailsList od LEFT JOIN FETCH od.productId ORDER BY o.orderDate DESC",
+					Orders.class)
 					.getResultList();
 
 			req.setAttribute("orders", ordersList);
@@ -64,6 +76,13 @@ public class OrdersController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
+		Users user = (Users) session.getAttribute("user");
+
+		// If user is not logged in or is not staff/manager, throw a 403 error
+		if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+			return;
+		}
 
 		try {
 			int orderId = Integer.parseInt(req.getParameter("orderId"));
@@ -82,8 +101,13 @@ public class OrdersController extends HttpServlet {
 			session.setAttribute("updateSuccess", "true");
 			res.sendRedirect(req.getContextPath() + "/admin/orders");
 		} catch (Exception e) {
-			// TODO: handle exception
+			try {
+				utx.rollback();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			session.setAttribute("error", "Failed to update order: " + e.getMessage());
+			res.sendRedirect(req.getContextPath() + "/admin/orders");
 		}
 	}
-
 }

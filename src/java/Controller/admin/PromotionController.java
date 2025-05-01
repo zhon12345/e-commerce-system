@@ -1,6 +1,7 @@
 package Controller.admin;
 
 import Model.Promotions;
+import Model.Users;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,16 @@ public class PromotionController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			// Check if user is logged in and has appropriate role
+			HttpSession session = request.getSession();
+			Users user = (Users) session.getAttribute("user");
+
+			// If user is not logged in or is not staff/manager, throw a 403 error
+			if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+				return;
+			}
+
 			List<Promotions> promotionList = em.createQuery(
 					"SELECT p FROM Promotions p WHERE p.isActive = :isActive", Promotions.class)
 					.setParameter("isActive", true)
@@ -49,6 +60,15 @@ public class PromotionController extends HttpServlet {
 		String action = request.getParameter("action");
 		HttpSession session = request.getSession();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		// Check if user is logged in and has appropriate role
+		Users user = (Users) session.getAttribute("user");
+
+		// If user is not logged in or is not staff/manager, throw a 403 error
+		if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+			return;
+		}
 
 		try {
 			if ("add".equals(action)) {

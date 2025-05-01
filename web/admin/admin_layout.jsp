@@ -1,7 +1,28 @@
 <%-- /WEB-INF/views/admin/admin_layout.jsp --%>
 <%@ page import="java.util.List, Model.Products, Model.Categories, Model.Users"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%-- <%@ page import="Model.Staff" %> --%> <%-- Needed if checking roles directly in layout --%>
+<%
+    // Security check - verify user is logged in and has appropriate role
+    Users currentUser = (Users) session.getAttribute("user");
+    boolean isManager = false;
+    boolean isStaff = false;
+
+    if (currentUser != null && currentUser.getRole() != null) {
+        String role = currentUser.getRole();
+        isManager = "manager".equalsIgnoreCase(role);
+        isStaff = "staff".equalsIgnoreCase(role);
+
+        // Set isManager as a session attribute for use in other files
+        session.setAttribute("isManager", isManager);
+    }
+
+    // If user is not logged in or is neither staff nor manager, throw a 403 error
+    // This will be caught by web.xml error handling and redirected to error.jsp
+    if (currentUser == null || (!isManager && !isStaff)) {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,22 +36,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/admin_dashboard_styles.css"> <%-- Adjust path as needed --%>
-
-    <%--
-    <%
-        // --- Security Check Placeholder ---
-        // Staff loggedInStaff = (Staff) session.getAttribute("loggedInStaff");
-        String adminUsername = "Admin User"; // Placeholder
-        // boolean isManager = false; // Placeholder
-        // if (loggedInStaff == null) {
-        //     response.sendRedirect(request.getContextPath() + "/login.jsp");
-        //     return;
-        // } else {
-        //     adminUsername = loggedInStaff.getUsername();
-        //     // isManager = loggedInStaff.getIsManager();
-        // }
-    %>
-    --%>
 </head>
 <body>
     <%-- Consider including navbar as a separate component if used elsewhere --%>
