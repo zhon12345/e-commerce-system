@@ -4,7 +4,7 @@
     Author     : yjee0
 --%>
 
-<%@ page import="java.util.List, java.util.Map, java.text.SimpleDateFormat, Model.Orders, Model.Orderdetails, Model.Products"%>
+<%@ page import="java.util.List, java.text.SimpleDateFormat, Model.Orders, Model.Orderdetails, Model.Products"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -50,9 +50,8 @@
 			</div>
 
 			<%
-				List<Orders> orderList = (List<Orders>) request.getAttribute("orderList");
-				Map<Integer, List<Orderdetails>> orderDetailsMap = (Map<Integer, List<Orderdetails>>) request.getAttribute("orderDetailsMap");
-				if (orderList == null || orderList.isEmpty()) {
+				List<Orders> orders = (List<Orders>) request.getAttribute("orders");
+				if (orders == null || orders.isEmpty()) {
 			%>
 			<div class="empty-status">
 				<h3>No orders yet</h3>
@@ -64,16 +63,13 @@
 			<%
 				} else {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-					for (Orders order : orderList) {
-						List<Orderdetails> detailsList = orderDetailsMap.get(order.getId());
+					for (Orders order : orders) {
+						List<Orderdetails> details = order.getOrderdetailsList();
 						String badge = "";
-						if ("packaging".equals(order.getStatus())) {
-							badge = "cancelled";
-						} else if ("shipping".equals(order.getStatus())) {
-							badge = "pending";
-						} else if ("delivery".equals(order.getStatus())) {
-							badge = "completed";
-						}
+
+						if ("packaging".equals(order.getStatus())) badge = "cancelled";
+						if ("shipping".equals(order.getStatus())) badge = "pending";
+						if ("delivery".equals(order.getStatus())) badge = "completed";
 			%>
 			<div class="card">
 				<div class="header">
@@ -86,7 +82,7 @@
 
 				<%
 					int totalItems = 0;
-					for (Orderdetails detail : detailsList) {
+					for (Orderdetails detail : details) {
 						Products product = detail.getProductId();
 						totalItems += detail.getQuantity();
 				%>
