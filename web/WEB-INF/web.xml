@@ -49,10 +49,6 @@
         <servlet-class>Controller.user.CardController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>HistoryController</servlet-name>
-        <servlet-class>Controller.user.HistoryController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ReviewController</servlet-name>
         <servlet-class>Controller.ReviewController</servlet-class>
     </servlet>
@@ -67,10 +63,6 @@
     <servlet>
         <servlet-name>StaffController</servlet-name>
         <servlet-class>Controller.admin.StaffController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>OrdersController</servlet-name>
-        <servlet-class>Controller.admin.OrdersController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PromotionController</servlet-name>
@@ -137,10 +129,6 @@
         <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>HistoryController</servlet-name>
-        <url-pattern>/user/history</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ReviewController</servlet-name>
         <url-pattern>/user/reviews</url-pattern>
     </servlet-mapping>
@@ -175,10 +163,6 @@
     <servlet-mapping>
         <servlet-name>ReviewsController</servlet-name>
         <url-pattern>/admin/reviews</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>OrdersController</servlet-name>
-        <url-pattern>/admin/orders</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PromotionController</servlet-name>
