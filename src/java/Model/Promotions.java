@@ -61,7 +61,7 @@ public class Promotions implements Serializable {
   @Column(name = "VALID_TO")
   @Temporal(TemporalType.DATE)
 	private Date validTo;
-	@Column(name = "IS_ACTIVE")
+	@Column(name = "IS_ACTIVE", insertable = false)
 	private Boolean isActive;
 	@OneToMany(mappedBy = "promoId")
 	private List<Orders> ordersList;

@@ -53,20 +53,12 @@
         <servlet-class>Controller.ReviewController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>IndexController</servlet-name>
-        <servlet-class>Controller.IndexController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ReviewsController</servlet-name>
         <servlet-class>Controller.admin.ReviewsController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>StaffController</servlet-name>
         <servlet-class>Controller.admin.StaffController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>PromotionController</servlet-name>
-        <servlet-class>Controller.admin.PromotionController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AdminProducts</servlet-name>
@@ -132,10 +124,6 @@
         <servlet-name>ReviewController</servlet-name>
         <url-pattern>/user/reviews</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>IndexController</servlet-name>
-        <url-pattern>/index</url-pattern>
-    </servlet-mapping>
     <error-page>
         <error-code>403</error-code>
         <location>/WEB-INF/errors/error.jsp</location>
@@ -163,10 +151,6 @@
     <servlet-mapping>
         <servlet-name>ReviewsController</servlet-name>
         <url-pattern>/admin/reviews</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PromotionController</servlet-name>
-        <url-pattern>/admin/promotions</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
