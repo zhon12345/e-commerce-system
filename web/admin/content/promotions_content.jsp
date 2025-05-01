@@ -40,9 +40,9 @@
         </thead>
         <tbody>
             <%
-                List<Promotions> promotionList = (List<Promotions>) request.getAttribute("promotionList");
-                if (promotionList != null && !promotionList.isEmpty()) {
-                    for (Promotions promo : promotionList) {
+                List<Promotions> promotions = (List<Promotions>) request.getAttribute("promotions");
+                if (promotions != null && !promotions.isEmpty()) {
+                    for (Promotions promo : promotions) {
             %>
             <tr>
                 <td><%= promo.getId() %></td>
@@ -81,7 +81,7 @@
             </div>
             <div class="modal-body">
                 <form action="${pageContext.request.contextPath}/admin/promotions" method="POST">
-                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="action" value="create">
 
                     <div class="mb-3">
                         <label for="promoCode" class="form-label">Promo Code</label>
@@ -125,8 +125,8 @@
             </div>
             <div class="modal-body">
                 <form action="${pageContext.request.contextPath}/admin/promotions" method="POST">
-                    <input type="hidden" name="action" value="edit">
-                    <input type="hidden" name="id" id="editId">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="promoId" id="promoId">
 
                     <div class="mb-3">
                         <label for="editPromoCode" class="form-label">Promo Code</label>
@@ -162,7 +162,7 @@
 
 <script>
 function editPromotion(id, promoCode, discount, validFrom, validTo) {
-    document.getElementById('editId').value = id;
+    document.getElementById('promoId').value = id;
     document.getElementById('editPromoCode').value = promoCode;
     document.getElementById('editDiscount').value = discount;
     document.getElementById('editValidFrom').value = validFrom;
@@ -182,7 +182,7 @@ function deletePromotion(id) {
 
         const idInput = document.createElement('input');
         idInput.type = 'hidden';
-        idInput.name = 'id';
+        idInput.name = 'promoId';
         idInput.value = id;
 
         form.appendChild(actionInput);
