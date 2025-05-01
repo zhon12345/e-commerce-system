@@ -5,6 +5,13 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    // Check if user is already logged in
+    if (session.getAttribute("user") != null) {
+        response.sendRedirect(request.getContextPath() + "/index");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
 	<head>
