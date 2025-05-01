@@ -18,11 +18,11 @@
 
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-users"></i> User Management</h2>
 
-<%-- Get the isManager attribute passed from admin_users.jsp --%>
 <%
-    boolean isManager = false;
-    if (request.getAttribute("isManager") != null) {
-        isManager = (Boolean) request.getAttribute("isManager");
+    // Get isManager from session attribute
+    Boolean isManager = (Boolean) session.getAttribute("isManager");
+    if (isManager == null) {
+        isManager = false;
     }
 
     // Create date formatter for the created date

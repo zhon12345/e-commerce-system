@@ -31,6 +31,17 @@ public class UserController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			// Check if user is logged in and has appropriate role
+			HttpSession session = request.getSession();
+			Users currentUser = (Users) session.getAttribute("user");
+
+			// If user is not logged in or is not staff/manager, throw a 403 error
+			if (currentUser == null || !(currentUser.getRole().equalsIgnoreCase("staff") ||
+					currentUser.getRole().equalsIgnoreCase("manager"))) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+				return;
+			}
+
 			List<Users> userList = em.createQuery(
 					"SELECT u FROM Users u WHERE u.role = :role AND u.isArchived = :isArchived", Users.class)
 					.setParameter("role", "customer")
@@ -51,6 +62,22 @@ public class UserController extends HttpServlet {
 
 		String action = request.getParameter("action");
 		HttpSession session = request.getSession();
+		Users currentUser = (Users) session.getAttribute("user");
+
+		// If user is not logged in or is not staff/manager, throw a 403 error
+		if (currentUser == null || !(currentUser.getRole().equalsIgnoreCase("staff") ||
+				currentUser.getRole().equalsIgnoreCase("manager"))) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+			return;
+		}
+
+		// For certain actions, check if user is a manager
+		if (("add".equals(action) || "edit".equals(action) || "archive".equals(action))
+				&& !currentUser.getRole().equalsIgnoreCase("manager")) {
+			session.setAttribute("error", "Only managers can add, edit, or archive users");
+			response.sendRedirect(request.getContextPath() + "/admin/users");
+			return;
+		}
 
 		try {
 			if ("add".equals(action)) {

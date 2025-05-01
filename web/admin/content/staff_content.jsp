@@ -18,6 +18,14 @@
 
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-user-shield"></i> Staff Management</h2>
 
+<%
+    // Get isManager from session attribute
+    Boolean isManager = (Boolean) session.getAttribute("isManager");
+    if (isManager == null) {
+        isManager = false;
+    }
+%>
+
 <button type="button" class="btn btn-primary mb-3 btn-add" data-bs-toggle="modal" data-bs-target="#addStaffModal">
    <i class="fas fa-plus"></i> Add Staff
 </button>

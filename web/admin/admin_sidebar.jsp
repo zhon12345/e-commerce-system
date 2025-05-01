@@ -2,17 +2,17 @@
 <%@ page import="Model.Users" %>
 
 <%
- // Get the active page name set by the including JSP
+    // Get the active page name set by the including JSP
     String activePage = (String) request.getAttribute("activeAdminPage");
     if (activePage == null) {
         activePage = "dashboard"; // Default if not set
     }
 
-    // Check if the logged-in user is a manager
-    Users user = (Users) session.getAttribute("user");
-    boolean isManager = false;
-    if (user != null && user.getRole() != null) {
-        isManager = user.getRole().equalsIgnoreCase("manager");
+    // Use isManager from session attribute instead of recalculating it
+    Boolean isManager = (Boolean) session.getAttribute("isManager");
+    // Default to false if not set (though this shouldn't happen due to security check in admin_layout.jsp)
+    if (isManager == null) {
+        isManager = false;
     }
 %>
 <div class="sidebar mb-3">

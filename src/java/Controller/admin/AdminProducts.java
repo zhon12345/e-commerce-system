@@ -6,6 +6,7 @@ package Controller.admin;
 
 import Model.Categories;
 import Model.Products;
+import Model.Users;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -14,6 +15,7 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import jakarta.transaction.UserTransaction;
 import java.io.File;
@@ -54,6 +56,16 @@ public class AdminProducts extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		try {
+			// Check if user is logged in and has appropriate role
+			HttpSession session = req.getSession();
+			Users user = (Users) session.getAttribute("user");
+
+			// If user is not logged in or is not staff/manager, throw a 403 error
+			if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+				res.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+				return;
+			}
+
 			// Get all non-archived products with eager loading of their categories
 			List<Products> productList = em
 					.createQuery("SELECT p FROM Products p LEFT JOIN FETCH p.categoryId WHERE p.isArchived = :isArchived",
@@ -84,6 +96,16 @@ public class AdminProducts extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		// Check if user is logged in and has appropriate role
+		HttpSession session = req.getSession();
+		Users user = (Users) session.getAttribute("user");
+
+		// If user is not logged in or is not staff/manager, throw a 403 error
+		if (user == null || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
+			return;
+		}
+
 		String action = req.getParameter("action");
 
 		try {
