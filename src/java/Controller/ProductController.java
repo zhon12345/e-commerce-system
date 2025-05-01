@@ -64,8 +64,6 @@ public class ProductController extends HttpServlet {
 			req.setAttribute("reviewText", reviewText);
 		}
 
-		req.setAttribute("activeTab", tab != null ? tab : "description");
-
 		try {
 			Products product = em.createNamedQuery("Products.findById", Products.class)
 					.setParameter("id", Integer.parseInt(productId))

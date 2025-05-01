@@ -37,7 +37,7 @@
 			</div>
 
 			<%
-				List<Reviews> reviews = (List<Reviews>) request.getAttribute("reviewList");
+				List<Reviews> reviews = (List<Reviews>) request.getAttribute("reviews");
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
 				if (reviews == null || reviews.isEmpty()) {
@@ -107,7 +107,7 @@
 					const actionInput = document.createElement('input');
 					actionInput.type = 'hidden';
 					actionInput.name = 'action';
-					actionInput.value = 'remove';
+					actionInput.value = 'delete';
 					form.appendChild(actionInput);
 
 					form.submit();
