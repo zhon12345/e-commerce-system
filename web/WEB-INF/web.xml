@@ -49,14 +49,6 @@
         <servlet-class>Controller.user.CardController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ReviewController</servlet-name>
-        <servlet-class>Controller.ReviewController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ReviewsController</servlet-name>
-        <servlet-class>Controller.admin.ReviewsController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>StaffController</servlet-name>
         <servlet-class>Controller.admin.StaffController</servlet-class>
     </servlet>
@@ -120,10 +112,6 @@
         <servlet-name>CheckoutController</servlet-name>
         <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ReviewController</servlet-name>
-        <url-pattern>/user/reviews</url-pattern>
-    </servlet-mapping>
     <error-page>
         <error-code>403</error-code>
         <location>/WEB-INF/errors/error.jsp</location>
@@ -148,10 +136,6 @@
         <servlet-name>AdminController</servlet-name>
         <servlet-class>Controller.admin.AdminController</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>ReviewsController</servlet-name>
-        <url-pattern>/admin/reviews</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/admin/profile</url-pattern>

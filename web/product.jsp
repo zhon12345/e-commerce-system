@@ -88,24 +88,23 @@
 		<!-- Bottom Box (Description/Review) -->
 		<div class="bottom-box">
 			<div class="tab-container">
-				<div class="tab <%= "description".equals(request.getAttribute("activeTab")) ? "active" : "" %>" onclick="switchTab('description', event)">Description</div>
-				<div class="tab <%= "reviews".equals(request.getAttribute("activeTab")) ? "active" : "" %>" onclick="switchTab('reviews', event)">Reviews</div>
+				<div class="tab" onclick="switchTab('description', event)">Description</div>
+				<div class="tab" onclick="switchTab('reviews', event)">Reviews</div>
 			</div>
 
-			<div id="description-content" class="content-section" style="display: <%= "description".equals(request.getAttribute("activeTab")) ? "block" : "none" %>;">
+			<div id="description-content" class="content-section">
 				<div class="product-description">
 					<h3>Product Description</h3>
 					<p>${product.description.isEmpty() ? "No description available." : product.description}</p>
 				</div>
 			</div>
 
-			<div id="reviews-content" class="content-section" style="display: <%= "reviews".equals(request.getAttribute("activeTab")) ? "block" : "none" %>;">
+			<div id="reviews-content" class="content-section">
 				<div class="review-section">
 					<h3>Your Review</h3>
 					<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/reviews" method="post" id="reviewForm">
 						<input type="hidden" name="productId" value="${product.id}">
-						<input type="hidden" name="activeTab" value="reviews">
-						<input type="hidden" name="action" value="add">
+						<input type="hidden" name="action" value="create">
 
 						<div class="rating">
 							<div class="stars">
@@ -177,6 +176,8 @@
 				if (error != null) {
 		%>
 					showError('<%= field %>', '<%= error %>');
+					switchTab('reviews', null);
+					document.querySelector('.bottom-box').scrollIntoView({ behavior: 'smooth' });
 		<%
 				}
 			}
