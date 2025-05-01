@@ -5,14 +5,12 @@ import Model.Reviews;
 import Model.Categories;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,75 +31,73 @@ public class ProductsController extends HttpServlet {
 
 			BigDecimal minPrice = parsePrice(minPriceParam);
 			BigDecimal maxPrice = parsePrice(maxPriceParam);
-			Integer selectedRating = null;
-
+			// Parse the rating parameter up front
+			final Integer selectedRating;
 			if (ratingParam != null && !ratingParam.isEmpty()) {
 				try {
 					selectedRating = Integer.parseInt(ratingParam);
 				} catch (NumberFormatException e) {
-					// Handle invalid rating parameter (e.g., log error)
+					selectedRating = null;
 				}
+			} else {
+				selectedRating = null;
 			}
 
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Products> cq = cb.createQuery(Products.class);
-			Root<Products> product = cq.from(Products.class);
+			// Use the findByIsArchived named query with false to only get non-archived
+			// products
+			List<Products> productsList = em.createNamedQuery("Products.findByIsArchived", Products.class)
+					.setParameter("isArchived", false)
+					.getResultList();
 
-			cq.select(product).distinct(true);
-
-			List<Predicate> predicates = new ArrayList<>();
-
-			if (minPrice != null || maxPrice != null) {
-				Path<BigDecimal> pricePath = product.get("price");
-				List<Predicate> pricePredicates = new ArrayList<>();
-
-				if (minPrice != null) {
-					pricePredicates.add(cb.ge(pricePath, minPrice));
-				}
-				if (maxPrice != null) {
-					pricePredicates.add(cb.le(pricePath, maxPrice));
-				}
-
-				predicates.add(cb.and(pricePredicates.toArray(new Predicate[0])));
-			}
-
-			if (selectedRating != null) {
-				Subquery<Double> avgSubquery = cq.subquery(Double.class);
-				Root<Reviews> reviewRoot = avgSubquery.from(Reviews.class);
-				avgSubquery.select(cb.avg(reviewRoot.get("rating")));
-				avgSubquery.where(cb.equal(reviewRoot.get("productId"), product));
-				predicates.add(cb.ge(avgSubquery, selectedRating.doubleValue()));
-			}
-
-			if (search != null && !search.trim().isEmpty()) {
-				String searchTerm = "%" + search.toLowerCase() + "%";
-
-				predicates.add(
-						cb.or(
-								cb.like(cb.lower(product.get("name")), searchTerm),
-								cb.like(cb.lower(product.get("description")), searchTerm)));
-			}
-
+			// Apply category filter if needed
 			if (categoryParams != null && categoryParams.length > 0) {
-				Subquery<Integer> categorySubquery = cq.subquery(Integer.class);
-				Root<Categories> categoryRoot = categorySubquery.from(Categories.class);
-
-				categorySubquery.select(categoryRoot.get("id"))
-						.where(categoryRoot.get("name").in((Object[]) categoryParams));
-
-				predicates.add(product.get("categoryId").get("id").in(categorySubquery));
+				final String[] categories = categoryParams; // Create a final copy for the lambda
+				productsList = productsList.stream()
+						.filter(p -> {
+							Categories category = p.getCategoryId();
+							if (category == null) {
+								return false;
+							}
+							String categoryName = category.getName();
+							for (String param : categories) {
+								if (param.equals(categoryName)) {
+									return true;
+								}
+							}
+							return false;
+						})
+						.collect(java.util.stream.Collectors.toList());
 			}
 
-			if (!predicates.isEmpty()) {
-				cq.where(cb.and(predicates.toArray(new Predicate[0])));
+			// Apply price filters
+			if (minPrice != null) {
+				final BigDecimal min = minPrice; // Create a final copy
+				productsList = productsList.stream()
+						.filter(p -> p.getPrice().compareTo(min) >= 0)
+						.collect(java.util.stream.Collectors.toList());
 			}
 
-			cq.orderBy(cb.asc(product.get("name")));
+			if (maxPrice != null) {
+				final BigDecimal max = maxPrice; // Create a final copy
+				productsList = productsList.stream()
+						.filter(p -> p.getPrice().compareTo(max) <= 0)
+						.collect(java.util.stream.Collectors.toList());
+			}
 
-			List<Products> productsList = em.createQuery(cq).getResultList();
+			// Apply search filter
+			if (search != null && !search.trim().isEmpty()) {
+				final String searchLower = search.toLowerCase(); // Create a final copy
+				productsList = productsList.stream()
+						.filter(p -> (p.getName() != null && p.getName().toLowerCase().contains(searchLower)) ||
+								(p.getDescription() != null && p.getDescription().toLowerCase().contains(searchLower)))
+						.collect(java.util.stream.Collectors.toList());
+			}
+
+			// Get categories for filter options
 			List<Categories> categoriesList = em.createNamedQuery("Categories.findAll", Categories.class)
 					.getResultList();
 
+			// Get average ratings
 			String avgQuery = "SELECT r.productId.id, AVG(CAST(r.rating as float)) FROM Reviews r GROUP BY r.productId.id";
 			List<Object[]> avgResults = em.createQuery(avgQuery, Object[].class).getResultList();
 
@@ -112,12 +108,24 @@ public class ProductsController extends HttpServlet {
 				averageRatings.put(productId, avg);
 			}
 
+			// Apply rating filter if needed - using the final selectedRating
+			if (selectedRating != null) {
+				final Map<Integer, Double> finalRatings = averageRatings; // Create a final copy
+				productsList = productsList.stream()
+						.filter(p -> {
+							Double avgRating = finalRatings.get(p.getId());
+							return avgRating != null && Math.round(avgRating) == selectedRating;
+						})
+						.collect(java.util.stream.Collectors.toList());
+			}
+
 			req.setAttribute("products", productsList);
 			req.setAttribute("categories", categoriesList);
 			req.setAttribute("averageRatings", averageRatings);
 			req.getRequestDispatcher("/products.jsp").forward(req, res);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
