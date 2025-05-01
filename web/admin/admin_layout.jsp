@@ -87,26 +87,6 @@
             </div> </div> <div class="toast-container position-fixed top-0 end-0 p-3">
       </div>
 
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="addUserModalLabel"><i class="fas fa-user-plus me-2"></i>Add New User</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="addUserForm">
-              <div class="mb-3"> <label for="addUserName" class="form-label">Username</label> <input type="text" class="form-control" id="addUserName" required> </div>
-              <div class="mb-3"> <label for="addUserEmail" class="form-label">Email address</label> <input type="email" class="form-control" id="addUserEmail" required> </div>
-              <div class="mb-3"> <label for="addUserPassword" class="form-label">Password</label> <input type="password" class="form-control" id="addUserPassword" required> </div>
-              <div class="mb-3"> <label for="addUserRole" class="form-label">Role</label> <select class="form-select" id="addUserRole" required> <option value="Customer" selected>Customer</option> </select> </div>
-            </form>
-          </div>
-          <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="submit" class="btn btn-primary" form="addUserForm">Save User</button> </div>
-        </div>
-      </div>
-    </div>
-
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
