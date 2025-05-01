@@ -22,7 +22,7 @@
            href="${pageContext.request.contextPath}/admin/dashboard">
             <i class="fas fa-chart-line"></i> Dashboard
         </a>
-        <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/admin_users.jsp">
+        <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/users">
             <i class="fas fa-users-cog"></i> Users
         </a>
         <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/admin/products">
