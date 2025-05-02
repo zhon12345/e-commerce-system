@@ -6,6 +6,7 @@ package Controller;
 
 import Model.Orders;
 import Model.Users;
+import static Utils.Authentication.isAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -164,10 +165,6 @@ public class OrdersController extends HttpServlet {
 			session.setAttribute("error", "Failed to update order: " + e.getMessage());
 			res.sendRedirect(req.getContextPath() + "/admin/orders");
 		}
-	}
-
-	private boolean isAuthorized(Users user) {
-		return user != null && (user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"));
 	}
 
 }

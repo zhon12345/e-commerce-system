@@ -6,6 +6,7 @@ package Controller;
 
 import Model.Promotions;
 import Model.Users;
+import static Utils.Authentication.isAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -132,7 +133,8 @@ public class PromotionsController extends HttpServlet {
 		res.sendRedirect(req.getContextPath() + "/admin/promotions");
 	}
 
-	private void createPromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session) throws IOException {
+	private void createPromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session)
+			throws IOException {
 		try {
 			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
 			BigDecimal discount = new BigDecimal(req.getParameter("discount")).divide(new BigDecimal(100));
@@ -163,7 +165,8 @@ public class PromotionsController extends HttpServlet {
 		}
 	}
 
-	private void updatePromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session) throws IOException {
+	private void updatePromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session)
+			throws IOException {
 		try {
 			int promoId = Integer.parseInt(req.getParameter("promoId"));
 			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
@@ -197,7 +200,8 @@ public class PromotionsController extends HttpServlet {
 
 	}
 
-	private void deletePromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session) throws IOException {
+	private void deletePromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session)
+			throws IOException {
 		try {
 			int promoId = Integer.parseInt(req.getParameter("promoId"));
 
@@ -219,10 +223,6 @@ public class PromotionsController extends HttpServlet {
 
 			session.setAttribute("error", "Failed to delete promotion: " + e.getMessage());
 		}
-	}
-
-	private boolean isAuthorized(Users user) {
-		return user != null && (user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"));
 	}
 
 }

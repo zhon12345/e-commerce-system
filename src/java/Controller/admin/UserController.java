@@ -1,9 +1,8 @@
 package Controller.admin;
 
 import Model.Users;
+import static Utils.Authentication.hashPassword;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -158,18 +157,4 @@ public class UserController extends HttpServlet {
 		response.sendRedirect(request.getContextPath() + "/admin/users");
 	}
 
-	private String hashPassword(String password) throws ServletException {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] hashedBytes = md.digest(password.getBytes());
-
-			StringBuilder sb = new StringBuilder();
-			for (byte b : hashedBytes) {
-				sb.append(String.format("%02x", b));
-			}
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			throw new ServletException("Error hashing password", e);
-		}
-	}
 }

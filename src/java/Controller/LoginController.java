@@ -5,6 +5,7 @@
 package Controller;
 
 import Model.Users;
+import static Utils.Authentication.hashPassword;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -96,21 +97,6 @@ public class LoginController extends HttpServlet {
 
 		if (hasErrors) {
 			req.getRequestDispatcher("/login.jsp").forward(req, res);
-		}
-	}
-
-	private String hashPassword(String password) throws ServletException {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] hashedBytes = md.digest(password.getBytes());
-
-			StringBuilder sb = new StringBuilder();
-			for (byte b : hashedBytes) {
-				sb.append(String.format("%02x", b));
-			}
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			throw new ServletException("Error hashing password", e);
 		}
 	}
 

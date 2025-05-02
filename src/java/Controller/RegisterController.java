@@ -5,10 +5,9 @@
 package Controller;
 
 import Model.Users;
+import static Utils.Authentication.hashPassword;
 import jakarta.annotation.Resource;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
@@ -27,10 +26,10 @@ public class RegisterController extends HttpServlet {
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param request servlet request
+	 * @param request  servlet request
 	 * @param response servlet response
 	 * @throws ServletException if a servlet-specific error occurs
-	 * @throws IOException if an I/O error occurs
+	 * @throws IOException      if an I/O error occurs
 	 */
 	@PersistenceContext
 	EntityManager em;
@@ -107,7 +106,8 @@ public class RegisterController extends HttpServlet {
 
 	private boolean checkExisting(String field, String value, String attribute, HttpServletRequest req) {
 		try {
-			Long count = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u." + field + " = :value", Long.class).setParameter("value", value).getSingleResult();
+			Long count = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u." + field + " = :value", Long.class)
+					.setParameter("value", value).getSingleResult();
 
 			if (count > 0) {
 				req.setAttribute(attribute, field.substring(0, 1).toUpperCase() + field.substring(1) + " already exists.");
@@ -121,18 +121,4 @@ public class RegisterController extends HttpServlet {
 		}
 	}
 
-	private String hashPassword(String password) throws ServletException {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] hashedBytes = md.digest(password.getBytes());
-
-			StringBuilder sb = new StringBuilder();
-			for (byte b : hashedBytes) {
-				sb.append(String.format("%02x", b));
-			}
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			throw new ServletException("Error hashing password", e);
-		}
-	}
 }
