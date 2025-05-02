@@ -7,6 +7,7 @@ package Controller;
 import Model.Products;
 import Model.Reviews;
 import Model.Users;
+import static Utils.Authentication.isAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -211,10 +212,6 @@ public class ReviewsController extends HttpServlet {
 
 		res.sendRedirect(req.getContextPath() + "/user/reviews");
 		return;
-	}
-
-	private boolean isAuthorized(Users user) {
-		return user != null && (user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"));
 	}
 
 }
