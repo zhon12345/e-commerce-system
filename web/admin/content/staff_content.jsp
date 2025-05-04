@@ -43,7 +43,7 @@
         </thead>
         <tbody>
             <%
-                List<Users> staffList = (List<Users>) request.getAttribute("staffList");
+                List<Users> staffList = (List<Users>) request.getAttribute("users");
                 if (staffList != null && !staffList.isEmpty()) {
                     for (Users staff : staffList) {
             %>
@@ -89,7 +89,7 @@
             </div>
             <div class="modal-body">
                 <form id="addStaffForm" action="${pageContext.request.contextPath}/admin/staff" method="POST">
-                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="action" value="create">
                     <input type="hidden" name="role" value="staff">
 
                     <div class="mb-3">
@@ -127,8 +127,8 @@
             </div>
             <div class="modal-body">
                 <form id="editStaffForm" action="${pageContext.request.contextPath}/admin/staff" method="POST">
-                    <input type="hidden" name="action" value="edit">
-                    <input type="hidden" id="editStaffId" name="id">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" id="editStaffId" name="userId">
                     <input type="hidden" name="role" value="staff">
 
                     <div class="mb-3">
@@ -160,7 +160,7 @@
     }
 
     function archiveStaff(id) {
-        if (confirm('Are you sure you want to archive this staff member? This action can be reversed by an administrator.')) {
+        if (confirm('Are you sure you want to archive this staff member?')) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '${pageContext.request.contextPath}/admin/staff';
@@ -168,11 +168,11 @@
             const actionInput = document.createElement('input');
             actionInput.type = 'hidden';
             actionInput.name = 'action';
-            actionInput.value = 'archive';
+            actionInput.value = 'delete';
 
             const idInput = document.createElement('input');
             idInput.type = 'hidden';
-            idInput.name = 'id';
+            idInput.name = 'userId';
             idInput.value = id;
 
             form.appendChild(actionInput);
