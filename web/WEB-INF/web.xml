@@ -37,21 +37,9 @@
         <servlet-class>Controller.user.CardController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>StaffController</servlet-name>
-        <servlet-class>Controller.admin.StaffController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>AdminProducts</servlet-name>
         <servlet-class>Controller.admin.AdminProducts</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>UserController</servlet-name>
-        <servlet-class>Controller.admin.UserController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>StaffController</servlet-name>
-        <url-pattern>/admin/staff</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DashboardController</servlet-name>
         <url-pattern>/admin/dashboard</url-pattern>
@@ -108,21 +96,9 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/WEB-INF/errors/error.jsp</location>
     </error-page>
-    <servlet>
-        <servlet-name>AdminController</servlet-name>
-        <servlet-class>Controller.admin.AdminController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AdminController</servlet-name>
-        <url-pattern>/admin/profile</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AdminProducts</servlet-name>
         <url-pattern>/admin/products</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UserController</servlet-name>
-        <url-pattern>/admin/users</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>index</welcome-file>

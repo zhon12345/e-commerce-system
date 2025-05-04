@@ -49,7 +49,7 @@
         </thead>
         <tbody>
             <%
-                List<Users> userList = (List<Users>) request.getAttribute("userList");
+                List<Users> userList = (List<Users>) request.getAttribute("users");
                 if (userList != null && !userList.isEmpty()) {
                     for (Users user : userList) {
             %>
@@ -98,7 +98,7 @@
             </div>
             <div class="modal-body">
                 <form id="addUserForm" action="${pageContext.request.contextPath}/admin/users" method="POST">
-                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="action" value="create">
                     <input type="hidden" name="role" value="customer">
 
                     <div class="mb-3">
@@ -136,8 +136,8 @@
             </div>
             <div class="modal-body">
                 <form id="editUserForm" action="${pageContext.request.contextPath}/admin/users" method="POST">
-                    <input type="hidden" name="action" value="edit">
-                    <input type="hidden" id="editUserId" name="id">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" id="editUserId" name="userId">
                     <input type="hidden" name="role" value="customer">
 
                     <div class="mb-3">
@@ -168,7 +168,7 @@
     }
 
     function archiveUser(id) {
-        if (confirm('Are you sure you want to archive this user? This action can be reversed by an administrator.')) {
+        if (confirm('Are you sure you want to archive this user?')) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '${pageContext.request.contextPath}/admin/users';
@@ -176,11 +176,11 @@
             const actionInput = document.createElement('input');
             actionInput.type = 'hidden';
             actionInput.name = 'action';
-            actionInput.value = 'archive';
+            actionInput.value = 'delete';
 
             const idInput = document.createElement('input');
             idInput.type = 'hidden';
-            idInput.name = 'id';
+            idInput.name = 'userId';
             idInput.value = id;
 
             form.appendChild(actionInput);

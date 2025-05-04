@@ -1,7 +1,5 @@
 <%@ page import="Model.Users" %>
-<% 
-    Users currentUser = (Users) session.getAttribute("user");
-%>
+<jsp:useBean id="user" class="Model.Users" scope="session" />
 
 <% if (session.getAttribute("error") != null) { %>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -28,24 +26,23 @@
         <div class="card">
             <div class="card-body">
                 <form id="profileForm" action="${pageContext.request.contextPath}/admin/profile" method="POST" onsubmit="return validateForm()">
+                    <input type="hidden" name="action" value="update_profile">
+
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" 
-                               value="<%= currentUser.getUsername() %>" required>
+                        <input type="text" class="form-control" id="username" name="username" value="${user.getUsername()}" required>
                         <div class="invalid-feedback" id="usernameError"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" 
-                               value="<%= currentUser.getName() != null ? currentUser.getName() : "" %>" required>
+                        <input type="text" class="form-control" id="name" name="name" value="${user.getName()}" required>
                         <div class="invalid-feedback" id="nameError"></div>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" 
-                               value="<%= currentUser.getEmail() %>" required>
+                        <input type="email" class="form-control" id="email" name="email" value="${user.getEmail()}" required>
                         <div class="invalid-feedback" id="emailError"></div>
                     </div>
 
@@ -61,7 +58,7 @@
                 <h5 class="card-title mb-3">Change Password</h5>
                 <form id="passwordForm" action="${pageContext.request.contextPath}/admin/profile" method="POST" onsubmit="return validatePasswordForm()">
                     <input type="hidden" name="action" value="change_password">
-                    
+
                     <div class="mb-3">
                         <label for="currentPassword" class="form-label">Current Password</label>
                         <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
@@ -95,12 +92,12 @@ function validateForm() {
     const username = document.getElementById('username');
     const name = document.getElementById('name');
     const email = document.getElementById('email');
-    
+
     // Reset previous errors
     username.classList.remove('is-invalid');
     name.classList.remove('is-invalid');
     email.classList.remove('is-invalid');
-    
+
     // Validate username
     if (!username.value.trim()) {
         username.classList.add('is-invalid');
@@ -111,14 +108,14 @@ function validateForm() {
         document.getElementById('usernameError').textContent = 'Username must be at least 3 characters long';
         isValid = false;
     }
-    
+
     // Validate name
     if (!name.value.trim()) {
         name.classList.add('is-invalid');
         document.getElementById('nameError').textContent = 'Name is required';
         isValid = false;
     }
-    
+
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.value.trim()) {
@@ -130,7 +127,7 @@ function validateForm() {
         document.getElementById('emailError').textContent = 'Invalid email format';
         isValid = false;
     }
-    
+
     return isValid;
 }
 
@@ -139,19 +136,19 @@ function validatePasswordForm() {
     const currentPassword = document.getElementById('currentPassword');
     const newPassword = document.getElementById('newPassword');
     const confirmPassword = document.getElementById('confirmPassword');
-    
+
     // Reset previous errors
     currentPassword.classList.remove('is-invalid');
     newPassword.classList.remove('is-invalid');
     confirmPassword.classList.remove('is-invalid');
-    
+
     // Validate current password
     if (!currentPassword.value.trim()) {
         currentPassword.classList.add('is-invalid');
         document.getElementById('currentPasswordError').textContent = 'Current password is required';
         isValid = false;
     }
-    
+
     // Validate new password
     if (!newPassword.value.trim()) {
         newPassword.classList.add('is-invalid');
@@ -162,7 +159,7 @@ function validatePasswordForm() {
         document.getElementById('newPasswordError').textContent = 'Password must be at least 8 characters long';
         isValid = false;
     }
-    
+
     // Validate confirm password
     if (!confirmPassword.value.trim()) {
         confirmPassword.classList.add('is-invalid');
@@ -173,7 +170,7 @@ function validatePasswordForm() {
         document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
         isValid = false;
     }
-    
+
     return isValid;
 }
 </script>

@@ -25,6 +25,11 @@
         <a class="nav-link <%= "users".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/users">
             <i class="fas fa-users-cog"></i> Users
         </a>
+        <% if (isManager) { %>
+            <a class="nav-link <%= "staff".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/staff">
+                <i class="fas fa-user-shield"></i> Staff
+            </a>
+        <% } %>
         <a class="nav-link <%= "products".equals(activePage) ? "active" : "" %>" href="<%= request.getContextPath() %>/admin/products">
             <i class="fas fa-box-open"></i> Products
         </a>
@@ -35,12 +40,7 @@
             <i class="fas fa-receipt"></i> Orders
         </a>
         <a class="nav-link <%= "reviews".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/reviews">
-            <i class="fas fa-receipt"></i> Reviews
+            <i class="fa-solid fa-comment-dots"></i> Reviews
         </a>
-        <% if (isManager) { %>
-            <a class="nav-link <%= "staff".equals(activePage) ? "active" : "" %>" href="${pageContext.request.contextPath}/admin/staff">
-                <i class="fas fa-user-shield"></i> Staff
-            </a>
-        <% } %>
     </nav>
 </div>
