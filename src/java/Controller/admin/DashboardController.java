@@ -1,7 +1,10 @@
 package Controller.admin;
 
-import Model.*;
-import java.io.IOException;
+import Model.Orderdetails;
+import Model.Orders;
+import Model.Reports;
+import Model.Users;
+import static Utils.Authentication.isLoggedInAndAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,10 +14,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DashboardController extends HttpServlet {
 
@@ -25,19 +33,14 @@ public class DashboardController extends HttpServlet {
     private UserTransaction utx;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // Check if user is logged in and has appropriate role
             HttpSession session = request.getSession();
             Users user = (Users) session.getAttribute("user");
 
             // If user is not logged in or is not staff/manager, throw a 403 error
-            if (user == null
-                    || !(user.getRole().equalsIgnoreCase("staff") || user.getRole().equalsIgnoreCase("manager"))) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
-                return;
-            }
+            if (!isLoggedInAndAuthorized(request, response, user, null)) return;
 
             String action = request.getParameter("action");
 

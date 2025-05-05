@@ -12,6 +12,7 @@ import Model.Orders;
 import Model.Products;
 import Model.Promotions;
 import Model.Users;
+import static Utils.Authentication.isLoggedIn;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -42,10 +43,7 @@ public class CheckoutController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=checkout");
-			return;
-		}
+		if (!isLoggedIn(req, res, user, "checkout")) return;
 
 		String promoCode = req.getParameter("promoCode");
 		String removePromo = req.getParameter("removePromo");
@@ -130,10 +128,7 @@ public class CheckoutController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=checkout");
-			return;
-		}
+		if (!isLoggedIn(req, res, user, "checkout")) return;
 
 		try {
 			String addressId = req.getParameter("addressId");

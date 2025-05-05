@@ -6,7 +6,7 @@ package Controller;
 
 import Model.Users;
 import static Utils.Authentication.hashPassword;
-import static Utils.Authentication.isAuthorized;
+import static Utils.Authentication.isLoggedInAndAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -47,10 +47,7 @@ public class UsersController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (!isAuthorized(user)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		if (user != null && user.getRole().equalsIgnoreCase("manager")) {
 			session.setAttribute("isManager", true);
@@ -85,10 +82,7 @@ public class UsersController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (!isAuthorized(user)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		if (path.equals("/admin/users") || path.equals("/admin/staff")) {
 			if (!user.getRole().equalsIgnoreCase("manager")) {

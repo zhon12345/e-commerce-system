@@ -1,5 +1,5 @@
 <%-- /WEB-INF/views/admin/admin_layout.jsp --%>
-<%@ page import="java.util.List, Model.Products, Model.Categories, Model.Users"%>
+<%@ page import="java.util.List, Utils.Authentication, jakarta.servlet.http.HttpServletRequest, jakarta.servlet.http.HttpServletResponse, Model.Products, Model.Categories, Model.Users"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     // Security check - verify user is logged in and has appropriate role
@@ -18,10 +18,7 @@
 
     // If user is not logged in or is neither staff nor manager, throw a 403 error
     // This will be caught by web.xml error handling and redirected to error.jsp
-    if (currentUser == null || (!isManager && !isStaff)) {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access to admin area");
-        return;
-    }
+    if (!Authentication.isLoggedInAndAuthorized(request, response, currentUser, (String) null)) return;
 %>
 
 <!DOCTYPE html>

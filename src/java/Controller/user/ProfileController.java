@@ -9,6 +9,7 @@ import Model.Cardinfo;
 import Model.Users;
 import static Utils.Authentication.hashPassword;
 import static Utils.Authentication.isAuthorized;
+import static Utils.Authentication.isLoggedIn;
 import Utils.FileManager;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -44,18 +45,13 @@ public class ProfileController extends HttpServlet {
 		String path = req.getServletPath();
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
+		
+		String redirect = path.substring(path.lastIndexOf('/') + 1);
 
-		if (user == null) {
-			String redirect = path.substring(path.lastIndexOf('/') + 1);
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=" + redirect);
-			return;
-		}
+		if (!isLoggedIn(req, res, user, redirect)) return;
 
 		if (path.equals("/admin/profile")) {
-			if (!isAuthorized(user)) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+			if (!isAuthorized(user)) return;
 
 			req.getRequestDispatcher("/admin/admin_profile.jsp").forward(req, res);
 			return;
@@ -144,19 +140,14 @@ public class ProfileController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (user == null) {
-			String redirect = path.substring(path.lastIndexOf('/') + 1);
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=" + redirect);
-			return;
-		}
+		String redirect = path.substring(path.lastIndexOf('/') + 1);
+
+		if (!isLoggedIn(req, res, user, redirect)) return;
 
 		String action = req.getParameter("action");
 
 		if (path.equals("/admin/profile")) {
-			if (!isAuthorized(user)) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+			if (!isAuthorized(user)) return;
 
 			switch (action) {
 				case "change_password":

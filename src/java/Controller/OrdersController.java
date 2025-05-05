@@ -6,7 +6,8 @@ package Controller;
 
 import Model.Orders;
 import Model.Users;
-import static Utils.Authentication.isAuthorized;
+import static Utils.Authentication.isLoggedIn;
+import static Utils.Authentication.isLoggedInAndAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -49,10 +50,7 @@ public class OrdersController extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (path.equals("/user/history")) {
-			if (user == null) {
-				res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=history");
-				return;
-			}
+			if (!isLoggedIn(req, res, user, "history")) return;
 
 			try {
 				String status = req.getParameter("status");
@@ -88,10 +86,7 @@ public class OrdersController extends HttpServlet {
 		}
 
 		if (path.equals("/admin/orders")) {
-			if (!isAuthorized(user)) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+			if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 			try {
 				String jpql = "SELECT DISTINCT o FROM Orders o " +
@@ -134,10 +129,7 @@ public class OrdersController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (!isAuthorized(user)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		try {
 			int orderId = Integer.parseInt(req.getParameter("orderId"));

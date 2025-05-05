@@ -7,7 +7,8 @@ package Controller;
 import Model.Products;
 import Model.Reviews;
 import Model.Users;
-import static Utils.Authentication.isAuthorized;
+import static Utils.Authentication.isLoggedIn;
+import static Utils.Authentication.isLoggedInAndAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,10 +42,7 @@ public class ReviewsController extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 
 		if (path.equals("/user/reviews")) {
-			if (user == null) {
-				res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=reviews");
-				return;
-			}
+			if (!isLoggedIn(req, res, user, "reviews")) return;
 
 			try {
 				List<Reviews> reviewsList = em.createQuery(
@@ -63,10 +61,7 @@ public class ReviewsController extends HttpServlet {
 		}
 
 		if (path.equals("/admin/reviews")) {
-			if (!isAuthorized(user)) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+			if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 			try {
 				List<Reviews> reviewsList = em.createQuery(
@@ -124,11 +119,8 @@ public class ReviewsController extends HttpServlet {
 		Users user = (Users) session.getAttribute("user");
 		String productId = req.getParameter("productId");
 
-		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=product?id=" + productId + "&tab=reviews");
-			return;
-		}
-
+		if (!isLoggedIn(req, res, user, "product?id=" + productId + "&tab=reviews")) return;
+		
 		try {
 			String rating = req.getParameter("rating");
 			String reviewText = req.getParameter("reviewText").trim();

@@ -8,6 +8,7 @@ import Model.Cart;
 import Model.Products;
 import Model.Promotions;
 import Model.Users;
+import static Utils.Authentication.isLoggedIn;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -38,10 +39,7 @@ public class CartController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=cart");
-			return;
-		}
+		if (!isLoggedIn(req, res, user, "cart")) return;
 
 		try {
 			List<Cart> cartList = em.createQuery("SELECT c FROM Cart c WHERE c.userId = :user", Cart.class)
@@ -71,10 +69,7 @@ public class CartController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (user == null) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp?redirect=cart");
-			return;
-		}
+		if (!isLoggedIn(req, res, user, "cart")) return;
 
 		String action = req.getParameter("action");
 
