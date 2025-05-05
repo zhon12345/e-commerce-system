@@ -75,7 +75,7 @@
 
 					<div class="right">
 						<div class="avatar">
-							<img src="<%= user.getAvatar() != null ? request.getContextPath() + "/uploads/" + user.getAvatar() : request.getContextPath() + "/assets/avatars/default.webp" %>" alt="Avatar" class="pic" id="userAvatar">
+							<img src="${pageContext.request.contextPath}/<%= user.getAvatarPath() != null ? "uploads/" + user.getAvatarPath() : "/assets/avatars/default.webp" %>" alt="Avatar" class="pic" id="userAvatar">
 							<!-- upload pic -->
 							<div class="upload-pic" title="Change photo">
 								<i class="fas fa-camera"></i>

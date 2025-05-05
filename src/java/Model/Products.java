@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 	@NamedQuery(name = "Products.findAll", query = "SELECT p FROM Products p"),
 	@NamedQuery(name = "Products.findById", query = "SELECT p FROM Products p WHERE p.id = :id"),
+	@NamedQuery(name = "Products.findByImagePath", query = "SELECT p FROM Products p WHERE p.imagePath = :imagePath"),
 	@NamedQuery(name = "Products.findByName", query = "SELECT p FROM Products p WHERE p.name = :name"),
 	@NamedQuery(name = "Products.findByDescription", query = "SELECT p FROM Products p WHERE p.description = :description"),
 	@NamedQuery(name = "Products.findByPrice", query = "SELECT p FROM Products p WHERE p.price = :price"),
@@ -49,6 +50,8 @@ public class Products implements Serializable {
   @Basic(optional = false)
   @Column(name = "ID")
 	private Integer id;
+	@Column(name = "IMAGE_PATH")
+	private String imagePath;
 	@Basic(optional = false)
   @Column(name = "NAME")
 	private String name;
@@ -96,6 +99,14 @@ public class Products implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public String getName() {

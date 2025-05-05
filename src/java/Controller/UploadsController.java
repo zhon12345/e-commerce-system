@@ -18,20 +18,19 @@ public class UploadsController extends HttpServlet {
 			return;
 		}
 
-		String fileName = pathInfo.substring(1);
+		String filePath = pathInfo.substring(1);
+		if (filePath.contains("..") || filePath.contains("://")) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid file path.");
+			return;
+		}
 
 		String webAppPath = getServletContext().getRealPath("/");
 		File webAppDir = new File(webAppPath);
 		File projectRootDir = webAppDir.getParentFile().getParentFile();
-		File uploadDir = new File(projectRootDir, "uploads/avatars");
+		File uploadDir = new File(projectRootDir, "uploads");
+		File file = new File(uploadDir, filePath);
 
-		if (!uploadDir.exists()) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND, "Upload directory not found.");
-			return;
-		}
-
-		File file = new File(uploadDir, fileName);
-		if (!file.exists()) {
+		if (!file.exists() || !file.isFile()) {
 			res.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found.");
 			return;
 		}
@@ -42,11 +41,15 @@ public class UploadsController extends HttpServlet {
 		}
 		res.setContentType(contentType);
 
+		if (contentType.startsWith("image/")) {
+			res.setHeader("Cache-Control", "public, max-age=86400");
+		}
+
 		try {
 			Files.copy(file.toPath(), res.getOutputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to stream file.");
+			throw new ServletException(e);
 		}
 	}
 }

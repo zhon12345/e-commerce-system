@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
 	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
 	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
-	@NamedQuery(name = "Users.findByAvatar", query = "SELECT u FROM Users u WHERE u.avatar = :avatar"),
+	@NamedQuery(name = "Users.findByAvatarPath", query = "SELECT u FROM Users u WHERE u.avatarPath = :avatarPath"),
 	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
 	@NamedQuery(name = "Users.findByName", query = "SELECT u FROM Users u WHERE u.name = :name"),
 	@NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
@@ -49,8 +49,8 @@ public class Users implements Serializable {
   @Basic(optional = false)
   @Column(name = "ID")
 	private Integer id;
-	@Column(name = "AVATAR")
-	private String avatar;
+	@Column(name = "AVATAR_PATH")
+	private String avatarPath;
 	@Basic(optional = false)
   @Column(name = "USERNAME")
 	private String username;
@@ -107,12 +107,12 @@ public class Users implements Serializable {
 		this.id = id;
 	}
 
-	public String getAvatar() {
-		return avatar;
+	public String getAvatarPath() {
+		return avatarPath;
 	}
 
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
+	public void setAvatarPath(String avatarPath) {
+		this.avatarPath = avatarPath;
 	}
 
 	public String getUsername() {
