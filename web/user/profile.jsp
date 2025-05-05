@@ -18,7 +18,7 @@
 <body>
 	<jsp:useBean id="user" class="Model.Users" scope="session" />
 
-	<% if (session.getAttribute("editSuccess") != null && session.getAttribute("editSuccess").equals("true")) { %>
+	<% if (session.getAttribute("success") != null) { %>
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			Swal.fire({
@@ -28,7 +28,7 @@
 			});
 		});
 	</script>
-	<% session.removeAttribute("editSuccess"); %>
+	<% session.removeAttribute("success"); %>
 	<% } %>
 
 	<!-- title -->
@@ -51,7 +51,7 @@
 					<div class="left">
 						<div class="info">
 							<label for="username">Username:</label>
-							<input type="text" id="username" name="username" value="${user.username}" disabled>
+							<input type="text" id="username" name="username" value="${user.username}" readonly>
 						</div>
 
 						<div class="info name">

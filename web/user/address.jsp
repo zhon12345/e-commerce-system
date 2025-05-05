@@ -1,5 +1,5 @@
 <%@page import="java.util.List, Model.Addresses"%>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 
@@ -66,22 +66,21 @@
 					</div>
 
 					<div class="actions">
-						<button class="edit-btn" onclick="window.location.href = '${pageContext.request.contextPath}/user/address?action=edit&id=<%= addr.getId() %>'">Edit</button>
-						<button class="delete" onclick="confirmDelete('<%= request.getContextPath() + "/user/address?action=delete&id=" + addr.getId()%>')">Delete</button>
+						<button class="edit-btn" onclick="window.location.href = '${pageContext.request.contextPath}/user/address?action=update&id=<%= addr.getId() %>'">Edit</button>
+						<button class="delete" onclick="confirmDelete(<%= addr.getId()%>)">Delete</button>
 					</div>
 				</div>
 				<%
 						}
 					} else {
 				%>
-					<div class="empty-status">
-						<i class="fas fa-map-marker-alt"></i>
-						<h3>No Saved Addresses</h3>
-						<p>You haven't added any addresses yet. Add your first address to get started.</p>
-					</div>
+				<div class="empty-status">
+					<i class="fas fa-map-marker-alt"></i>
+					<h3>No Saved Addresses</h3>
+					<p>You haven't added any addresses yet. Add your first address to get started.</p>
+				</div>
 				<% } %>
 			</div>
-
 		</div>
 	</div>
 
@@ -90,17 +89,16 @@
 		<div class="add-content">
 			<span class="close-btn" id="closePopupBtn">&times;</span>
 			<h2>
-				<%= request.getAttribute("editAddress") !=null ? "Edit Address" : "Add New Address" %>
+				<%= request.getAttribute("updateAddress") !=null ? "Edit Address" : "Add New Address" %>
 			</h2>
 			<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/address" method="POST">
 				<%
-					if (request.getAttribute("editAddress") !=null) {
-						Addresses editAddress=(Addresses)
-						request.getAttribute("editAddress");
+					if (request.getAttribute("updateAddress") !=null) {
+						Addresses updateAddress = (Addresses) request.getAttribute("updateAddress");
 				%>
-				<input type="hidden" name="action" value="edit">
-				<input type="hidden" name="id" value="<%= editAddress.getId() %>">
+				<input type="hidden" name="id" value="<%= updateAddress.getId() %>">
 				<% } %>
+				<input type="hidden" name="action" value="<%= request.getAttribute("updateAddress") !=null ? "update" : "create" %>">
 
 				<div class="add-info name">
 					<label for="name">Receiver Name</label>
@@ -137,11 +135,16 @@
 					<span class="error-message">${stateError}</span>
 				</div>
 				<button type="submit" class="btn">
-					<%= request.getAttribute("editAddress") !=null ? "Save" : "Add" %>
+					<%= request.getAttribute("updateAddress") !=null ? "Save" : "Add" %>
 				</button>
 			</form>
 		</div>
 	</div>
+
+	<form id="deleteForm" method="POST" action="${pageContext.request.contextPath}/user/address" style="display:none;">
+		<input type="hidden" name="action" value="delete">
+		<input type="hidden" id="deleteId" name="id">
+	</form>
 
 	<script>
 		window.addEventListener("DOMContentLoaded", () => {
@@ -152,19 +155,19 @@
 					String error = (String) request.getAttribute(field + "Error");
 					if (error != null) {
 			%>
-						addPopup.style.display = 'flex';
-						showError('<%= field %>', '<%= error %>');
+			addPopup.style.display = 'flex';
+			showError('<%= field %>', '<%= error %>');
 			<%
 					}
 				}
 
-				if (request.getAttribute("editAddress") != null) {
+				if (request.getAttribute("updateAddress") != null) {
 			%>
 				addPopup.style.display = 'flex';
 			<% } %>
 			});
 
-		function confirmDelete(url) {
+		function confirmDelete(id) {
 			Swal.fire({
 				title: 'Are you sure?',
 				text: "You won't be able to revert this!",
@@ -175,44 +178,45 @@
 				confirmButtonText: 'Yes, delete it!'
 			}).then((result) => {
 				if (result.isConfirmed) {
-					window.location.href = url;
+					document.getElementById('deleteId').value = id;
+					document.getElementById('deleteForm').submit();
 				}
 			});
 		}
 
 		<% if (session.getAttribute("deleteSuccess") != null) { %>
-		Swal.fire({
-			icon: 'success',
-			title: 'Deleted!',
-			text: 'Your address has been deleted.',
-			confirmButtonColor: '#4C60DF',
-			showConfirmButton: true,
-			timer: 1500
-		});
-		<% session.removeAttribute("deleteSuccess"); %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Deleted!',
+				text: 'Your address has been deleted.',
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
+				timer: 1500
+			});
+			<% session.removeAttribute("deleteSuccess"); %>
 		<% } %>
-		<% if (session.getAttribute("addSuccess") != null) { %>
-		Swal.fire({
-			icon: 'success',
-			title: 'Added!',
-			text: 'Your address has been added successfully.',
-			confirmButtonColor: '#4C60DF',
-			showConfirmButton: true,
-			timer: 1500
-		});
-		<% session.removeAttribute("addSuccess"); %>
+		<% if (session.getAttribute("createSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Added!',
+				text: 'Your address has been added successfully.',
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
+				timer: 1500
+			});
+			<% session.removeAttribute("createSuccess"); %>
 		<% } %>
 
-		<% if (session.getAttribute("editSuccess") != null) { %>
-		Swal.fire({
-			icon: 'success',
-			title: 'Updated!',
-			text: 'Your address has been updated successfully.',
-			confirmButtonColor: '#4C60DF',
-			showConfirmButton: true,
-			timer: 1500
-		});
-		<% session.removeAttribute("editSuccess"); %>
+		<% if (session.getAttribute("updateSuccess") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Updated!',
+				text: 'Your address has been updated successfully.',
+				confirmButtonColor: '#4C60DF',
+				showConfirmButton: true,
+				timer: 1500
+			});
+			<% session.removeAttribute("updateSuccess"); %>
 		<% } %>
 	</script>
 </body>

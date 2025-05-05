@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author zhon12345
  */
-@WebServlet(name = "UsersController", urlPatterns = { "/admin/profile", "/admin/users", "/admin/staff" })
+@WebServlet(name = "UsersController", urlPatterns = { "/admin/users", "/admin/staff" })
 public class UsersController extends HttpServlet {
 
 	@PersistenceContext
@@ -54,11 +54,6 @@ public class UsersController extends HttpServlet {
 
 		if (user != null && user.getRole().equalsIgnoreCase("manager")) {
 			session.setAttribute("isManager", true);
-		}
-
-		if (path.equals("/admin/profile")) {
-			req.getRequestDispatcher("/admin/admin_profile.jsp").forward(req, res);
-			return;
 		}
 
 		if (path.equals("/admin/users")) {
@@ -92,50 +87,6 @@ public class UsersController extends HttpServlet {
 
 		if (!isAuthorized(user)) {
 			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
-
-		if (path.equals("/admin/profile")) {
-			String action = req.getParameter("action");
-
-			if (action.equals("change_password")) {
-				String currentPassword = req.getParameter("currentPassword");
-				String newPassword = req.getParameter("newPassword");
-				String confirmPassword = req.getParameter("confirmPassword");
-
-				if (!user.getPassword().equals(hashPassword(currentPassword))) {
-					session.setAttribute("error", "Current password is incorrect");
-					return;
-				}
-
-				if (!newPassword.equals(confirmPassword)) {
-					session.setAttribute("error", "New password and confirm password do not match");
-					return;
-				}
-
-				try {
-					utx.begin();
-					user.setPassword(hashPassword(newPassword));
-					em.merge(user);
-					utx.commit();
-
-					session.setAttribute("success", "Password updated successfully");
-				} catch (Exception e) {
-					try {
-						if (utx != null) {
-							utx.rollback();
-						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-
-			if (action.equals("update_profile")) {
-				updateUser(req, session, user.getId().toString(), "Profile");
-			}
-
-			res.sendRedirect(req.getContextPath() + path);
 			return;
 		}
 

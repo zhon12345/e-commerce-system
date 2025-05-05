@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
     <servlet>
-        <servlet-name>ProfileController</servlet-name>
-        <servlet-class>Controller.user.ProfileController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>UploadsController</servlet-name>
         <servlet-class>Controller.UploadsController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddressController</servlet-name>
-        <servlet-class>Controller.user.AddressController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CartController</servlet-name>
@@ -24,29 +16,13 @@
         <servlet-name>CheckoutController</servlet-name>
         <servlet-class>Controller.CheckoutController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>CardController</servlet-name>
-        <servlet-class>Controller.user.CardController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>DashboardController</servlet-name>
         <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ProfileController</servlet-name>
-        <url-pattern>/user/profile</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>UploadsController</servlet-name>
         <url-pattern>/uploads/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddressController</servlet-name>
-        <url-pattern>/user/address</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CardController</servlet-name>
-        <url-pattern>/user/card</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CartController</servlet-name>

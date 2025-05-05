@@ -82,11 +82,12 @@ public class Addresses implements Serializable {
 		this.id = id;
 	}
 
-	public Addresses(Integer id, String receiverName, String contactNumber, String address1, String city, String state, String postalCode) {
-		this.id = id;
+	public Addresses(Users userId, String receiverName, String contactNumber, String address1, String address2, String city, String state, String postalCode) {
+		this.userId = userId;
 		this.receiverName = receiverName;
 		this.contactNumber = contactNumber;
 		this.address1 = address1;
+		this.address2 = address2;
 		this.city = city;
 		this.state = state;
 		this.postalCode = postalCode;
