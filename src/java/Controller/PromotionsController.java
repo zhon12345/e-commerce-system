@@ -6,7 +6,7 @@ package Controller;
 
 import Model.Promotions;
 import Model.Users;
-import static Utils.Authentication.isAuthorized;
+import static Utils.Authentication.isLoggedInAndAuthorized;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -67,10 +67,7 @@ public class PromotionsController extends HttpServlet {
 		}
 
 		if (path.equals("/admin/promotions")) {
-			if (!isAuthorized(user)) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+			if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 			try {
 				List<Promotions> promotionsList = em.createNamedQuery("Promotions.findByIsActive", Promotions.class)
@@ -108,10 +105,7 @@ public class PromotionsController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (!isAuthorized(user)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		String action = req.getParameter("action");
 

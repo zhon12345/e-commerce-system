@@ -4,7 +4,7 @@ import Model.Categories;
 import Model.Products;
 import Model.Reviews;
 import Model.Users;
-import static Utils.Authentication.isAuthorized;
+import static Utils.Authentication.isLoggedInAndAuthorized;
 import Utils.FileManager;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
@@ -53,10 +53,9 @@ public class ProductsController extends HttpServlet {
 				HttpSession session = req.getSession();
 				Users user = (Users) session.getAttribute("user");
 
-				if (isAuthorized(user)) {
-					fetchAdminProductsList(req, res);
-					return;
-				}
+				if (!isLoggedInAndAuthorized(req, res, user, null)) return;
+
+				fetchAdminProductsList(req, res);
 			}
 
 			res.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -88,10 +87,7 @@ public class ProductsController extends HttpServlet {
 		HttpSession session = req.getSession();
 		Users user = (Users) session.getAttribute("user");
 
-		if (!isAuthorized(user)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		String action = req.getParameter("action");
 
