@@ -87,7 +87,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="action" value="create">
+
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="productName" class="form-label">Product Name</label>
@@ -145,9 +146,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="edit">
+                <input type="hidden" name="action" value="update">
                 <input type="hidden" id="editProductId" name="productId">
                 <input type="hidden" id="editOldProductName" name="oldProductName">
+
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="editProductName" class="form-label">Product Name</label>
