@@ -7,6 +7,7 @@ package Model;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -78,7 +79,7 @@ public class Orders implements Serializable {
 	@JoinColumn(name = "USER_ID", referencedColumnName = "ID")
   @ManyToOne
 	private Users userId;
-	@OneToMany(mappedBy = "orderId")
+	@OneToMany(mappedBy = "orderId", fetch = FetchType.EAGER)
 	private List<Orderdetails> orderdetailsList;
 
 	public Orders() {
