@@ -57,8 +57,7 @@
 					<div class="left">
 						<div class="header">
 							<a href="${pageContext.request.contextPath}/product?id=<%= review.getProductId() %>">
-								<% String imagePath = request.getContextPath() + "/assets/products/" + review.getProductId().getName() + "/1"; %>
-								<img src="<%= imagePath %>.png" onerror="this.onerror=null; this.src='<%= imagePath %>.jpg'" alt="<%= review.getProductId().getName() %>" class="image">
+								<img src="${pageContext.request.contextPath}/<%= review.getProductId().getImagePath() %>" alt="<%= review.getProductId().getName() %>" class="image">
 							</a>
 							<div class="info">
 								<div class="name"><%= review.getProductId().getName() %></div>

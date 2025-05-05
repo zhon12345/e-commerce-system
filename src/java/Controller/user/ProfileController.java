@@ -5,16 +5,11 @@
 package Controller.user;
 
 import Model.Users;
+import Utils.FileManager;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -97,48 +92,12 @@ public class ProfileController extends HttpServlet {
 			hasErrors = true;
 		}
 
-		String avatar = user.getAvatar();
-		if (filePart != null && filePart.getSize() > 0) {
-			try {
-				String contentType = filePart.getContentType();
-				if (!contentType.startsWith("image/")) {
-					req.setAttribute("avatarError", "Only images are allowed");
-					hasErrors = true;
-				} else {
-					String extension = contentType.split("/")[1];
-					String fileName = UUID.randomUUID() + "." + extension;
-
-					String webAppPath = getServletContext().getRealPath("/");
-					File webAppDir = new File(webAppPath);
-					File projectRootDir = webAppDir.getParentFile().getParentFile();
-					File uploadDir = new File(projectRootDir, UPLOAD_DIR);
-
-					if (!uploadDir.exists()) {
-						uploadDir.mkdirs();
-					}
-
-					if (avatar != null && !avatar.isEmpty()) {
-						File oldFile = new File(uploadDir, avatar);
-						if (oldFile.exists()) {
-							try {
-								Files.delete(oldFile.toPath());
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-
-					File file = new File(uploadDir, fileName);
-					try (InputStream input = filePart.getInputStream()) {
-						Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-					}
-
-					avatar = fileName;
-				}
-			} catch (Exception e) {
-				req.setAttribute("avatarError", "Upload failed: " + e.getMessage());
-				hasErrors = true;
-			}
+		String avatar = user.getAvatarPath();
+		try {
+			avatar = FileManager.uploadAvatar(filePart, getServletContext(), user.getAvatarPath());
+		} catch (Exception e) {
+			req.setAttribute("avatarError", "Upload failed: " + e.getMessage());
+			hasErrors = true;
 		}
 
 		if (hasErrors) {
@@ -155,7 +114,7 @@ public class ProfileController extends HttpServlet {
 			user.setName(name);
 			user.setEmail(email);
 			user.setContact(contact);
-			user.setAvatar(avatar);
+			user.setAvatarPath(avatar);
 
 			em.merge(user);
 			utx.commit();
@@ -172,7 +131,7 @@ public class ProfileController extends HttpServlet {
 			} catch (Exception ex) {
 			}
 
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			throw new ServletException(e);
 		}
 	}
 
