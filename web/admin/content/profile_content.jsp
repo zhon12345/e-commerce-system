@@ -25,7 +25,7 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-                <form id="profileForm" action="${pageContext.request.contextPath}/admin/profile" method="POST" onsubmit="return validateForm()">
+                <form id="profileForm" onsubmit="return validateForm()" action="${pageContext.request.contextPath}/admin/profile" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="update_profile">
 
                     <div class="mb-3">
@@ -44,6 +44,12 @@
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" value="${user.getEmail()}" required>
                         <div class="invalid-feedback" id="emailError"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="phone" class="form-control" id="phone" name="phone" value="${user.getContact()}" required>
+                        <div class="invalid-feedback" id="phoneError"></div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">

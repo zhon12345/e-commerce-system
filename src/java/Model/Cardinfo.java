@@ -69,8 +69,10 @@ public class Cardinfo implements Serializable {
 		this.id = id;
 	}
 
-	public Cardinfo(Integer id, short expMonth, short expYear) {
-		this.id = id;
+	public Cardinfo(Users userId, String cardNumber, String cardName, short expMonth, short expYear) {
+		this.userId = userId;
+		this.cardNumber = cardNumber;
+		this.cardName = cardName;
 		this.expMonth = expMonth;
 		this.expYear = expYear;
 	}
