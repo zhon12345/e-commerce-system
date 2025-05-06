@@ -1,12 +1,3 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:25:23 pm
-    Author     : yjee0
-*/
-
 :root {
 	--primary-color: #4C60DF;
 	--second-color: #3a4bb5;
@@ -18,7 +9,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 	max-height: 600px;
 }
 
-/* category */
 .category-section {
 	max-width: 1200px;
 	margin: 40px auto;
@@ -72,7 +62,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 	font-weight: 500;
 }
 
-/* Voucher Section */
 .voucher-section {
 	max-width: 1250px;
 	margin: 40px auto;

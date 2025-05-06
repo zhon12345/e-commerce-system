@@ -19,25 +19,21 @@
 </header>
 
 <body>
-	<!-- title -->
 	<div class="title">
 		<h2>Address</h2>
 	</div>
 
 	<div class="container">
-		<!-- sidebar  -->
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="address"/>
     </jsp:include>
 
-		<!-- content -->
 		<div class="content">
 			<div class="header">
 				<h2>My Address</h2>
 				<button class="add" id="addAddressBtn">Add New Address</button>
 			</div>
 
-			<!-- address display sample -->
 			<div class="list">
 				<%
 					List<Addresses> addresses = (List<Addresses>) request.getAttribute("addresses");
@@ -84,7 +80,6 @@
 		</div>
 	</div>
 
-	<!-- edit profile -->
 	<div class="add-container" id="addPopup">
 		<div class="add-content">
 			<span class="close-btn" id="closePopupBtn">&times;</span>

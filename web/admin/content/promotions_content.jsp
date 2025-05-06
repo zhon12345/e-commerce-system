@@ -199,31 +199,24 @@ document.addEventListener('DOMContentLoaded', function() {
         'editValidFrom': 'editValidTo'
     };
 
-    // Set minimum dates and add event listeners for date inputs
     Object.entries(dateInputs).forEach(([fromId, toId]) => {
         const fromElement = document.getElementById(fromId);
         const toElement = document.getElementById(toId);
 
-        // Set minimum date to today
         fromElement.min = today;
         toElement.min = today;
 
-        // Validate dates when from date is changed
         fromElement.addEventListener('change', function() {
             toElement.min = this.value;
         });
     });
 
-    // Handle discount input validation
     ['discount', 'editDiscount'].forEach(id => {
         const discountInput = document.getElementById(id);
 
-        // Validate on input event - limit to 100% and ensure only integers
         discountInput.addEventListener('input', function() {
-            // Remove any non-numeric characters
             this.value = this.value.replace(/[^0-9]/g, '');
 
-            // Limit to 100
             if (parseInt(this.value) > 100) {
                 this.value = 100;
             }

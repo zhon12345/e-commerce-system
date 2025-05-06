@@ -85,7 +85,6 @@
 		</div>
 	</div>
 
-	<!-- Add/Edit Card Form -->
 	<div class="add-container" id="addPopup">
 		<div class="add-content">
 			<span class="close-btn" id="closePopupBtn">&times;</span>

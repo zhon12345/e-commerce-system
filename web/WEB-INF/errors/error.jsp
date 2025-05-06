@@ -1,9 +1,3 @@
-<%--
-    Document   : error
-    Created on : Apr 29, 2025, 3:37:11 PM
-    Author     : zhon12345
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true"%>
 <!DOCTYPE html>
 <html>

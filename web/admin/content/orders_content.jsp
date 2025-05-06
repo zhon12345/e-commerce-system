@@ -1,6 +1,3 @@
-<%-- /WEB-INF/views/admin/content/orders_content.jsp --%>
-<%-- This file contains only the content specific to the Order Management page --%>
-<%-- /WEB-INF/views/admin/content/orders_content.jsp --%>
 <%@ page import="java.util.List, Model.Orders, Model.Orderdetails, java.text.SimpleDateFormat" %>
 
 <% if (session.getAttribute("error") != null) { %>

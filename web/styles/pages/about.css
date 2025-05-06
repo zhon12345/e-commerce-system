@@ -1,12 +1,3 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:32:12 pm
-    Author     : yjee0
-*/
-
 :root {
     --primary-color: #4C60DF;
     --secondary-color: #6c757d;
@@ -14,26 +5,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     --dark-color: #343a40;
 }
 
-/* container */
 .container {
     max-width: 1000px;
     margin: 50px auto;
     padding: 0 30px;
 }
 
-/* our mission */
 .about {
     background: white;
     border-radius: 10px;
     padding: 40px;
     margin-bottom: 40px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .about:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .about h2 {
@@ -57,11 +46,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 
 .divider {
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
     margin: 40px 0;
 }
 
-/* our vission */
 .ov {
     font-style: italic;
     font-size: 1.1rem;
@@ -73,7 +61,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border-radius: 0 5px 5px 0;
 }
 
-/* founder */
 .founders {
     text-align: center;
     margin-top: 40px;
@@ -90,13 +77,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     background: white;
     border-radius: 10px;
     padding: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .avatar {
@@ -127,7 +114,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     font-size: 0.9rem;
 }
 
-/* media */
 @media (max-width: 768px) {
     .title h2 {
         font-size: 1.8rem;

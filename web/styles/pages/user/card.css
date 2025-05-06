@@ -1,19 +1,9 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:44:41 pm
-    Author     : yjee0
-*/
-
 :root {
     --primary-color: #4C60DF;
     --secondary-color: #f8f9fa;
     --danger-color: #e74c3c;
 }
 
-/* container */
 .container {
     display: flex;
     max-width: 1200px;
@@ -21,7 +11,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     padding: 0 20px;
 }
 
-/* Card Content */
 .content {
     flex: 1;
     background: white;
@@ -66,7 +55,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-right: 8px;
 }
 
-/* card styles */
 .list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -101,7 +89,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-bottom: 5px;
 }
 
-/* Edit/Delete button styles */
 .card .actions {
     margin-top: 25px;
     display: flex;
@@ -122,7 +109,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     cursor: pointer;
 }
 
-/* Edit button */
 .card .actions a.edit {
     background: rgba(255, 255, 255, 0.15);
     color: white;
@@ -135,7 +121,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Delete button */
 .card .actions button.delete {
     background: rgba(231, 76, 60, 0.15);
     color: #ff8b80;
@@ -148,7 +133,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border-color: rgba(231, 76, 60, 0.5);
 }
 
-/* Add icons */
 .card .actions a.edit i {
     font-size: 14px;
 }

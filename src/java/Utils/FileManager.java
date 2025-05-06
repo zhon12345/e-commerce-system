@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Utils;
 
 import jakarta.servlet.ServletContext;
@@ -13,10 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-/**
- *
- * @author zhon12345
- */
 public class FileManager {
 
 	private static final String BASE_UPLOAD_DIR = "uploads";

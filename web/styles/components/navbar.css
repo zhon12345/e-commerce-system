@@ -1,12 +1,3 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:17:30 pm
-    Author     : yjee0
-*/
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -75,7 +66,6 @@ body {
     gap: 40px;
 }
 
-/* icon style */
 .nav-icon {
     font-size: 22px;
     color: #4C60DF;
@@ -92,7 +82,6 @@ body {
     transform: scale(1.1);
 }
 
-/* profile dropdown */
 .user-dropdown {
     position: relative;
     display: inline-block;
@@ -128,7 +117,6 @@ body {
     display: block;
 }
 
-/* Search styles */
 .search-container form {
     display: flex;
     align-items: center;

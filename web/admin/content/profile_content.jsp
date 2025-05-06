@@ -99,12 +99,10 @@ function validateForm() {
     const name = document.getElementById('name');
     const email = document.getElementById('email');
 
-    // Reset previous errors
     username.classList.remove('is-invalid');
     name.classList.remove('is-invalid');
     email.classList.remove('is-invalid');
 
-    // Validate username
     if (!username.value.trim()) {
         username.classList.add('is-invalid');
         document.getElementById('usernameError').textContent = 'Username is required';
@@ -115,14 +113,12 @@ function validateForm() {
         isValid = false;
     }
 
-    // Validate name
     if (!name.value.trim()) {
         name.classList.add('is-invalid');
         document.getElementById('nameError').textContent = 'Name is required';
         isValid = false;
     }
 
-    // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.value.trim()) {
         email.classList.add('is-invalid');
@@ -143,19 +139,16 @@ function validatePasswordForm() {
     const newPassword = document.getElementById('newPassword');
     const confirmPassword = document.getElementById('confirmPassword');
 
-    // Reset previous errors
     currentPassword.classList.remove('is-invalid');
     newPassword.classList.remove('is-invalid');
     confirmPassword.classList.remove('is-invalid');
 
-    // Validate current password
     if (!currentPassword.value.trim()) {
         currentPassword.classList.add('is-invalid');
         document.getElementById('currentPasswordError').textContent = 'Current password is required';
         isValid = false;
     }
 
-    // Validate new password
     if (!newPassword.value.trim()) {
         newPassword.classList.add('is-invalid');
         document.getElementById('newPasswordError').textContent = 'New password is required';
@@ -166,7 +159,6 @@ function validatePasswordForm() {
         isValid = false;
     }
 
-    // Validate confirm password
     if (!confirmPassword.value.trim()) {
         confirmPassword.classList.add('is-invalid');
         document.getElementById('confirmPasswordError').textContent = 'Please confirm your password';

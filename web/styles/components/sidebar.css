@@ -1,24 +1,14 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 17 Apr 2025, 12:19:58 am
-    Author     : yjee0
-*/
-
 :root {
     --primary-color: #4C60DF;
     --secondary-color: #f8f9fa;
 }
 
-/* sidebar */
 .sidebar {
     width: 250px;
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     margin-right: 20px;
 }
 
@@ -54,4 +44,3 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 .sidebar a:hover:not(.active) {
     background-color: #f0f0f0;
 }
-

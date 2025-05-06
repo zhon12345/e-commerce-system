@@ -1,9 +1,3 @@
-<%--
-    Document   : product
-    Created on : 22 Apr 2025, 12:49:51 am
-    Author     : yjee0
---%>
-
 <%@ page import="java.util.List, java.text.SimpleDateFormat, Model.Reviews"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -28,12 +22,10 @@
 
 	<div class="container">
 		<div class="product-container">
-			<!-- Left Box (Product Image) -->
 			<div class="left-box">
 				<img src="${pageContext.request.contextPath}/<%= product.getImagePath() %>" alt="<%= product.getName() %>" class="product-image">
 			</div>
 
-			<!-- Right Box (Product Details) -->
 			<div class="right-box">
 				<div class="product-header">
 				${product.name}
@@ -80,7 +72,6 @@
 			</div>
 		</div>
 
-		<!-- Bottom Box (Description/Review) -->
 		<div class="bottom-box">
 			<div class="tab-container">
 				<div class="tab" onclick="switchTab('description', event)">Description</div>

@@ -262,7 +262,6 @@ public class ProductsController extends BaseController {
 				.setParameter("isArchived", false)
 				.getResultList();
 
-		// Get all categories
 		List<Categories> categoryList = em.createNamedQuery("Categories.findAll", Categories.class)
 				.getResultList();
 
@@ -277,17 +276,14 @@ public class ProductsController extends BaseController {
 			product.setName(req.getParameter("name"));
 			product.setDescription(req.getParameter("description"));
 
-			// Set price (convert from String to BigDecimal)
 			String priceStr = req.getParameter("price");
 			BigDecimal price = new BigDecimal(priceStr);
 			product.setPrice(price);
 
-			// Set stock (convert from String to int)
 			String stockStr = req.getParameter("stock");
 			int stock = Integer.parseInt(stockStr);
 			product.setStock(stock);
 
-			// Set category if provided
 			String categoryIdStr = req.getParameter("categoryId");
 			if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
 				int categoryId = Integer.parseInt(categoryIdStr);
@@ -309,7 +305,6 @@ public class ProductsController extends BaseController {
 				e.printStackTrace();
 			}
 
-			// Persist the product using utx
 			utx.begin();
 			em.persist(product);
 			utx.commit();
@@ -324,21 +319,17 @@ public class ProductsController extends BaseController {
 		try {
 			String oldImagePath = product.getImagePath();
 
-			// Update product fields
 			product.setName(req.getParameter("name"));
 			product.setDescription(req.getParameter("description"));
 
-			// Update price
 			String priceStr = req.getParameter("price");
 			BigDecimal price = new BigDecimal(priceStr);
 			product.setPrice(price);
 
-			// Update stock
 			String stockStr = req.getParameter("stock");
 			int stock = Integer.parseInt(stockStr);
 			product.setStock(stock);
 
-			// Update category if provided
 			String categoryIdStr = req.getParameter("categoryId");
 			if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
 				int categoryId = Integer.parseInt(categoryIdStr);
@@ -364,7 +355,6 @@ public class ProductsController extends BaseController {
 				}
 			}
 
-			// Update the product using utx
 			utx.begin();
 			em.merge(product);
 			utx.commit();

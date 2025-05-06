@@ -1,9 +1,3 @@
-<%--
-    Document   : aboutus
-    Created on : 1 Apr 2025, 4:19:48 pm
-    Author     : yjee0
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -21,12 +15,10 @@
         <%@include file="components/navbar.jsp" %>
     </header>
     <body>
-        <!-- title -->
         <div class="title">
             <h2>About Us</h2>
         </div>
 
-        <!-- Our Mission -->
         <div class="container">
             <div class="about">
                 <h2>Our Mission</h2>
@@ -35,7 +27,6 @@
 
             <div class="divider"></div>
 
-            <!-- Our Vision -->
             <div class="about">
                 <h2>Our Vision</h2>
                 <p class="mv">"Construct a community of like-minded tech enthusiasts while enriching everyone's digital journey."</p>
@@ -43,7 +34,6 @@
 
             <div class="divider"></div>
 
-            <!-- founders -->
             <div class="about">
                 <h2>Our Story</h2>
                 <p class="mv">"Founded by six friends united by a shared passion for technology.

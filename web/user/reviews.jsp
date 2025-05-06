@@ -19,18 +19,15 @@
 </header>
 
 <body>
-	<!-- title -->
 	<div class="title">
 		<h2>Reviews</h2>
 	</div>
 
 	<div class="container">
-		<!-- sidebar -->
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="reviews"/>
     </jsp:include>
 
-		<!-- content of avatar -->
 		<div class="content">
 			<div class="header-status">
 				<h2>My Reviews</h2>

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
 
 import jakarta.persistence.Basic;
@@ -19,10 +15,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author zhon12345
- */
 @Entity
 @Table(name = "ORDERDETAILS")
 @XmlRootElement
@@ -42,7 +34,6 @@ public class Orderdetails implements Serializable {
 	@Basic(optional = false)
   @Column(name = "QUANTITY")
 	private int quantity;
-	// @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
 	@Basic(optional = false)
   @Column(name = "PRICE")
 	private BigDecimal price;

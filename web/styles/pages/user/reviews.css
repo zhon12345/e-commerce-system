@@ -1,18 +1,8 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:45:09 pm
-    Author     : yjee0
-*/
-
 :root {
 	--primary-color: #4C60DF;
 	--secondary-color: #f8f9fa;
 }
 
-/* container */
 .container {
 	display: flex;
 	max-width: 1200px;
@@ -20,7 +10,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 	padding: 0 20px;
 }
 
-/* History Content */
 .content {
 	flex: 1;
 	background: white;
@@ -29,7 +18,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Review Cards */
 .card {
 	display: flex;
 	justify-content: space-between;

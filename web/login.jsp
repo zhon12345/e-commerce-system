@@ -1,16 +1,9 @@
-<%--
-    Document   : login
-    Created on : 1 Apr 2025, 3:19:40 pm
-    Author     : yjee0
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    // Check if user is already logged in
-    if (session.getAttribute("user") != null) {
-        response.sendRedirect(request.getContextPath() + "/index");
-        return;
-    }
+	if (session.getAttribute("user") != null) {
+		response.sendRedirect(request.getContextPath() + "/index");
+		return;
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -30,16 +23,12 @@
 			<h2>Login</h2>
 		</div>
 
-		<!-- container -->
 		<div class="container">
-			<!<!-- box -->
 			<div class="box">
-				<!-- image -->
 				<div class="image">
 					<img src="${pageContext.request.contextPath}/assets/logo/text.png" />
 				</div>
 
-				<!-- form -->
 				<div class="form">
 					<h1 class="login-title">Login</h1>
 
@@ -71,7 +60,6 @@
 						<button type="submit" class="button">Login</button>
 					</form>
 
-					<!-- go to sign up page -->
 					<div class="signup">Don't have an account? <a href="register.jsp">Register</a></div>
 				</div>
 			</div>

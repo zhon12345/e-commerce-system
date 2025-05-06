@@ -108,7 +108,6 @@ function switchTab(tabName, event) {
 	} else {
 		document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
 	}
-
 }
 
 window.updateQuantity = updateQuantity;
