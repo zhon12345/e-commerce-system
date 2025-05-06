@@ -22,8 +22,15 @@ import java.util.Set;
 @WebServlet(name = "DashboardController", urlPatterns = { "/admin/dashboard" })
 public class DashboardController extends BaseController {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 *
+	 * @param request servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             Users user = getCurrentUser(request);
 

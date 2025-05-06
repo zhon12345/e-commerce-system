@@ -20,6 +20,13 @@ import java.util.List;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 10)
 public class ProfileController extends BaseController {
 
+	/**
+	 *
+	 * @param req servlet request
+	 * @param res servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
@@ -106,10 +113,9 @@ public class ProfileController extends BaseController {
 	}
 
 	/**
-	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param req
-	 * @param res
+	 * @param req servlet request
+	 * @param res servlet response
 	 * @throws ServletException if a servlet-specific error occurs
 	 * @throws IOException      if an I/O error occurs
 	 */

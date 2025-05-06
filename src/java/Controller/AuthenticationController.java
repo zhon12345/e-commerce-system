@@ -15,10 +15,9 @@ import java.util.List;
 public class AuthenticationController extends BaseController {
 
 	/**
-	 * Handles the HTTP <code>GET</code> method.
 	 *
-	 * @param request  servlet request
-	 * @param response servlet response
+	 * @param req servlet request
+	 * @param res servlet response
 	 * @throws ServletException if a servlet-specific error occurs
 	 * @throws IOException      if an I/O error occurs
 	 */
@@ -45,10 +44,9 @@ public class AuthenticationController extends BaseController {
 	}
 
 	/**
-	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param request  servlet request
-	 * @param response servlet response
+	 * @param req servlet request
+	 * @param res servlet response
 	 * @throws ServletException if a servlet-specific error occurs
 	 * @throws IOException      if an I/O error occurs
 	 */
