@@ -114,26 +114,26 @@
 			});
 		}
 
-		<% if (session.getAttribute("deleteSuccess") != null) { %>
+		<% if (session.getAttribute("success") != null) { %>
 			Swal.fire({
 				icon: 'success',
-				title: 'Deleted!',
-				text: 'Your review has been deleted.',
-				showConfirmButton: false,
+				title: 'Success',
+				text: '<%= session.getAttribute("success") %>',
+				confirmButtonColor: '#4C60DF',
 				timer: 1500
 			});
-			<% session.removeAttribute("deleteSuccess"); %>
+			<% session.removeAttribute("success"); %>
 		<% } %>
 
-		<% if (session.getAttribute("deleteError") != null) { %>
+		<% if (session.getAttribute("error") != null) { %>
 			Swal.fire({
 				icon: 'error',
-				title: 'Oops...',
+				title: 'Error',
 				text: 'Something went wrong, please try again.',
 				showConfirmButton: false,
 				timer: 1500
 			});
-			<% session.removeAttribute("deleteError"); %>
+			<% session.removeAttribute("error"); %>
 		<% } %>
 	</script>
 </body>

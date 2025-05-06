@@ -6,16 +6,11 @@ package Controller;
 
 import Model.Users;
 import static Utils.Authentication.hashPassword;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +20,7 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "AuthenticationController", urlPatterns = { "/register", "/login", "/logout" })
-public class AuthenticationController extends HttpServlet {
-
-	@PersistenceContext
-	EntityManager em;
-
-	@Resource
-	UserTransaction utx;
+public class AuthenticationController extends BaseController {
 
 	/**
 	 * Handles the HTTP <code>GET</code> method.
@@ -139,7 +128,7 @@ public class AuthenticationController extends HttpServlet {
 					return;
 				}
 
-				session.setAttribute("loginSuccess", "true");
+				setSuccessMessage(req, "Login successful!");
 
 				String targetPath = validateRedirect(redirect, session);
 				res.sendRedirect(req.getContextPath() + targetPath);
@@ -214,8 +203,7 @@ public class AuthenticationController extends HttpServlet {
 			em.persist(newUser);
 			utx.commit();
 
-			HttpSession session = req.getSession();
-			session.setAttribute("registerSuccess", "true");
+			setSuccessMessage(req, "Registration successful!");
 			res.sendRedirect(req.getContextPath() + "/login.jsp");
 		} catch (Exception e) {
 			throw new ServletException(e);
@@ -230,7 +218,7 @@ public class AuthenticationController extends HttpServlet {
 		}
 
 		session = req.getSession(true);
-		session.setAttribute("logoutSuccess", "true");
+		setSuccessMessage(req, "Logout successful!");
 		res.sendRedirect(req.getContextPath() + "/index");
 	}
 
@@ -260,7 +248,9 @@ public class AuthenticationController extends HttpServlet {
 
 			List<String> userPages = Arrays.asList("profile", "address", "card", "history", "reviews");
 
-			session.removeAttribute("loginSuccess");
+			if (session.getAttribute("success") != null && ((String) session.getAttribute("success")).contains("Login")) {
+				session.removeAttribute("success");
+			}
 
 			if (userPages.contains(lastSegment)) {
 				return "/user/" + lastSegment;

@@ -2,6 +2,23 @@
 <%-- This file contains only the content specific to the Order Management page --%>
 <%-- /WEB-INF/views/admin/content/orders_content.jsp --%>
 <%@ page import="java.util.List, Model.Orders, Model.Orderdetails, java.text.SimpleDateFormat" %>
+
+<% if (session.getAttribute("error") != null) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= session.getAttribute("error") %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <% session.removeAttribute("error"); %>
+<% } %>
+
+<% if (session.getAttribute("success") != null) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= session.getAttribute("success") %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <% session.removeAttribute("success"); %>
+<% } %>
+
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-receipt"></i> Order Management</h2>
 
 <div class="table-responsive">

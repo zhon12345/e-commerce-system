@@ -7,16 +7,10 @@ package Controller;
 import Model.Promotions;
 import Model.Users;
 import static Utils.Authentication.isLoggedInAndAuthorized;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -28,13 +22,7 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "PromotionsController", urlPatterns = { "/index", "/admin/promotions" })
-public class PromotionsController extends HttpServlet {
-
-	@PersistenceContext
-	EntityManager em;
-
-	@Resource
-	UserTransaction utx;
+public class PromotionsController extends BaseController {
 
 	/**
 	 * Handles the HTTP <code>GET</code> method.
@@ -47,8 +35,7 @@ public class PromotionsController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (path.equals("/index")) {
 			try {
@@ -102,8 +89,7 @@ public class PromotionsController extends HttpServlet {
 			return;
 		}
 
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
@@ -111,24 +97,23 @@ public class PromotionsController extends HttpServlet {
 
 		switch (action) {
 			case "create":
-				createPromotion(req, res, session);
+				createPromotion(req);
 				break;
 			case "update":
-				updatePromotion(req, res, session);
+				updatePromotion(req);
 				break;
 			case "delete":
-				deletePromotion(req, res, session);
+				deletePromotion(req);
 				break;
 			default:
-				session.setAttribute("error", "Invalid action performed: " + action);
-				break;
+				res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				return;
 		}
 
 		res.sendRedirect(req.getContextPath() + "/admin/promotions");
 	}
 
-	private void createPromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session)
-			throws IOException {
+	private void createPromotion(HttpServletRequest req) throws IOException {
 		try {
 			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
 			BigDecimal discount = new BigDecimal(req.getParameter("discount")).divide(new BigDecimal(100));
@@ -147,7 +132,7 @@ public class PromotionsController extends HttpServlet {
 			em.persist(newPromo);
 			utx.commit();
 
-			session.setAttribute("success", "Promotion added successfully!");
+			setSuccessMessage(req, "Promotion added successfully!");
 		} catch (Exception e) {
 			try {
 				utx.rollback();
@@ -155,12 +140,11 @@ public class PromotionsController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Failed to add promotion: " + e.getMessage());
+			setErrorMessage(req, "Failed to add promotion: " + e.getMessage());
 		}
 	}
 
-	private void updatePromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session)
-			throws IOException {
+	private void updatePromotion(HttpServletRequest req) throws IOException {
 		try {
 			int promoId = Integer.parseInt(req.getParameter("promoId"));
 			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
@@ -181,7 +165,7 @@ public class PromotionsController extends HttpServlet {
 			}
 			utx.commit();
 
-			session.setAttribute("success", "Promotion updated successfully!");
+			setSuccessMessage(req, "Promotion updated successfully!");
 		} catch (Exception e) {
 			try {
 				utx.rollback();
@@ -189,13 +173,12 @@ public class PromotionsController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Failed to update promotion: " + e.getMessage());
+			setErrorMessage(req, "Failed to update promotion: " + e.getMessage());
 		}
 
 	}
 
-	private void deletePromotion(HttpServletRequest req, HttpServletResponse res, HttpSession session)
-			throws IOException {
+	private void deletePromotion(HttpServletRequest req) throws IOException {
 		try {
 			int promoId = Integer.parseInt(req.getParameter("promoId"));
 
@@ -207,7 +190,7 @@ public class PromotionsController extends HttpServlet {
 			}
 			utx.commit();
 
-			session.setAttribute("success", "Promotion deleted successfully!");
+			setSuccessMessage(req, "Promotion deleted successfully!");
 		} catch (Exception e) {
 			try {
 				utx.rollback();
@@ -215,7 +198,7 @@ public class PromotionsController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Failed to delete promotion: " + e.getMessage());
+			setErrorMessage(req, "Failed to delete promotion: " + e.getMessage());
 		}
 	}
 

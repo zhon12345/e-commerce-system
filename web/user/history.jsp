@@ -114,15 +114,15 @@
 	</div>
 
 	<script>
-		<% if (session.getAttribute("orderSuccess") != null) { %>
+		<% if (session.getAttribute("success") != null) { %>
 			Swal.fire({
 				icon: 'success',
-				title: 'Success!',
-				text: 'Your order has been completed successfully.',
-				showConfirmButton: false,
+				title: 'Success',
+				text: '<%= session.getAttribute("success") %>',
+				confirmButtonColor: '#4C60DF',
 				timer: 1500
 			});
-			<% session.removeAttribute("orderSuccess"); %>
+			<% session.removeAttribute("success"); %>
 		<% } %>
 
 		function submitForm(status) {

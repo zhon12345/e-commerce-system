@@ -9,16 +9,10 @@ import Model.Products;
 import Model.Promotions;
 import Model.Users;
 import static Utils.Authentication.isLoggedIn;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -28,18 +22,11 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "CartController", urlPatterns = { "/cart" })
-public class CartController extends HttpServlet {
-
-	@PersistenceContext
-	EntityManager em;
-
-	@Resource
-	UserTransaction utx;
+public class CartController extends BaseController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedIn(req, res, user, "cart")) return;
 
@@ -50,7 +37,7 @@ public class CartController extends HttpServlet {
 
 			req.setAttribute("cartList", cartList);
 
-			calculateOrderSummary(cartList, req, session);
+			calculateOrderSummary(cartList, req);
 
 			req.getRequestDispatcher("/cart.jsp").forward(req, res);
 		} catch (Exception e) {
@@ -68,8 +55,7 @@ public class CartController extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedIn(req, res, user, "cart")) return;
 
@@ -180,13 +166,13 @@ public class CartController extends HttpServlet {
 				.getResultList();
 	}
 
-	public static void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req, HttpSession session) {
+	public static void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req) {
 		double subtotal = 0;
 		int totalItems = 0;
 		double discount = 0;
 
 		// Check both request and session for applied promo
-		Promotions appliedPromo = (Promotions) session.getAttribute("appliedPromo");
+		Promotions appliedPromo = (Promotions) req.getSession().getAttribute("appliedPromo");
 
 		if (cartList != null && !cartList.isEmpty()) {
 			for (Cart item : cartList) {

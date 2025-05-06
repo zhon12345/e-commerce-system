@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "UploadsController", urlPatterns = { "/uploads/*" })
-public class UploadsController extends HttpServlet {
+public class UploadsController extends BaseController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {

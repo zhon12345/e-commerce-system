@@ -9,16 +9,11 @@ import Model.Reviews;
 import Model.Users;
 import static Utils.Authentication.isLoggedIn;
 import static Utils.Authentication.isLoggedInAndAuthorized;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -28,18 +23,11 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "ReviewsController", urlPatterns = { "/user/reviews", "/admin/reviews" })
-public class ReviewsController extends HttpServlet {
-
-	@PersistenceContext
-	EntityManager em;
-
-	@Resource
-	UserTransaction utx;
+public class ReviewsController extends BaseController {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (path.equals("/user/reviews")) {
 			if (!isLoggedIn(req, res, user, "reviews")) return;
@@ -91,7 +79,6 @@ public class ReviewsController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
 
 		if (!path.equals("/user/reviews")) {
 			res.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -102,10 +89,10 @@ public class ReviewsController extends HttpServlet {
 
 		switch (action) {
 			case "create":
-				createReview(req, res, session);
+				createReview(req, res);
 				break;
 			case "delete":
-				deleteReview(req, res, session);
+				deleteReview(req, res);
 				break;
 			default:
 				res.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -114,9 +101,9 @@ public class ReviewsController extends HttpServlet {
 
 	}
 
-	private void createReview(HttpServletRequest req, HttpServletResponse res, HttpSession session)
-			throws ServletException, IOException {
-		Users user = (Users) session.getAttribute("user");
+	private void createReview(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		Users user = getCurrentUser(req);
 		String productId = req.getParameter("productId");
 
 		if (!isLoggedIn(req, res, user, "product?id=" + productId + "&tab=reviews")) return;
@@ -177,9 +164,8 @@ public class ReviewsController extends HttpServlet {
 		}
 	}
 
-	private void deleteReview(HttpServletRequest req, HttpServletResponse res, HttpSession session)
-			throws ServletException, IOException {
-		Users user = (Users) session.getAttribute("user");
+	private void deleteReview(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		Users user = getCurrentUser(req);
 		String reviewId = req.getParameter("reviewId");
 
 		try {
@@ -190,7 +176,7 @@ public class ReviewsController extends HttpServlet {
 				review.setIsArchived(true);
 				em.merge(review);
 				utx.commit();
-				session.setAttribute("deleteSuccess", "true");
+				setSuccessMessage(req, "Review deleted successfully!");
 			}
 		} catch (Exception e) {
 			try {
@@ -199,7 +185,7 @@ public class ReviewsController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("deleteError", "true");
+			setErrorMessage(req, "Error deleting review: " + e.getMessage());
 		}
 
 		res.sendRedirect(req.getContextPath() + "/user/reviews");

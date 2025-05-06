@@ -13,16 +13,11 @@ import Model.Products;
 import Model.Promotions;
 import Model.Users;
 import static Utils.Authentication.isLoggedIn;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -33,17 +28,11 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "CheckoutController", urlPatterns = { "/checkout" })
-public class CheckoutController extends HttpServlet {
-
-	@PersistenceContext
-	EntityManager em;
-
-	@Resource
-	UserTransaction utx;
+public class CheckoutController extends BaseController {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedIn(req, res, user, "checkout")) return;
 
@@ -101,7 +90,7 @@ public class CheckoutController extends HttpServlet {
 				}
 			}
 
-			CartController.calculateOrderSummary(cartList, req, session);
+			CartController.calculateOrderSummary(cartList, req);
 
 			req.setAttribute("addressList", addressList);
 			req.setAttribute("cardList", cardList);
@@ -128,7 +117,7 @@ public class CheckoutController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedIn(req, res, user, "checkout")) return;
 
@@ -254,7 +243,7 @@ public class CheckoutController extends HttpServlet {
 			utx.commit();
 
 			session.removeAttribute("appliedPromo");
-			session.setAttribute("orderSuccess", "true");
+			setSuccessMessage(req, "Your order has been placed successfully!");
 
 			res.sendRedirect(req.getContextPath() + "/user/history");
 		} catch (Exception e) {

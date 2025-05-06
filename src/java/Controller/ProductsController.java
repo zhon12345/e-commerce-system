@@ -6,33 +6,22 @@ import Model.Reviews;
 import Model.Users;
 import static Utils.Authentication.isLoggedInAndAuthorized;
 import Utils.FileManager;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "ProductsController", urlPatterns = {"/products", "/product", "/admin/products"})
+@WebServlet(name = "ProductsController", urlPatterns = { "/products", "/product", "/admin/products" })
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 5 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
-public class ProductsController extends HttpServlet {
-
-	@PersistenceContext
-	private EntityManager em;
-
-	@Resource
-	private UserTransaction utx;
+public class ProductsController extends BaseController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -50,8 +39,7 @@ public class ProductsController extends HttpServlet {
 			}
 
 			if (path.equals("/admin/products")) {
-				HttpSession session = req.getSession();
-				Users user = (Users) session.getAttribute("user");
+				Users user = getCurrentUser(req);
 
 				if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
@@ -84,8 +72,7 @@ public class ProductsController extends HttpServlet {
 			return;
 		}
 
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
@@ -93,7 +80,7 @@ public class ProductsController extends HttpServlet {
 
 		switch (action) {
 			case "create":
-				createProduct(req, res);
+				createProduct(req);
 				break;
 			case "update":
 			case "delete":
@@ -102,17 +89,17 @@ public class ProductsController extends HttpServlet {
 				Products product = em.find(Products.class, Integer.parseInt(productId));
 
 				if (product == null) {
-					session.setAttribute("error", "Product not found.");
+					setErrorMessage(req, "Product not found.");
 					res.sendRedirect(req.getContextPath() + "/admin/products");
 					return;
 				}
 
 				if (action.equals("update")) {
-					updateProduct(req, res, product);
+					updateProduct(req, product);
 				}
 
 				if (action.equals("delete")) {
-					deleteProduct(req, res, product);
+					deleteProduct(req, product);
 				}
 		}
 
@@ -284,7 +271,7 @@ public class ProductsController extends HttpServlet {
 		req.getRequestDispatcher("/admin/admin_products.jsp").forward(req, res);
 	}
 
-	private void createProduct(HttpServletRequest req, HttpServletResponse res) {
+	private void createProduct(HttpServletRequest req) {
 		try {
 			Products product = new Products();
 			product.setName(req.getParameter("name"));
@@ -327,15 +314,14 @@ public class ProductsController extends HttpServlet {
 			em.persist(product);
 			utx.commit();
 
-			req.getSession().setAttribute("success", "Product created successfully.");
+			setSuccessMessage(req, "Product created successfully.");
 		} catch (Exception e) {
-			req.getSession().setAttribute("error", "Error creating product: " + e.getMessage());
+			setErrorMessage(req, "Error creating product: " + e.getMessage());
 		}
 	}
 
-	private void updateProduct(HttpServletRequest req, HttpServletResponse res, Products product) {
+	private void updateProduct(HttpServletRequest req, Products product) {
 		try {
-			String oldName = product.getName();
 			String oldImagePath = product.getImagePath();
 
 			// Update product fields
@@ -383,22 +369,22 @@ public class ProductsController extends HttpServlet {
 			em.merge(product);
 			utx.commit();
 
-			req.getSession().setAttribute("success", "Product updated successfully.");
+			setSuccessMessage(req, "Product updated successfully.");
 		} catch (Exception e) {
-			req.getSession().setAttribute("error", "Error updating product: " + e.getMessage());
+			setErrorMessage(req, "Error updating product: " + e.getMessage());
 		}
 	}
 
-	private void deleteProduct(HttpServletRequest req, HttpServletResponse res, Products product) {
+	private void deleteProduct(HttpServletRequest req, Products product) {
 		try {
 			product.setIsArchived(true);
 
 			utx.begin();
 			em.merge(product);
 			utx.commit();
-			req.getSession().setAttribute("success", "Product deleted successfully.");
+			setSuccessMessage(req, "Product deleted successfully.");
 		} catch (Exception e) {
-			req.getSession().setAttribute("error", "Error deleting product: " + e.getMessage());
+			setErrorMessage(req, "Error deleting product: " + e.getMessage());
 		}
 	}
 

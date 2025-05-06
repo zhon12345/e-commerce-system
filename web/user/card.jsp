@@ -23,6 +23,7 @@
 	<div class="title">
 		<h2>Bank & Cards</h2>
 	</div>
+
 	<div class="container">
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="card" />
@@ -48,6 +49,7 @@
 					<div class="number">
 						<%= cardNumber %>
 					</div>
+
 					<div class="details">
 						<div>
 							<div class="label">Card Holder</div>
@@ -62,6 +64,7 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="actions">
 						<a href="${pageContext.request.contextPath}/user/card?action=update&id=<%= card.getId() %>"
 							class="edit">Edit</a>
@@ -78,6 +81,7 @@
 					<p>You haven't added any credit or debit cards yet. Add your first card to get started.</p>
 				</div>
 				<% } %>
+			</div>
 		</div>
 	</div>
 
@@ -95,7 +99,7 @@
 				%>
 				<input type="hidden" name="id" value="<%= updateCard.getId() %>">
 				<% } %>
-				<input type="hidden" name="action" value="<%= request.getAttribute(" updateCard") !=null ? "update" : "create" %>">
+				<input type="hidden" name="action" value="<%= request.getAttribute("updateCard") !=null ? "update" : "create" %>">
 
 				<div class="add-info number">
 					<label for="number">Card Number</label>
@@ -163,46 +167,21 @@
 			});
 		}
 
-		<% if (session.getAttribute("deleteSuccess") != null) { %>
+		<% if (session.getAttribute("success") != null) { %>
 			Swal.fire({
 				icon: 'success',
-				title: 'Deleted!',
-				text: 'Your card has been deleted.',
+				title: 'Success',
+				text: '<%= session.getAttribute("success") %>',
 				confirmButtonColor: '#4C60DF',
-				showConfirmButton: true,
 				timer: 1500
 			});
-			<% session.removeAttribute("deleteSuccess"); %>
+			<% session.removeAttribute("success"); %>
 		<% } %>
-
-			<% if (session.getAttribute("createSuccess") != null) { %>
-				Swal.fire({
-					icon: 'success',
-					title: 'Added!',
-					text: 'Your card has been added successfully.',
-					confirmButtonColor: '#4C60DF',
-					showConfirmButton: true,
-					timer: 1500
-				});
-				<% session.removeAttribute("createSuccess"); %>
-			<% } %>
-
-			<% if (session.getAttribute("updateSuccess") != null) { %>
-				Swal.fire({
-					icon: 'success',
-					title: 'Updated!',
-					text: 'Your card has been updated successfully.',
-					confirmButtonColor: '#4C60DF',
-					showConfirmButton: true,
-					timer: 1500
-				});
-				<% session.removeAttribute("updateSuccess"); %>
-			<% } %>
 	</script>
-	<script src="${pageContext.request.contextPath}/scripts/user/card.js" type="module"></script>
 </body>
 <footer>
 	<%@include file="../components/footer.jsp" %>
 </footer>
+<script src="${pageContext.request.contextPath}/scripts/user/card.js" type="module"></script>
 
 </html>

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.user;
+package Controller;
 
 import Model.Addresses;
 import Model.Cardinfo;
@@ -11,18 +11,12 @@ import static Utils.Authentication.hashPassword;
 import static Utils.Authentication.isAuthorized;
 import static Utils.Authentication.isLoggedIn;
 import Utils.FileManager;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
 
@@ -32,20 +26,13 @@ import java.util.List;
  */
 @WebServlet(name = "ProfileController", urlPatterns = { "/admin/profile", "/user/profile", "/user/address", "/user/card" })
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 10)
-public class ProfileController extends HttpServlet {
-
-	@PersistenceContext
-	private EntityManager em;
-
-	@Resource
-	private UserTransaction utx;
+public class ProfileController extends BaseController {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
-		
+		Users user = getCurrentUser(req);
+
 		String redirect = path.substring(path.lastIndexOf('/') + 1);
 
 		if (!isLoggedIn(req, res, user, redirect)) return;
@@ -66,7 +53,7 @@ public class ProfileController extends HttpServlet {
 		String id = req.getParameter("id");
 
 		if (path.equals("/user/address")) {
-			if (action.equals("update")) {
+			if ("update".equals(action)) {
 				try {
 					int addressId = Integer.parseInt(id);
 					Addresses address = em.find(Addresses.class, addressId);
@@ -96,7 +83,7 @@ public class ProfileController extends HttpServlet {
 		}
 
 		if (path.equals("/user/card")) {
-			if (action.equals("update")) {
+			if ("update".equals(action)) {
 				try {
 					int cardId = Integer.parseInt(id);
 					Cardinfo card = em.find(Cardinfo.class, cardId);
@@ -137,8 +124,7 @@ public class ProfileController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		String redirect = path.substring(path.lastIndexOf('/') + 1);
 
@@ -151,10 +137,10 @@ public class ProfileController extends HttpServlet {
 
 			switch (action) {
 				case "change_password":
-					changePassword(req, session, user);
+					changePassword(req, user);
 					break;
 				case "update_profile":
-					updateProfile(req, res, session, user);
+					updateProfile(req, res, user);
 					break;
 				default:
 					res.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -166,7 +152,7 @@ public class ProfileController extends HttpServlet {
 		}
 
 		if (path.equals("/user/profile")) {
-			updateProfile(req, res, session, user);
+			updateProfile(req, res, user);
 
 			res.sendRedirect(req.getContextPath() + "/user/profile");
 			return;
@@ -236,7 +222,7 @@ public class ProfileController extends HttpServlet {
 						em.persist(address);
 						utx.commit();
 
-						session.setAttribute("createSuccess", "Address added successfully!");
+						setSuccessMessage(req, "Address added successfully!");
 					} catch (Exception e) {
 						try {
 							if (utx != null) {
@@ -246,7 +232,7 @@ public class ProfileController extends HttpServlet {
 							ex.printStackTrace();
 						}
 
-						session.setAttribute("error", "Error adding address: " + e.getMessage());
+						setErrorMessage(req, "Error adding address: " + e.getMessage());
 					}
 					break;
 				case "update":
@@ -273,7 +259,7 @@ public class ProfileController extends HttpServlet {
 							em.merge(address);
 							utx.commit();
 
-							session.setAttribute("updateSuccess", "Address updated successfully!");
+							setSuccessMessage(req, "Address updated successfully!");
 						} catch (Exception e) {
 							try {
 								if (utx != null) {
@@ -283,12 +269,12 @@ public class ProfileController extends HttpServlet {
 								ex.printStackTrace();
 							}
 
-							session.setAttribute("error", "Error updating address: " + e.getMessage());
+							setErrorMessage(req, "Error updating address: " + e.getMessage());
 						}
 					}
 
 					if (action.equals("delete")) {
-						deleteAddress(session, address);
+						deleteAddress(req, address);
 					}
 					break;
 				default:
@@ -371,7 +357,7 @@ public class ProfileController extends HttpServlet {
 						em.persist(card);
 						utx.commit();
 
-						session.setAttribute("createSuccess", "Card added successfully!");
+						setSuccessMessage(req, "Card added successfully!");
 					} catch (Exception e) {
 						try {
 							if (utx != null) {
@@ -381,7 +367,7 @@ public class ProfileController extends HttpServlet {
 							ex.printStackTrace();
 						}
 
-						session.setAttribute("error", "Error adding card: " + e.getMessage());
+						setErrorMessage(req, "Error adding card: " + e.getMessage());
 					}
 					break;
 				case "update":
@@ -405,7 +391,7 @@ public class ProfileController extends HttpServlet {
 							em.merge(card);
 							utx.commit();
 
-							session.setAttribute("updateSuccess", "Card updated successfully!");
+							setSuccessMessage(req, "Card updated successfully!");
 						} catch (Exception e) {
 							try {
 								if (utx != null) {
@@ -415,12 +401,12 @@ public class ProfileController extends HttpServlet {
 								ex.printStackTrace();
 							}
 
-							session.setAttribute("error", "Error updating card: " + e.getMessage());
+							setErrorMessage(req, "Error updating card: " + e.getMessage());
 						}
 					}
 
 					if (action.equals("delete")) {
-						deleteCard(session, card);
+						deleteCard(req, card);
 					}
 					break;
 				default:
@@ -432,7 +418,7 @@ public class ProfileController extends HttpServlet {
 		}
 	}
 
-	private void updateProfile(HttpServletRequest req, HttpServletResponse res, HttpSession session, Users user) throws ServletException, IOException {
+	private void updateProfile(HttpServletRequest req, HttpServletResponse res, Users user) throws ServletException, IOException {
 		String path = req.getServletPath();
 		String username = req.getParameter("username").trim();
 		String name = req.getParameter("name").trim();
@@ -526,8 +512,8 @@ public class ProfileController extends HttpServlet {
 			em.merge(user);
 			utx.commit();
 
-			session.setAttribute("user", user);
-			session.setAttribute("success", "Profile updated successfully!");
+			req.getSession().setAttribute("user", user);
+			setSuccessMessage(req, "Profile updated successfully!");
 		} catch (Exception e) {
 			try {
 				if (utx != null) {
@@ -540,18 +526,18 @@ public class ProfileController extends HttpServlet {
 		}
 	}
 
-	private void changePassword(HttpServletRequest req, HttpSession session, Users user) throws ServletException {
+	private void changePassword(HttpServletRequest req, Users user) throws ServletException {
 		String currentPassword = req.getParameter("currentPassword");
 		String newPassword = req.getParameter("newPassword");
 		String confirmPassword = req.getParameter("confirmPassword");
 
 		if (!user.getPassword().equals(hashPassword(currentPassword))) {
-			session.setAttribute("error", "Current password is incorrect");
+			setErrorMessage(req, "Current password is incorrect");
 			return;
 		}
 
 		if (!newPassword.equals(confirmPassword)) {
-			session.setAttribute("error", "New password and confirm password do not match");
+			setErrorMessage(req, "New password and confirm password do not match");
 			return;
 		}
 
@@ -561,7 +547,7 @@ public class ProfileController extends HttpServlet {
 			em.merge(user);
 			utx.commit();
 
-			session.setAttribute("success", "Password updated successfully");
+			setSuccessMessage(req, "Password updated successfully!");
 		} catch (Exception e) {
 			try {
 				if (utx != null) {
@@ -571,11 +557,11 @@ public class ProfileController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Error updating password: " + e.getMessage());
+			setErrorMessage(req, "Error updating password: " + e.getMessage());
 		}
 	}
 
-	private void deleteAddress(HttpSession session, Addresses address) {
+	private void deleteAddress(HttpServletRequest req, Addresses address) {
 		try {
 			utx.begin();
 
@@ -584,7 +570,7 @@ public class ProfileController extends HttpServlet {
 
 			utx.commit();
 
-			session.setAttribute("deleteSuccess", "true");
+			setSuccessMessage(req, "Address successfully deleted!");
 		} catch (Exception e) {
 			try {
 				if (utx != null) {
@@ -594,11 +580,11 @@ public class ProfileController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Error deleting address: " + e.getMessage());
+			setErrorMessage(req, "Error deleting address: " + e.getMessage());
 		}
 	}
 
-	private void deleteCard(HttpSession session, Cardinfo card) {
+	private void deleteCard(HttpServletRequest req, Cardinfo card) {
 		try {
 			utx.begin();
 
@@ -607,7 +593,7 @@ public class ProfileController extends HttpServlet {
 
 			utx.commit();
 
-			session.setAttribute("deleteSuccess", "true");
+			setSuccessMessage(req, "Card successfully deleted!");
 		} catch (Exception e) {
 			try {
 				if (utx != null) {
@@ -617,7 +603,7 @@ public class ProfileController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Error deleting card: " + e.getMessage());
+			setErrorMessage(req, "Error deleting card: " + e.getMessage());
 		}
 	}
 

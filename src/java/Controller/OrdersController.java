@@ -8,17 +8,11 @@ import Model.Orders;
 import Model.Users;
 import static Utils.Authentication.isLoggedIn;
 import static Utils.Authentication.isLoggedInAndAuthorized;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,13 +21,7 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "OrdersController", urlPatterns = { "/user/history", "/admin/orders" })
-public class OrdersController extends HttpServlet {
-
-	@PersistenceContext
-	private EntityManager em;
-
-	@Resource
-	private UserTransaction utx;
+public class OrdersController extends BaseController {
 
 	/**
 	 * Handles the HTTP <code>GET</code> method.
@@ -46,8 +34,7 @@ public class OrdersController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (path.equals("/user/history")) {
 			if (!isLoggedIn(req, res, user, "history")) return;
@@ -126,8 +113,7 @@ public class OrdersController extends HttpServlet {
 			return;
 		}
 
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
@@ -145,7 +131,7 @@ public class OrdersController extends HttpServlet {
 
 			utx.commit();
 
-			session.setAttribute("updateSuccess", "true");
+			setSuccessMessage(req, "Order status updated successfully.");
 			res.sendRedirect(req.getContextPath() + "/admin/orders");
 		} catch (Exception e) {
 			try {
@@ -154,7 +140,7 @@ public class OrdersController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Failed to update order: " + e.getMessage());
+			setErrorMessage(req, "Failed to update order: " + e.getMessage());
 			res.sendRedirect(req.getContextPath() + "/admin/orders");
 		}
 	}

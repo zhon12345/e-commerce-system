@@ -7,16 +7,10 @@ package Controller;
 import Model.Users;
 import static Utils.Authentication.hashPassword;
 import static Utils.Authentication.isLoggedInAndAuthorized;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,13 +19,7 @@ import java.util.List;
  * @author zhon12345
  */
 @WebServlet(name = "UsersController", urlPatterns = { "/admin/users", "/admin/staff" })
-public class UsersController extends HttpServlet {
-
-	@PersistenceContext
-	EntityManager em;
-
-	@Resource
-	UserTransaction utx;
+public class UsersController extends BaseController {
 
 	/**
 	 * Handles the HTTP <code>GET</code> method.
@@ -44,13 +32,12 @@ public class UsersController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		if (user != null && user.getRole().equalsIgnoreCase("manager")) {
-			session.setAttribute("isManager", true);
+			req.getSession().setAttribute("isManager", true);
 		}
 
 		if (path.equals("/admin/users")) {
@@ -79,8 +66,7 @@ public class UsersController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
-		HttpSession session = req.getSession();
-		Users user = (Users) session.getAttribute("user");
+		Users user = getCurrentUser(req);
 
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
@@ -95,18 +81,18 @@ public class UsersController extends HttpServlet {
 
 			switch (action) {
 				case "create":
-					createUser(req, session, userType);
+					createUser(req, userType);
 					break;
 				case "update":
 				case "delete":
 					String userId = req.getParameter("userId");
 
 					if ("update".equals(action)) {
-						updateUser(req, session, userId, userType);
+						updateUser(req, userId, userType);
 					}
 
 					if ("delete".equals(action)) {
-						deleteUser(req, session, userId, userType);
+						deleteUser(req, userId, userType);
 					}
 			}
 
@@ -131,7 +117,7 @@ public class UsersController extends HttpServlet {
 		}
 	}
 
-	private void createUser(HttpServletRequest req, HttpSession session, String userType) throws IOException, ServletException {
+	private void createUser(HttpServletRequest req, String userType) throws IOException, ServletException {
 		String username = req.getParameter("username").trim();
 		String email = req.getParameter("email").trim();
 		String password = req.getParameter("password").trim();
@@ -142,7 +128,7 @@ public class UsersController extends HttpServlet {
 				|| password == null || password.trim().isEmpty()
 				|| role == null || role.trim().isEmpty()) {
 
-			session.setAttribute("error", "All fields are required");
+			setErrorMessage(req, "All fields are required");
 			return;
 		}
 
@@ -154,8 +140,7 @@ public class UsersController extends HttpServlet {
 			em.persist(newUser);
 			utx.commit();
 
-			session.setAttribute("success",
-					role.substring(0, 1).toUpperCase() + role.substring(1) + " created successfully!");
+			setSuccessMessage(req, userType + " created successfully!");
 		} catch (Exception e) {
 			try {
 				if (utx != null) {
@@ -165,12 +150,11 @@ public class UsersController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error",
-					"Error creating " + role.substring(0, 1).toUpperCase() + role.substring(1) + ": " + e.getMessage());
+			setErrorMessage(req, "Error creating " + role.substring(0, 1).toUpperCase() + role.substring(1) + ": " + e.getMessage());
 		}
 	}
 
-	private void updateUser(HttpServletRequest req, HttpSession session, String userId, String userType) throws IOException, ServletException {
+	private void updateUser(HttpServletRequest req, String userId, String userType) throws IOException, ServletException {
 		String username = req.getParameter("username").trim();
 		String email = req.getParameter("email").trim();
 		String name = req.getParameter("name");
@@ -187,7 +171,7 @@ public class UsersController extends HttpServlet {
 					.getSingleResult();
 
 			if (usernameCount > 0) {
-				session.setAttribute("error", "Username is already taken");
+				setErrorMessage(req, "Username is already taken");
 				return;
 			}
 
@@ -207,13 +191,13 @@ public class UsersController extends HttpServlet {
 				em.merge(user);
 				utx.commit();
 
-				if (user.getId().equals(((Users) session.getAttribute("user")).getId())) {
-					session.setAttribute("user", user);
+				if (user.getId().equals((getCurrentUser(req)).getId())) {
+					req.getSession().setAttribute("user", user);
 				}
 
-				session.setAttribute("success", userType + " updated successfully!");
+				setSuccessMessage(req, userType + " updated successfully!");
 			} else {
-				session.setAttribute("error", userType + " not found!");
+				setErrorMessage(req, userType + " not found!");
 			}
 
 		} catch (Exception e) {
@@ -225,11 +209,11 @@ public class UsersController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Error updating " + userType + ": " + e.getMessage());
+			setErrorMessage(req, "Error updating " + userType + ": " + e.getMessage());
 		}
 	}
 
-	private void deleteUser(HttpServletRequest req, HttpSession session, String userId, String userType) throws IOException, ServletException {
+	private void deleteUser(HttpServletRequest req, String userId, String userType) throws IOException, ServletException {
 		try {
 			int id = Integer.parseInt(userId);
 			Users user = em.find(Users.class, id);
@@ -240,9 +224,9 @@ public class UsersController extends HttpServlet {
 				em.merge(user);
 				utx.commit();
 
-				session.setAttribute("success", userType + " deleted successfully!");
+				setSuccessMessage(req, userType + " deleted successfully!");
 			} else {
-				session.setAttribute("error", userType + " not found!");
+				setErrorMessage(req, userType + " not found!");
 			}
 		} catch (Exception e) {
 			try {
@@ -253,7 +237,7 @@ public class UsersController extends HttpServlet {
 				ex.printStackTrace();
 			}
 
-			session.setAttribute("error", "Error deleting " + userType + ": " + e.getMessage());
+			setErrorMessage(req, "Error deleting " + userType + ": " + e.getMessage());
 		}
 	}
 }
