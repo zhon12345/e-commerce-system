@@ -13,6 +13,7 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ import java.util.List;
  *
  * @author zhon12345
  */
+@WebServlet(name = "CartController", urlPatterns = { "/cart" })
 public class CartController extends HttpServlet {
 
 	@PersistenceContext
@@ -107,7 +109,7 @@ public class CartController extends HttpServlet {
 				utx.rollback();
 			} catch (Exception ex) {
 			}
-			
+
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
