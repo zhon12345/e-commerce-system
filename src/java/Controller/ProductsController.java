@@ -23,6 +23,13 @@ import java.util.Map;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 5 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
 public class ProductsController extends BaseController {
 
+	/**
+	 *
+	 * @param req servlet request
+	 * @param res servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
@@ -63,6 +70,13 @@ public class ProductsController extends BaseController {
 		}
 	}
 
+	/**
+	 *
+	 * @param req servlet request
+	 * @param res servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();

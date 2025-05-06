@@ -22,6 +22,14 @@ import java.util.List;
 @WebServlet(name = "CheckoutController", urlPatterns = { "/checkout" })
 public class CheckoutController extends BaseController {
 
+	/**
+	 *
+	 * @param req servlet request
+	 * @param res servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		Users user = getCurrentUser(req);
@@ -99,10 +107,9 @@ public class CheckoutController extends BaseController {
 	}
 
 	/**
-	 * Handles the HTTP <code>POST</code> method.
 	 *
-	 * @param request  servlet request
-	 * @param response servlet response
+	 * @param req servlet request
+	 * @param res servlet response
 	 * @throws ServletException if a servlet-specific error occurs
 	 * @throws IOException      if an I/O error occurs
 	 */
