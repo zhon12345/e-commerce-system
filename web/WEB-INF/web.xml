@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
-    <servlet>
-        <servlet-name>UploadsController</servlet-name>
-        <servlet-class>Controller.UploadsController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CartController</servlet-name>
-        <servlet-class>Controller.CartController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DashboardController</servlet-name>
-        <servlet-class>Controller.admin.DashboardController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CheckoutController</servlet-name>
-        <servlet-class>Controller.CheckoutController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DashboardController</servlet-name>
-        <url-pattern>/admin/dashboard</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UploadsController</servlet-name>
-        <url-pattern>/uploads/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CartController</servlet-name>
-        <url-pattern>/cart</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CheckoutController</servlet-name>
-        <url-pattern>/checkout</url-pattern>
-    </servlet-mapping>
     <error-page>
         <error-code>403</error-code>
         <location>/WEB-INF/errors/error.jsp</location>

@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@WebServlet(name = "UploadsController", urlPatterns = { "/uploads/*" })
 public class UploadsController extends HttpServlet {
 
 	@Override

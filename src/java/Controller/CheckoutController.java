@@ -17,6 +17,7 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ import java.util.List;
  *
  * @author zhon12345
  */
+@WebServlet(name = "CheckoutController", urlPatterns = { "/checkout" })
 public class CheckoutController extends HttpServlet {
 
 	@PersistenceContext
