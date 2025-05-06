@@ -1,9 +1,3 @@
-<%--
-    Document   : checkout
-    Created on : 21 Apr 2025, 12:51:39 pm
-    Author     : yjee0
---%>
-
 <%@ page import="java.util.List, Model.Addresses, Model.Cardinfo, Model.Promotions"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -27,9 +21,7 @@
 	</div>
 
 	<div class="container">
-		<!-- Combined Box for All Sections -->
 		<div class="checkout-box">
-			<!-- Address Section -->
 			<div class="address">
 				<h3 class="section-title">Select Delivery Address</h3>
 				<%
@@ -77,7 +69,6 @@
 				<% } %>
 			</div>
 
-			<!-- Payment Information Section -->
 			<div class="payment-info">
 				<h3 class="section-title">Payment Information</h3>
 				<div class="payment-methods">
@@ -137,7 +128,6 @@
 				</div>
 			</div>
 
-			<!-- Promotion Code Section -->
 			<div class="promotion">
 				<h3 class="section-title">Promo Code</h3>
 				<%
@@ -159,7 +149,6 @@
 				<% } %>
 			</div>
 
-			<!-- Order Summary Section -->
 			<div class="summary-detail">
 				<span>Subtotal (${totalItems != null ? totalItems : 0} items)</span>
 				<span>RM ${subtotal}</span>

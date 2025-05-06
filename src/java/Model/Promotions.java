@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
 
 import jakarta.persistence.Basic;
@@ -16,6 +12,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,10 +21,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author zhon12345
- */
 @Entity
 @Table(name = "PROMOTIONS")
 @XmlRootElement
@@ -49,9 +43,10 @@ public class Promotions implements Serializable {
 	@Basic(optional = false)
   @Column(name = "PROMO_CODE")
 	private String promoCode;
-	// @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
 	@Basic(optional = false)
-  @Column(name = "DISCOUNT")
+	@Column(name = "DISCOUNT")
+	@DecimalMax(value = "1.00")
+	@DecimalMin(value = "0.01")
 	private BigDecimal discount;
 	@Basic(optional = false)
   @Column(name = "VALID_FROM")

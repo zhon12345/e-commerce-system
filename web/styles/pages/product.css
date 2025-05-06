@@ -1,12 +1,3 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 22 Apr 2025, 12:49:35 am
-    Author     : yjee0
-*/
-
 :root {
     --primary-color: #4C60DF;
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -197,7 +188,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     padding: 10px;
 }
 
-/* Review section styles */
 .review-section {
     margin-bottom: 30px;
     padding: 20px;

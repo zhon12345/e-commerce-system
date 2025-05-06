@@ -1,18 +1,8 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:40:57 pm
-    Author     : yjee0
-*/
-
 :root {
     --primary-color: #4C60DF;
     --second-color: #3a4bb5;
 }
 
-/* container */
 .container {
     display: flex;
     justify-content: center;
@@ -21,18 +11,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     padding: 40px 20px;
 }
 
-/*login box */
 .box {
     display: flex;
     background: white;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     width: 900px;
     max-width: 90%;
 }
 
-/* image */
 .image {
     flex: 1;
     background: var(--primary-color);
@@ -47,7 +35,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     height: auto;
 }
 
-/* form */
 .form {
     flex: 1;
     padding: 50px;
@@ -60,7 +47,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     color: #333;
 }
 
-/* detail input */
 .detail {
     margin-bottom: 20px;
 }
@@ -120,7 +106,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border: #4C60DF 2px solid;
 }
 
-/* back to previous page */
 .back {
     text-align: center;
     margin-top: 20px;
@@ -137,7 +122,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     text-decoration: underline;
 }
 
-/* option for reset password */
 .option {
     text-align: center;
     margin: 15px 0;
@@ -156,7 +140,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     text-decoration: underline;
 }
 
-/* @media */
 @media (max-width: 768px) {
     .box {
         flex-direction: column;

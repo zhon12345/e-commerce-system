@@ -1,16 +1,9 @@
-<%--
-    Document   : signup
-    Created on : 4 Apr 2025, 4:16:56 pm
-    Author     : yjee0
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    // Check if user is already logged in
-    if (session.getAttribute("user") != null) {
-        response.sendRedirect(request.getContextPath() + "/index");
-        return;
-    }
+	if (session.getAttribute("user") != null) {
+		response.sendRedirect(request.getContextPath() + "/index");
+		return;
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -24,7 +17,6 @@
 	<header><%@include file="components/navbar.jsp" %></header>
 
 	<body>
-		<!-- title -->
 		<div class="title">
 			<h2>Register</h2>
 		</div>
@@ -77,7 +69,6 @@
 						<button type="submit" class="button">Sign Up</button>
 					</form>
 
-					<!-- back to previous page -->
 					<div class="back">Already have an account? <a href="login.jsp">Login</a></div>
 				</div>
 			</div>

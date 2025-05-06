@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller;
 
 import Model.Promotions;
@@ -17,10 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author zhon12345
- */
 @WebServlet(name = "PromotionsController", urlPatterns = { "/index", "/admin/promotions" })
 public class PromotionsController extends BaseController {
 
@@ -175,7 +167,6 @@ public class PromotionsController extends BaseController {
 
 			setErrorMessage(req, "Failed to update promotion: " + e.getMessage());
 		}
-
 	}
 
 	private void deletePromotion(HttpServletRequest req) throws IOException {
@@ -201,5 +192,4 @@ public class PromotionsController extends BaseController {
 			setErrorMessage(req, "Failed to delete promotion: " + e.getMessage());
 		}
 	}
-
 }

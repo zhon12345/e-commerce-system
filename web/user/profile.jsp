@@ -18,18 +18,15 @@
 <body>
 	<jsp:useBean id="user" class="Model.Users" scope="session" />
 
-	<!-- title -->
 	<div class="title">
 		<h2>Profile</h2>
 	</div>
 
 	<div class="container">
-		<!-- sidebar -->
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="profile"/>
     </jsp:include>
 
-		<!-- content of avatar -->
 		<div class="content">
 			<h2>Personal Information</h2>
 
@@ -63,7 +60,6 @@
 					<div class="right">
 						<div class="avatar">
 							<img src="${pageContext.request.contextPath}/<%= user.getAvatarPath() != null ? "uploads/" + user.getAvatarPath() : "/assets/avatars/default.webp" %>" alt="Avatar" class="pic" id="userAvatar">
-							<!-- upload pic -->
 							<div class="upload-pic" title="Change photo">
 								<i class="fas fa-camera"></i>
 								<input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">

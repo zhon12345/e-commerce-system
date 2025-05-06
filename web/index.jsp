@@ -1,8 +1,3 @@
-<%--
-		Document   : index
-    Created on : 31 Mar 2025, 3:08:46 pm
-    Author     : yjee0
---%>
 <%@page import="java.util.List, java.text.SimpleDateFormat, Model.Promotions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -24,14 +19,13 @@
 <body>
 	<img src="assets/home/hero.jpg" class="web_img" />
 
-	<!-- Voucher Section -->
+	<%
+		List<Promotions> promotions = (List<Promotions>) request.getAttribute("promotions");
+		if (promotions != null) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+	%>
 	<div class="voucher-section">
 		<h2 class="section-title">Available Vouchers</h2>
-		<%
-			List<Promotions> promotions = (List<Promotions>) request.getAttribute("promotions");
-			if (promotions != null) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-		%>
 		<div class="voucher-grid">
 			<% for (Promotions promo : promotions) { %>
 			<div class="voucher-item">
@@ -45,11 +39,9 @@
 			</div>
 			<% } %>
 		</div>
-		<% } else {%>
-		<% } %>
 	</div>
+	<% } %>
 
-	<!--Categories-->
 	<div class="category-section">
 		<h2 class="category-title">Category</h2>
 

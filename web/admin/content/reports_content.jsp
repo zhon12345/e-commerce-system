@@ -1,10 +1,6 @@
-<%-- /admin/content/reports_content.jsp --%>
-<%-- This file contains only the content specific to the Reports page --%>
-
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-file-alt"></i> View Reports</h2>
 
 <a href="#" class="btn btn-primary mb-3 btn-add"><i class="fas fa-cogs"></i> Generate Report</a>
-<%-- TODO: Link to a report generation page or trigger generation via AJAX --%>
 
 <div class="table-responsive">
     <table class="table table-striped table-hover table-bordered align-middle">

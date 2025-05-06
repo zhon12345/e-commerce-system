@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
 
 import jakarta.persistence.Basic;
@@ -26,10 +22,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author zhon12345
- */
 @Entity
 @Table(name = "ORDERS")
 @XmlRootElement
@@ -56,7 +48,6 @@ public class Orders implements Serializable {
 	@Basic(optional = false)
   @Column(name = "STATUS")
 	private String status;
-	// @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
 	@Basic(optional = false)
   @Column(name = "TOTAL_PRICE")
 	private BigDecimal totalPrice;

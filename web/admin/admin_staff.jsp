@@ -1,7 +1,6 @@
 <%@ page import="Model.Users" %>
 
 <%
-    // Set attributes for the layout template
     request.setAttribute("activeAdminPage", "staff");
     request.setAttribute("pageTitle", "Staff Management");
     request.setAttribute("mainContentPage", "/admin/content/staff_content.jsp");

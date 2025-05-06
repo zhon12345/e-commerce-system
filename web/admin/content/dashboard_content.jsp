@@ -1,7 +1,6 @@
 <%@ page import="java.util.List, Model.*, java.text.*, java.math.BigDecimal" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
-<%-- Get values from request with null checks --%>
 <%
     Integer totalUsers = (Integer) request.getAttribute("totalUsers");
     Integer totalProducts = (Integer) request.getAttribute("totalProducts");
@@ -12,7 +11,6 @@
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 %>
 
-<%-- Display messages --%>
 <% if (session.getAttribute("error") != null) { %>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <%= session.getAttribute("error") %>
@@ -34,9 +32,7 @@
 </h2>
 <p class="text-muted mb-4">Overview of the system statistics</p>
 
-<%-- Statistics Cards --%>
 <div class="row g-4 mb-4">
-    <%-- Users Card --%>
     <div class="col-xl-3 col-md-6">
         <div class="card h-100 border-start border-primary border-4">
             <div class="card-body">
@@ -53,7 +49,6 @@
         </div>
     </div>
 
-    <%-- Products Card --%>
     <div class="col-xl-3 col-md-6">
         <div class="card h-100 border-start border-success border-4">
             <div class="card-body">
@@ -70,7 +65,6 @@
         </div>
     </div>
 
-    <%-- Orders Card --%>
     <div class="col-xl-3 col-md-6">
         <div class="card h-100 border-start border-info border-4">
             <div class="card-body">
@@ -87,7 +81,6 @@
         </div>
     </div>
 
-    <%-- Revenue Card --%>
     <div class="col-xl-3 col-md-6">
         <div class="card h-100 border-start border-warning border-4">
             <div class="card-body">
@@ -107,7 +100,6 @@
     </div>
 </div>
 
-<%-- Report Generation Section --%>
 <div class="row mt-4">
     <div class="col-12">
         <div class="card">

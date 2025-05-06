@@ -43,13 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		enableScroll();
 	});
 
-	// Set up form validation
 	document.getElementById("name").addEventListener("input", () => validateName());
 	document.getElementById("phone").addEventListener("input", () => validatePhone());
 	document.getElementById("line1").addEventListener("input", () => validateLine());
+	document.getElementById("postcode").addEventListener("input", () => validatePostcode());
 	document.getElementById("city").addEventListener("input", () => validateCity());
 	document.getElementById("state").addEventListener("input", () => validateState());
-	document.getElementById("postcode").addEventListener("input", () => validatePostcode());
 });
 
 function validateName() {
@@ -79,12 +78,12 @@ function validateState() {
 function validateForm() {
 	const isNameValid = validateName();
 	const isPhoneValid = validatePhone();
-	const isLine1Valid = validateLine();
+	const isLineValid = validateLine();
+	const isPostcodeValid = validatePostcode();
 	const isCityValid = validateCity();
 	const isStateValid = validateState();
-	const isPostcodeValid = validatePostcode();
 
-	return isNameValid && isPhoneValid && isLine1Valid && isCityValid && isStateValid && isPostcodeValid;
+	return isNameValid && isPhoneValid && isLineValid && isPostcodeValid && isCityValid && isStateValid;
 }
 
 window.validateForm = validateForm;

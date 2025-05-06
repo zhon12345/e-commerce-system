@@ -1,13 +1,3 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 22 Apr 2025, 12:51:26 am
-    Author     : yjee0
-*/
-
-/* color */
 :root {
     --primary-color: #4C60DF;
     --secondary-color: #6c757d;
@@ -15,7 +5,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     --dark-color: #343a40;
 }
 
-/* filter */
 .container {
     display: flex;
     padding: 20px;
@@ -24,7 +13,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     gap: 20px;
 }
 
-/* filter box */
 .box {
     width: 250px;
     padding: 15px;
@@ -47,7 +35,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     margin-bottom: 20px;
 }
 
-/* option for category */
 .option {
     margin: 8px 0;
     display: flex;
@@ -61,7 +48,6 @@ input[type="checkbox"] {
     margin-right: 8px;
 }
 
-/* price range */
 .range {
     display: flex;
     gap: 10px;
@@ -75,7 +61,6 @@ input[type="checkbox"] {
     border-radius: 4px;
 }
 
-/* apply button */
 #reset,
 .empty-status .btn {
     background: var(--primary-color);
@@ -96,7 +81,6 @@ input[type="checkbox"] {
     border: #4C60DF 2px solid;
 }
 
-/* star rating for filter */
 .star-rating {
     margin-top: -10px;
 }
@@ -118,7 +102,6 @@ input[type="checkbox"] {
     margin-top: 10px;
 }
 
-/* Products */
 .products-section {
     flex: 1;
 }
@@ -160,7 +143,6 @@ input[type="checkbox"] {
     text-decoration: none;
 }
 
-/* products image */
 .image {
     width: 100%;
     height: 300px;
@@ -181,27 +163,23 @@ input[type="checkbox"] {
     background: white;
 }
 
-/* products name title */
 .name {
     font-weight: bold;
     margin-bottom: 5px;
     color: #000;
 }
 
-/* products price */
 .price {
     color: var(--primary-color);
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-/* products rating */
 .product-rating {
     color: #FFD700;
     margin-bottom: 15px;
 }
 
-/* add-to-cart button */
 .add-to-cart {
     width: 100%;
     padding: 8px;

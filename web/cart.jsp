@@ -1,9 +1,3 @@
-<%--
-    Document   : cart
-    Created on : 18 Apr 2025, 11:13:09 am
-    Author     : yjee0
---%>
-
 <%@ page import="java.util.List, Model.Products, Model.Cart"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,7 +20,6 @@
 	</div>
 
 	<div class="container">
-		<!-- Cart Items Section -->
 		<div class="items">
 			<%
 				List<Cart> cart = (List<Cart>) request.getAttribute("cartList");
@@ -81,7 +74,6 @@
 			<% } %>
 		</div>
 
-		<!-- Order Summary Section -->
 		<div class="summary">
 			<h3 class="summary-title">Order Summary</h3>
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller;
 
 import Model.Products;
@@ -18,10 +14,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author zhon12345
- */
 @WebServlet(name = "ReviewsController", urlPatterns = { "/user/reviews", "/admin/reviews" })
 public class ReviewsController extends BaseController {
 
@@ -158,7 +150,6 @@ public class ReviewsController extends BaseController {
 			session.removeAttribute("reviewText");
 
 			res.sendRedirect(req.getContextPath() + "/product?id=" + productId + "&tab=reviews");
-			return;
 		} catch (Exception e) {
 			throw new ServletException(e);
 		}
@@ -189,7 +180,6 @@ public class ReviewsController extends BaseController {
 		}
 
 		res.sendRedirect(req.getContextPath() + "/user/reviews");
-		return;
 	}
 
 }

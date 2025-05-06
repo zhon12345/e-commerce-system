@@ -16,16 +16,12 @@
 </header>
 
 <body>
-
-	<!-- title -->
 	<div class="title">
 		<h2>All Products</h2>
 	</div>
 
-	<!-- Filter -->
 	<div class="container">
 		<form class="box" method="GET" action="${pageContext.request.contextPath}/products">
-			<!-- Option for category -->
 			<div class="filter">
 				<h3>Product Category</h3>
 				<% List<Categories> categories = (List<Categories>) request.getAttribute("categories");
@@ -52,7 +48,6 @@
 				%>
 			</div>
 
-			<!-- Price range -->
 			<div class="filter">
 				<h3>Price Range</h3>
 				<div class="range">
@@ -62,7 +57,6 @@
 				</div>
 			</div>
 
-			<!-- Star rating for filter -->
 			<div class="filter">
 				<h3>Rating</h3>
 				<div class="star-rating" id="starContainer">
@@ -77,7 +71,6 @@
 			<button type="button" id="reset">Reset</button>
 		</form>
 
-		<!-- Products -->
 		<div class="products-section">
 			<% List<Products> products = (List<Products>) request.getAttribute("products");
 				if (products != null && !products.isEmpty()) {

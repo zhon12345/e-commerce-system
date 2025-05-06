@@ -19,13 +19,11 @@
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-users"></i> User Management</h2>
 
 <%
-    // Get isManager from session attribute
     Boolean isManager = (Boolean) session.getAttribute("isManager");
     if (isManager == null) {
         isManager = false;
     }
 
-    // Create date formatter for the created date
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 %>
 

@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
- */
-
 import { validateRequired, showError } from '../components/validation.js';
 
 function disableScroll() {
@@ -36,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById('number').value = "";
         document.getElementById('name').value = "";
-		document.getElementById('expiryDate').value = "";
+        document.getElementById('expiryDate').value = "";
     });
 
     closePopupBtn.addEventListener('click', function () {
@@ -44,10 +39,9 @@ document.addEventListener("DOMContentLoaded", function () {
         enableScroll();
     });
 
-    // Set up form validation
-	document.getElementById("number").addEventListener("input", () => validateNumber());
-	document.getElementById("name").addEventListener("input", () => validateName());
-	document.getElementById("expiryDate").addEventListener("input", () => validateExpiryDate());
+    document.getElementById("number").addEventListener("input", () => validateNumber());
+    document.getElementById("name").addEventListener("input", () => validateName());
+    document.getElementById("expiryDate").addEventListener("input", () => validateExpiryDate());
 });
 
 function validateNumber() {
@@ -59,16 +53,15 @@ function validateName() {
 }
 
 function validateExpiryDate() {
-	return validateRequired('expiryDate', 'Expiry Date');
+    return validateRequired('expiryDate', 'Expiry Date');
 }
-
 
 function validateForm() {
     const isNumberValid = validateNumber();
     const isNameValid = validateName();
-	const isExpiryDateValid = validateExpiryDate();
+    const isExpiryDateValid = validateExpiryDate();
 
-	return isNumberValid && isNameValid && isExpiryDateValid;
+    return isNumberValid && isNameValid && isExpiryDateValid;
 }
 
 window.validateForm = validateForm;

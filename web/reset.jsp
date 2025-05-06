@@ -12,21 +12,16 @@
         <%@include file="components/navbar.jsp" %>
     </header>
     <body>
-        <!-- title -->
         <div class="title">
             <h2>Forgot Password</h2>
         </div>
 
-        <!-- container -->
         <div class="container">
-            <!<!-- box -->
             <div class="box">
-                <!-- image -->
                 <div class="image">
                     <img src="${pageContext.request.contextPath}/assets/logo/text.png">
                 </div>
 
-                <!-- form -->
                 <div class="form">
                     <h1 class="title-form">Reset Your Password</h1>
 
@@ -62,7 +57,6 @@
                         <button action="set_password.jsp" type="submit" class="button">Reset Password</button>
                     </form>
 
-                    <!-- back to previous page -->
                     <div class="back">
                         <a href="login.jsp">Back to Login</a>
                     </div>

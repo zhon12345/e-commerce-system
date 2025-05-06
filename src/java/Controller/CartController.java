@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller;
 
 import Model.Cart;
@@ -17,10 +13,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 
-/**
- *
- * @author zhon12345
- */
 @WebServlet(name = "CartController", urlPatterns = { "/cart" })
 public class CartController extends BaseController {
 
@@ -89,7 +81,6 @@ public class CartController extends BaseController {
 			res.sendRedirect(req.getContextPath() + "/cart");
 		} catch (NumberFormatException e) {
 			res.sendRedirect(req.getContextPath() + "/products");
-			return;
 		} catch (Exception e) {
 			try {
 				utx.rollback();
@@ -171,7 +162,6 @@ public class CartController extends BaseController {
 		int totalItems = 0;
 		double discount = 0;
 
-		// Check both request and session for applied promo
 		Promotions appliedPromo = (Promotions) req.getSession().getAttribute("appliedPromo");
 
 		if (cartList != null && !cartList.isEmpty()) {

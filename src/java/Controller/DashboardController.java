@@ -27,7 +27,6 @@ public class DashboardController extends BaseController {
         try {
             Users user = getCurrentUser(request);
 
-            // If user is not logged in or is not staff/manager, throw a 403 error
             if (!isLoggedInAndAuthorized(request, response, user, null)) return;
 
             String action = request.getParameter("action");
@@ -39,38 +38,32 @@ public class DashboardController extends BaseController {
 
             utx.begin();
 
-            // Get total customers
             int totalUsers = ((Number) em.createQuery(
                     "SELECT COUNT(u) FROM Users u WHERE u.isArchived = :archived AND u.role = :role")
                     .setParameter("archived", false)
                     .setParameter("role", "customer")
                     .getSingleResult()).intValue();
 
-            // Get total products
             int totalProducts = ((Number) em.createQuery(
                     "SELECT COUNT(p) FROM Products p WHERE p.isArchived = :archived")
                     .setParameter("archived", false)
                     .getSingleResult()).intValue();
 
-            // Get total active orders - using DISTINCT
             int totalOrders = ((Number) em.createQuery(
                     "SELECT COUNT(DISTINCT o.id) FROM Orders o WHERE o.status IN :statuses")
                     .setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
                     .getSingleResult()).intValue();
 
-            // Calculate total revenue - using DISTINCT and grouping by order ID
             BigDecimal totalRevenue = (BigDecimal) em.createQuery(
                     "SELECT COALESCE(SUM(DISTINCT o.totalPrice), 0) FROM Orders o WHERE o.status IN :statuses")
                     .setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
                     .getSingleResult();
 
-            // Get recent reports
             List<Reports> recentReports = em.createQuery(
                     "SELECT r FROM Reports r ORDER BY r.generatedDate DESC", Reports.class)
                     .setMaxResults(5)
                     .getResultList();
 
-            // Set attributes
             request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("totalProducts", totalProducts);
             request.setAttribute("totalOrders", totalOrders);
@@ -102,14 +95,12 @@ public class DashboardController extends BaseController {
             utx.begin();
             Users user = (Users) request.getSession().getAttribute("user");
 
-            // Get and parse dates
             String startDateStr = request.getParameter("startDate");
             String endDateStr = request.getParameter("endDate");
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = dateFormat.parse(startDateStr);
             Date endDate = dateFormat.parse(endDateStr);
 
-            // Query orders
             List<Orders> orders = em.createQuery(
                     "SELECT DISTINCT o FROM Orders o " +
                             "WHERE o.orderDate BETWEEN :startDate AND :endDate",
@@ -118,15 +109,13 @@ public class DashboardController extends BaseController {
                     .setParameter("endDate", endDate)
                     .getResultList();
 
-            // Then fetch order details separately to avoid multiplication
             for (Orders order : orders) {
-                em.refresh(order); // Ensure we have fresh data
+                em.refresh(order);
                 if (order.getOrderdetailsList() != null) {
-                    order.getOrderdetailsList().size(); // Initialize the collection
+                    order.getOrderdetailsList().size();
                 }
             }
 
-            // Calculate metrics
             BigDecimal totalRevenue = BigDecimal.ZERO;
             BigDecimal totalDiscounts = BigDecimal.ZERO;
             Set<Integer> uniqueCustomers = new HashSet<>();
@@ -147,7 +136,6 @@ public class DashboardController extends BaseController {
             BigDecimal averageOrderValue = orders.isEmpty() ? BigDecimal.ZERO
                     : totalRevenue.divide(new BigDecimal(orders.size()), 2, RoundingMode.HALF_UP);
 
-            // Create and save report
             Reports report = new Reports();
             report.setReportType("Sales Report");
             report.setGeneratedDate(new Date());

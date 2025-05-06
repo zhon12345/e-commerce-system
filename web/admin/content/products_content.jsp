@@ -1,5 +1,3 @@
-<%-- /admin/content/products_content.jsp --%>
-<%-- This file contains only the content specific to the Product Management page --%>
 <%@ page import="java.util.List, Model.Products, Model.Categories" %>
 
 <% if (session.getAttribute("error") != null) { %>
@@ -199,7 +197,6 @@
 
 <script>
     function editProduct(id, name, description, categoryId, price, stock) {
-        // Set values in the edit modal
         document.getElementById('editProductId').value = id;
         document.getElementById('editProductName').value = name;
         document.getElementById('editOldProductName').value = name;
@@ -208,22 +205,17 @@
         document.getElementById('editProductPrice').value = price;
         document.getElementById('editProductStock').value = stock;
 
-        // Open the modal manually
         const editModal = new bootstrap.Modal(document.getElementById('editProductModal'));
         editModal.show();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Handle price input validation for both forms
         ['productPrice', 'editProductPrice'].forEach(id => {
             const priceInput = document.getElementById(id);
 
-            // Validate on input event - ensure only numbers and decimal point
             priceInput.addEventListener('input', function() {
-                // Remove any non-numeric characters except decimal point
                 let value = this.value.replace(/[^0-9.]/g, '');
 
-                // Ensure only one decimal point
                 const decimalCount = (value.match(/\./g) || []).length;
                 if (decimalCount > 1) {
                     const firstDecimalIndex = value.indexOf('.');
@@ -231,7 +223,6 @@
                            value.substring(firstDecimalIndex + 1).replace(/\./g, '');
                 }
 
-                // Limit to two decimal places
                 if (value.includes('.')) {
                     const parts = value.split('.');
                     if (parts[1].length > 2) {
@@ -244,32 +235,26 @@
             });
         });
 
-        // Handle stock input validation for both forms
         ['productStock', 'editProductStock'].forEach(id => {
             const stockInput = document.getElementById(id);
 
-            // Validate on input event - ensure only integers
             stockInput.addEventListener('input', function() {
-                // Remove any non-numeric characters
                 this.value = this.value.replace(/[^0-9]/g, '');
             });
         });
 
-        // Validate file input for image upload
         ['productImage', 'editProductImage'].forEach(id => {
             const imageInput = document.getElementById(id);
 
             imageInput.addEventListener('change', function() {
                 if (this.files.length > 0) {
                     const file = this.files[0];
-                    // Check file size (5MB max)
                     if (file.size > 5 * 1024 * 1024) {
                         alert('Image file is too large. Maximum size is 5MB.');
                         this.value = '';
                         return;
                     }
 
-                    // Check file type
                     const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
                     if (!validTypes.includes(file.type)) {
                         alert('Invalid file type. Please upload a JPG or PNG image.');

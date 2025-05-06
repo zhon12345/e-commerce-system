@@ -19,7 +19,6 @@
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-user-shield"></i> Staff Management</h2>
 
 <%
-    // Get isManager from session attribute
     Boolean isManager = (Boolean) session.getAttribute("isManager");
     if (isManager == null) {
         isManager = false;

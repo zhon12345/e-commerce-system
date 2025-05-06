@@ -1,18 +1,8 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
-*/
-/*
-    Created on : 16 Apr 2025, 11:44:34 pm
-    Author     : yjee0
-*/
-
 :root {
     --primary-color: #4C60DF;
     --secondary-color: #f8f9fa;
 }
 
-/* Account Container */
 .container {
     display: flex;
     max-width: 1200px;
@@ -20,7 +10,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     padding: 0 20px;
 }
 
-/* Address Content */
 .content {
     flex: 1;
     background: white;
@@ -41,7 +30,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     font-size: 24px;
 }
 
-/* add button */
 .add {
     background-color: var(--primary-color);
     color: white;
@@ -60,7 +48,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border: #4C60DF 2px solid;
 }
 
-/* address display */
 .list {
     display: flex;
     flex-direction: column;
@@ -88,7 +75,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     font-size: 18px;
 }
 
-/* Style for both action buttons */
 .actions button {
     padding: 7px 12px;
     border-radius: 8px;
@@ -98,7 +84,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     border: 1px solid var(--primary-color);
 }
 
-/* Edit button specific styling */
 .edit-btn,
 .delete {
     background-color: var(--primary-color);
@@ -112,7 +97,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
 }
-
 
 .delete {
     margin-left: 10px;

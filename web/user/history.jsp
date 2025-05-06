@@ -1,9 +1,3 @@
-<%--
-    Document   : history
-    Created on : 15 Apr 2025, 11:01:40 pm
-    Author     : yjee0
---%>
-
 <%@ page import="java.util.List, java.text.SimpleDateFormat, Model.Orders, Model.Orderdetails, Model.Products"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -24,18 +18,15 @@
 </header>
 
 <body>
-	<!-- title -->
 	<div class="title">
 		<h2>Order History</h2>
 	</div>
 
 	<div class="container">
-		<!-- Sidebar Navigation -->
 		<jsp:include page="/components/sidebar.jsp">
 			<jsp:param name="activePage" value="history"/>
     </jsp:include>
 
-		<!-- content -->
 		<div class="content">
 			<div class="header-status">
 				<h2>My Orders</h2>

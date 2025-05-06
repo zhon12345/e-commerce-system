@@ -1,5 +1,3 @@
-<%-- /WEB-INF/views/admin/content/orders_content.jsp --%>
-<%-- This file contains only the content specific to the Order Management page --%>
 <%@ page import="java.util.List, Model.Reviews" %>
 <h2 class="mb-3 border-bottom pb-2 text-body"><i class="fas fa-receipt"></i> Reviews Management</h2>
 
