@@ -1,20 +1,14 @@
-package Controller.admin;
+package Controller;
 
 import Model.Orderdetails;
 import Model.Orders;
 import Model.Reports;
 import Model.Users;
 import static Utils.Authentication.isLoggedInAndAuthorized;
-import jakarta.annotation.Resource;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,20 +20,12 @@ import java.util.List;
 import java.util.Set;
 
 @WebServlet(name = "DashboardController", urlPatterns = { "/admin/dashboard" })
-public class DashboardController extends HttpServlet {
-
-    @PersistenceContext
-    private EntityManager em;
-
-    @Resource
-    private UserTransaction utx;
+public class DashboardController extends BaseController {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // Check if user is logged in and has appropriate role
-            HttpSession session = request.getSession();
-            Users user = (Users) session.getAttribute("user");
+            Users user = getCurrentUser(request);
 
             // If user is not logged in or is not staff/manager, throw a 403 error
             if (!isLoggedInAndAuthorized(request, response, user, null)) return;
@@ -105,7 +91,7 @@ public class DashboardController extends HttpServlet {
             }
             System.out.println("Error in AdminDashboard: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Error loading dashboard data: " + e.getMessage());
+            setErrorMessage(request, "Error loading dashboard data: " + e.getMessage());
             request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
         }
     }
@@ -175,7 +161,7 @@ public class DashboardController extends HttpServlet {
             em.persist(report);
             utx.commit();
 
-            request.getSession().setAttribute("success", "Report generated successfully!");
+            setSuccessMessage(request, "Report generated successfully!");
 
         } catch (Exception e) {
             handleError(e, request, response);
@@ -211,7 +197,7 @@ public class DashboardController extends HttpServlet {
             ex.printStackTrace();
         }
         e.printStackTrace();
-        request.setAttribute("error", "Error: " + e.getMessage());
+        setErrorMessage(request, "Error: " + e.getMessage());
         request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
     }
 }

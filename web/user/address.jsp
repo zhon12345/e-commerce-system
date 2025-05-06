@@ -184,39 +184,15 @@
 			});
 		}
 
-		<% if (session.getAttribute("deleteSuccess") != null) { %>
+		<% if (session.getAttribute("success") != null) { %>
 			Swal.fire({
 				icon: 'success',
-				title: 'Deleted!',
-				text: 'Your address has been deleted.',
+				title: 'Success',
+				text: '<%= session.getAttribute("success") %>',
 				confirmButtonColor: '#4C60DF',
-				showConfirmButton: true,
 				timer: 1500
 			});
-			<% session.removeAttribute("deleteSuccess"); %>
-		<% } %>
-		<% if (session.getAttribute("createSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Added!',
-				text: 'Your address has been added successfully.',
-				confirmButtonColor: '#4C60DF',
-				showConfirmButton: true,
-				timer: 1500
-			});
-			<% session.removeAttribute("createSuccess"); %>
-		<% } %>
-
-		<% if (session.getAttribute("updateSuccess") != null) { %>
-			Swal.fire({
-				icon: 'success',
-				title: 'Updated!',
-				text: 'Your address has been updated successfully.',
-				confirmButtonColor: '#4C60DF',
-				showConfirmButton: true,
-				timer: 1500
-			});
-			<% session.removeAttribute("updateSuccess"); %>
+			<% session.removeAttribute("success"); %>
 		<% } %>
 	</script>
 </body>

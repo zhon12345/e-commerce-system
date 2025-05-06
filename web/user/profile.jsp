@@ -18,19 +18,6 @@
 <body>
 	<jsp:useBean id="user" class="Model.Users" scope="session" />
 
-	<% if (session.getAttribute("success") != null) { %>
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			Swal.fire({
-				icon: 'success',
-				title: 'Edit Successful!',
-				confirmButtonText: 'OK'
-			});
-		});
-	</script>
-	<% session.removeAttribute("success"); %>
-	<% } %>
-
 	<!-- title -->
 	<div class="title">
 		<h2>Profile</h2>
@@ -107,6 +94,17 @@
 				}
 			%>
 		})
+
+		<% if (session.getAttribute("success") != null) { %>
+			Swal.fire({
+				icon: 'success',
+				title: 'Success',
+				text: '<%= session.getAttribute("success") %>',
+				confirmButtonColor: '#4C60DF',
+				timer: 1500
+			});
+			<% session.removeAttribute("success"); %>
+		<% } %>
 	</script>
 </body>
 <footer>

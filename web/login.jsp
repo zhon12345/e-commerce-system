@@ -89,16 +89,16 @@
 					}
 				}
 			%>
+			})
 
-			<% if (session.getAttribute("registerSuccess") != null && session.getAttribute("registerSuccess").equals("true")) { %>
+			<% if (session.getAttribute("success") != null) { %>
 				Swal.fire({
 					icon: 'success',
-					title: 'Register Successful!',
-					confirmButtonText: 'OK'
+					title: '<%= session.getAttribute("success") %>',
+					timer: 3000
 				});
-				<% session.removeAttribute("registerSuccess"); %>
+				<% session.removeAttribute("success"); %>
 			<% } %>
-			})
 		</script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>

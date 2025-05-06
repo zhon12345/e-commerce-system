@@ -72,24 +72,13 @@
 	</div>
 
 	<script>
-	<% if (session.getAttribute("loginSuccess") != null && session.getAttribute("loginSuccess").equals("true")) { %>
+	<% if (session.getAttribute("success") != null) { %>
 		Swal.fire({
 			icon: 'success',
-			title: 'Login Successful!',
-			showConfirmButton: true,
+			title: '<%= session.getAttribute("success") %>',
 			timer: 3000
 		});
-		<% session.removeAttribute("loginSuccess"); %>
-	<% } %>
-
-	<% if (session.getAttribute("logoutSuccess") != null && session.getAttribute("logoutSuccess").equals("true")) { %>
-		Swal.fire({
-			icon: 'success',
-			title: 'Logout Successful!',
-			showConfirmButton: true,
-			timer: 3000
-		});
-		<% session.removeAttribute("logoutSuccess"); %>
+		<% session.removeAttribute("success"); %>
 	<% } %>
 	</script>
 </body>

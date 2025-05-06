@@ -13,17 +13,18 @@
 %>
 
 <%-- Display messages --%>
-<% if (request.getAttribute("error") != null) { %>
+<% if (session.getAttribute("error") != null) { %>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= request.getAttribute("error") %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <%= session.getAttribute("error") %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    <% session.removeAttribute("error"); %>
 <% } %>
 
 <% if (session.getAttribute("success") != null) { %>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <%= session.getAttribute("success") %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <% session.removeAttribute("success"); %>
 <% } %>
@@ -155,7 +156,7 @@
                                 <td><%= report.getReportType() %></td>
                                 <td><%= report.getGeneratedById().getUsername() %></td>
                                 <td>
-                                    <button class="btn btn-sm btn-info" 
+                                    <button class="btn btn-sm btn-info"
                                             onclick="showReport(`<%= report.getDetails().replace("`", "\\`") %>`)"
                                             title="View Details">
                                         <i class="fas fa-eye"></i>
@@ -197,4 +198,3 @@ function showReport(details) {
     new bootstrap.Modal(document.getElementById('reportModal')).show();
 }
 </script>
-
