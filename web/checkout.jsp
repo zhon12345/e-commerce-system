@@ -120,7 +120,7 @@
 						<i class="far fa-credit-card"></i>
 						<h3>No Saved Cards</h3>
 						<p>You haven't added any credit or debit cards yet. Please add a card.</p>
-						<a href="${pageContext.request.contextPath}/user/card">
+						<a href="${pageContext.request.contextPath}/user/cards">
 							<button class="add-card">Add Card</button>
 						</a>
 					</div>
