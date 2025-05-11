@@ -13,6 +13,8 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/components/title.css" />
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/pages/register.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<header><%@include file="components/navbar.jsp" %></header>
 
@@ -87,6 +89,16 @@
 			    }
 			  %>
 			})
+
+			<% if (session.getAttribute("error") != null) { %>
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: '<%= session.getAttribute("error") %>',
+					timer: 3000
+				});
+				<% session.removeAttribute("error"); %>
+			<% } %>
 		</script>
 	</body>
 	<footer><%@include file="components/footer.jsp" %></footer>

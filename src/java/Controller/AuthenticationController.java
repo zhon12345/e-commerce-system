@@ -26,12 +26,12 @@ public class AuthenticationController extends BaseController {
 		String path = req.getServletPath();
 
 		if (path.equals("/register")) {
-			req.getRequestDispatcher("/register.jsp").forward(req, res);
+			forwardToPage(req, res, "/register.jsp");
 			return;
 		}
 
 		if (path.equals("/login")) {
-			req.getRequestDispatcher("/login.jsp").forward(req, res);
+			forwardToPage(req, res, "/login.jsp");
 			return;
 		}
 
@@ -92,7 +92,7 @@ public class AuthenticationController extends BaseController {
 		}
 
 		if (hasErrors) {
-			req.getRequestDispatcher("/login.jsp").forward(req, res);
+			forwardToPage(req, res, "/login.jsp");
 			return;
 		}
 
@@ -114,14 +114,14 @@ public class AuthenticationController extends BaseController {
 				session.setAttribute("user", user);
 
 				if (!user.getRole().equals("customer")) {
-					res.sendRedirect(req.getContextPath() + "/admin/dashboard");
+					redirectToPage(req, res, "/admin/dashboard");
 					return;
 				}
 
 				setSuccessMessage(req, "Login successful!");
 
 				String targetPath = validateRedirect(redirect, session);
-				res.sendRedirect(req.getContextPath() + targetPath);
+				redirectToPage(req, res, targetPath);
 				return;
 			}
 		} catch (Exception e) {
@@ -131,7 +131,7 @@ public class AuthenticationController extends BaseController {
 		}
 
 		if (hasErrors) {
-			req.getRequestDispatcher("/login.jsp").forward(req, res);
+			forwardToPage(req, res, "/login.jsp");
 		}
 	}
 
@@ -181,23 +181,21 @@ public class AuthenticationController extends BaseController {
 			req.setAttribute("username", username);
 			req.setAttribute("email", email);
 
-			req.getRequestDispatcher("/register.jsp").forward(req, res);
+			forwardToPage(req, res, "/register.jsp");
 			return;
 		}
 
-		try {
-			String hashedPassword = hashPassword(password);
-			Users newUser = new Users(username, email, hashedPassword, "customer");
-
-			utx.begin();
+		handleTransaction(() -> {
+			Users newUser = new Users(username, email, hashPassword(password), "customer");
 			em.persist(newUser);
-			utx.commit();
+		}, req, "Registration Successful!", "Registration failed. Please try again.");
 
-			setSuccessMessage(req, "Registration successful!");
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
-		} catch (Exception e) {
-			throw new ServletException(e);
+		if (req.getSession().getAttribute("error") != null) {
+			forwardToPage(req, res, "/register.jsp");
+			return;
 		}
+
+		redirectToPage(req, res, "/login");
 	}
 
 	private void handleLogout(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -209,7 +207,7 @@ public class AuthenticationController extends BaseController {
 
 		session = req.getSession(true);
 		setSuccessMessage(req, "Logout successful!");
-		res.sendRedirect(req.getContextPath() + "/index");
+		redirectToPage(req, res, "/index");
 	}
 
 	private boolean checkExisting(String field, String value, String attribute, HttpServletRequest req)

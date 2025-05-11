@@ -33,13 +33,13 @@ public class UsersController extends BaseController {
 
 		if (path.equals("/admin/users")) {
 			fetchUsers(req, "customer");
-			req.getRequestDispatcher("/admin/admin_users.jsp").forward(req, res);
+			forwardToPage(req, res, "/admin/admin_users.jsp");
 			return;
 		}
 
 		if (path.equals("/admin/staff")) {
 			fetchUsers(req, "staff");
-			req.getRequestDispatcher("/admin/admin_staff.jsp").forward(req, res);
+			forwardToPage(req, res, "/admin/admin_staff.jsp");
 			return;
 		}
 
@@ -75,18 +75,29 @@ public class UsersController extends BaseController {
 					break;
 				case "update":
 				case "delete":
-					String userId = req.getParameter("userId");
+					try {
+						int userId = Integer.parseInt(req.getParameter("userId"));
+						Users selectedUser = em.find(Users.class, userId);
 
-					if ("update".equals(action)) {
-						updateUser(req, userId, userType);
-					}
+						if (selectedUser == null) {
+							setErrorMessage(req, userType + " not found!");
+							break;
+						}
 
-					if ("delete".equals(action)) {
-						deleteUser(req, userId, userType);
+						if ("update".equals(action)) {
+							updateUser(req, selectedUser, userType);
+						}
+
+						if ("delete".equals(action)) {
+							deleteUser(req, selectedUser, userType);
+						}
+					} catch (NumberFormatException e) {
+						setErrorMessage(req, userType + " not found!");
+						break;
 					}
 			}
 
-			res.sendRedirect(req.getContextPath() + path);
+			redirectToPage(req, res, path);
 			return;
 		}
 
@@ -108,126 +119,93 @@ public class UsersController extends BaseController {
 	}
 
 	private void createUser(HttpServletRequest req, String userType) throws IOException, ServletException {
-		String username = req.getParameter("username").trim();
-		String email = req.getParameter("email").trim();
-		String password = req.getParameter("password").trim();
+		handleTransaction(() -> {
+			Users user = new Users();
+
+			if (processUserData(req, user)) {
+				em.persist(user);
+				em.flush();
+				em.refresh(user);
+			}
+		}, req, userType + " created successfully", "Error creating " + userType);
+	}
+
+	private void updateUser(HttpServletRequest req, Users user, String userType) throws IOException, ServletException {
+		handleTransaction(() -> {
+			if (processUserData(req, user)) {
+				em.merge(user);
+			}
+		}, req, userType + " updated successfully!", "Error updating " + userType);
+	}
+
+	private void deleteUser(HttpServletRequest req, Users user, String userType) throws IOException, ServletException {
+		handleTransaction(() -> {
+			user.setIsArchived(true);
+			em.merge(user);
+		}, req, userType + " deleted successfully!", "Error deleting " + userType);
+	}
+
+	private boolean processUserData(HttpServletRequest req, Users user) {
+		String username = req.getParameter("username");
+		String name = req.getParameter("name");
+		String email = req.getParameter("email");
+		String password = req.getParameter("password");
 		String role = req.getParameter("role");
+
+		boolean hasError = false;
 
 		if (username == null || username.trim().isEmpty()
 				|| email == null || email.trim().isEmpty()
-				|| password == null || password.trim().isEmpty()
 				|| role == null || role.trim().isEmpty()) {
-
 			setErrorMessage(req, "All fields are required");
-			return;
+			hasError = true;
+		} else if (user.getId() == null && (password == null || password.trim().isEmpty())) {
+			setErrorMessage(req, "All fields are required");
+			hasError = true;
 		}
 
-		try {
-			String hashedPassword = hashPassword(password);
-
-			utx.begin();
-			Users newUser = new Users(username, email, hashedPassword, role);
-			em.persist(newUser);
-			utx.commit();
-
-			setSuccessMessage(req, userType + " created successfully!");
-		} catch (Exception e) {
-			try {
-				if (utx != null) {
-					utx.rollback();
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Error creating " + role.substring(0, 1).toUpperCase() + role.substring(1) + ": " + e.getMessage());
+		if (hasError) {
+			return false;
 		}
-	}
 
-	private void updateUser(HttpServletRequest req, String userId, String userType) throws IOException, ServletException {
-		String username = req.getParameter("username").trim();
-		String email = req.getParameter("email").trim();
-		String name = req.getParameter("name");
-		String role = req.getParameter("role");
+		Long userId = user.getId() != null ? user.getId() : 0L;
 
-		try {
-			int id = Integer.parseInt(userId);
-			Users user = em.find(Users.class, id);
+		Long usernameCount = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u.username = :username AND u.id != :userId", Long.class)
+				.setParameter("username", username)
+				.setParameter("userId", userId)
+				.getSingleResult();
 
-			Long usernameCount = em
-					.createQuery("SELECT COUNT(u) FROM Users u WHERE u.username = :username AND u.id != :userId", Long.class)
-					.setParameter("username", username)
-					.setParameter("userId", user.getId())
-					.getSingleResult();
-
-			if (usernameCount > 0) {
-				setErrorMessage(req, "Username is already taken");
-				return;
-			}
-
-			if (user != null) {
-				utx.begin();
-				user.setUsername(username);
-				user.setEmail(email);
-
-				if (name != null && !name.trim().isEmpty()) {
-					user.setName(name);
-				}
-
-				if (role != null && !role.isEmpty()) {
-					user.setRole(role);
-				}
-
-				em.merge(user);
-				utx.commit();
-
-				if (user.getId().equals((getCurrentUser(req)).getId())) {
-					req.getSession().setAttribute("user", user);
-				}
-
-				setSuccessMessage(req, userType + " updated successfully!");
-			} else {
-				setErrorMessage(req, userType + " not found!");
-			}
-
-		} catch (Exception e) {
-			try {
-				if (utx != null) {
-					utx.rollback();
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Error updating " + userType + ": " + e.getMessage());
+		if (usernameCount > 0) {
+			setErrorMessage(req, "Username is already taken");
+			hasError = true;
 		}
-	}
 
-	private void deleteUser(HttpServletRequest req, String userId, String userType) throws IOException, ServletException {
-		try {
-			int id = Integer.parseInt(userId);
-			Users user = em.find(Users.class, id);
+		Long emailCount = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u.email = :email AND u.id != :userId", Long.class)
+				.setParameter("email", email)
+				.setParameter("userId", userId)
+				.getSingleResult();
 
-			if (user != null) {
-				utx.begin();
-				user.setIsArchived(true);
-				em.merge(user);
-				utx.commit();
-
-				setSuccessMessage(req, userType + " deleted successfully!");
-			} else {
-				setErrorMessage(req, userType + " not found!");
-			}
-		} catch (Exception e) {
-			try {
-				if (utx != null) {
-					utx.rollback();
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Error deleting " + userType + ": " + e.getMessage());
+		if (emailCount > 0) {
+			setErrorMessage(req, "Email is already taken");
+			hasError = true;
 		}
+
+		if (hasError) {
+			return false;
+		}
+
+		user.setUsername(username.trim());
+		user.setEmail(email.trim());
+		user.setRole(role.trim());
+
+		if (name != null && !name.trim().isEmpty()) {
+			user.setName(name.trim());
+		}
+
+		if (password != null && !password.trim().isEmpty()) {
+			user.setPassword(hashPassword(password.trim()));
+		}
+
+		return true;
 	}
 }

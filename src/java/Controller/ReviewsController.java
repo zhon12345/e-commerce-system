@@ -41,7 +41,7 @@ public class ReviewsController extends BaseController {
 						.getResultList();
 
 				req.setAttribute("reviews", reviewsList);
-				req.getRequestDispatcher("/user/reviews.jsp").forward(req, res);
+				forwardToPage(req, res, "/user/reviews.jsp");
 				return;
 			} catch (Exception e) {
 				throw new ServletException(e);
@@ -59,8 +59,7 @@ public class ReviewsController extends BaseController {
 						.getResultList();
 
 				req.setAttribute("reviews", reviewsList);
-				req.getRequestDispatcher("/admin/admin_reviews.jsp").forward(req, res);
-				return;
+				forwardToPage(req, res, "/admin/reviews.jsp");
 			} catch (Exception e) {
 				throw new ServletException(e);
 			}
@@ -84,109 +83,110 @@ public class ReviewsController extends BaseController {
 			return;
 		}
 
+		Users user = getCurrentUser(req);
 		String action = req.getParameter("action");
 
 		switch (action) {
 			case "create":
-				createReview(req, res);
+				try {
+					int productId = Integer.parseInt(req.getParameter("productId"));
+					Products product = em.find(Products.class, productId);
+
+					if (product == null) {
+						setErrorMessage(req, "Product not found.");
+						break;
+					}
+
+					if (!isLoggedIn(req, res, user, "product?id=" + productId + "&tab=reviews")) return;
+
+					createReview(req, res, product, user);
+				} catch (NumberFormatException e) {
+					setErrorMessage(req, "Product not found.");
+				}
 				break;
 			case "delete":
-				deleteReview(req, res);
-				break;
-			default:
-				res.sendError(HttpServletResponse.SC_BAD_REQUEST);
-				break;
-		}
+				try {
+					int reviewId = Integer.parseInt(req.getParameter("reviewId"));
+					Reviews review = em.find(Reviews.class, reviewId);
 
-	}
+					if (review == null || !review.getUserId().getId().equals(user.getId())) {
+						setErrorMessage(req, "Review not found.");
+						break;
+					}
 
-	private void createReview(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		Users user = getCurrentUser(req);
-		String productId = req.getParameter("productId");
+					deleteReview(req, review);
 
-		if (!isLoggedIn(req, res, user, "product?id=" + productId + "&tab=reviews")) return;
-		
-		try {
-			String rating = req.getParameter("rating");
-			String reviewText = req.getParameter("reviewText").trim();
-
-			boolean hasError = false;
-
-			session.removeAttribute("selectedRatingError");
-			session.removeAttribute("reviewError");
-
-			if (rating == null || rating.isEmpty()) {
-				session.setAttribute("ratingError", "Please select a rating");
-				hasError = true;
-			} else {
-				int ratingValue = Integer.parseInt(rating);
-
-				if (ratingValue < 1 || ratingValue > 5) {
-					session.setAttribute("ratingError", "Rating must be between 1 and 5");
-					hasError = true;
+				} catch (NumberFormatException e) {
+					setErrorMessage(req, "Review not found.");
 				}
-			}
 
-			if (reviewText.isEmpty()) {
-				session.setAttribute("reviewError", "Review cannot be empty");
-				hasError = true;
-			}
-
-			if (hasError) {
-				session.setAttribute("selectedRating", rating);
-				session.setAttribute("reviewText", reviewText);
-
-				res.sendRedirect(req.getContextPath() + "/product?id=" + productId + "&tab=reviews");
-				return;
-			}
-
-			Reviews review = new Reviews();
-			review.setUserId(user);
-			review.setProductId(em.find(Products.class, Integer.parseInt(productId)));
-			review.setRating(Integer.parseInt(rating));
-			review.setReview(reviewText);
-			review.setIsArchived(false);
-			review.setReviewDate(new Date());
-
-			utx.begin();
-			em.persist(review);
-			utx.commit();
-
-			session.removeAttribute("selectedRating");
-			session.removeAttribute("reviewText");
-
-			res.sendRedirect(req.getContextPath() + "/product?id=" + productId + "&tab=reviews");
-		} catch (Exception e) {
-			throw new ServletException(e);
 		}
+
+		redirectToPage(req, res, "/user/reviews");
 	}
 
-	private void deleteReview(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		Users user = getCurrentUser(req);
-		String reviewId = req.getParameter("reviewId");
+	private void createReview(HttpServletRequest req, HttpServletResponse res, Products product, Users user) throws ServletException, IOException {
+		Reviews review = new Reviews();
 
-		try {
-			utx.begin();
-			Reviews review = em.find(Reviews.class, Integer.parseInt(reviewId));
-
-			if (review != null && review.getUserId().getId().equals(user.getId())) {
-				review.setIsArchived(true);
-				em.merge(review);
-				utx.commit();
-				setSuccessMessage(req, "Review deleted successfully!");
-			}
-		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Error deleting review: " + e.getMessage());
+		if (!processReviewData(req, review)) {
+			redirectToPage(req, res, "/product?id=" + product.getId() + "&tab=reviews");
+			return;
 		}
 
-		res.sendRedirect(req.getContextPath() + "/user/reviews");
+		handleTransaction(() -> {
+			review.setUserId(user);
+			review.setProductId(product);
+			review.setReviewDate(new Date());
+			em.persist(review);
+		}, req, null, "Error creating review.");
+
+		req.getSession().removeAttribute("selectedRating");
+		req.getSession().removeAttribute("reviewText");
+	}
+
+	private void deleteReview(HttpServletRequest req, Reviews review) throws ServletException, IOException {
+		handleTransaction(() -> {
+			review.setIsArchived(true);
+			em.merge(review);
+		}, req, "Review deleted successfully!", "Error deleting review");
+	}
+
+	private boolean processReviewData(HttpServletRequest req, Reviews review) {
+		HttpSession session = req.getSession();
+		String rating = req.getParameter("rating");
+		String reviewText = req.getParameter("reviewText").trim();
+
+		boolean hasError = false;
+
+		session.removeAttribute("selectedRatingError");
+		session.removeAttribute("reviewError");
+
+		if (rating == null || rating.isEmpty()) {
+			session.setAttribute("ratingError", "Please select a rating");
+			hasError = true;
+		} else {
+			int ratingValue = Integer.parseInt(rating);
+
+			if (ratingValue < 1 || ratingValue > 5) {
+				session.setAttribute("ratingError", "Rating must be between 1 and 5");
+				hasError = true;
+			}
+		}
+
+		if (reviewText.isEmpty()) {
+			session.setAttribute("reviewError", "Review cannot be empty");
+			hasError = true;
+		}
+
+		if (hasError) {
+			session.setAttribute("selectedRating", rating);
+			session.setAttribute("reviewText", reviewText);
+			return false;
+		}
+
+		review.setRating(Integer.parseInt(rating));
+		review.setReview(reviewText);
+		return true;
 	}
 
 }

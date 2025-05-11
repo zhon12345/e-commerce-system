@@ -56,7 +56,7 @@ public class OrdersController extends BaseController {
 
 				req.setAttribute("status", status);
 				req.setAttribute("orders", orderList);
-				req.getRequestDispatcher("/user/history.jsp").forward(req, res);
+				forwardToPage(req, res, "/user/history.jsp");
 				return;
 			} catch (Exception e) {
 				throw new ServletException(e);
@@ -77,7 +77,7 @@ public class OrdersController extends BaseController {
 				List<Orders> ordersList = em.createQuery(jpql, Orders.class).getResultList();
 
 				req.setAttribute("orders", ordersList);
-				req.getRequestDispatcher("/admin/admin_orders.jsp").forward(req, res);
+				forwardToPage(req, res, "/admin/admin_orders.jsp");
 				return;
 			} catch (Exception e) {
 				throw new ServletException(e);
@@ -111,28 +111,20 @@ public class OrdersController extends BaseController {
 			int orderId = Integer.parseInt(req.getParameter("orderId"));
 			String status = req.getParameter("status");
 
-			utx.begin();
+			handleTransaction(() -> {
+				Orders order = em.find(Orders.class, orderId);
+				if (order != null) {
+					order.setStatus(status);
+					em.merge(order);
+				}
+			}, req, "Order status updated successfully!", "Failed to update order");
 
-			Orders order = em.find(Orders.class, orderId);
-			if (order != null) {
-				order.setStatus(status);
-				em.merge(order);
-			}
-
-			utx.commit();
-
-			setSuccessMessage(req, "Order status updated successfully.");
-			res.sendRedirect(req.getContextPath() + "/admin/orders");
+			redirectToPage(req, res, "/admin/orders");
+		} catch (NumberFormatException e) {
+			setErrorMessage(req, "Invalid order ID.");
+			redirectToPage(req, res, "/admin/orders");
 		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Failed to update order: " + e.getMessage());
-			res.sendRedirect(req.getContextPath() + "/admin/orders");
+			throw new ServletException(e);
 		}
 	}
-
 }

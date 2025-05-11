@@ -39,12 +39,12 @@ public class ProfileController extends BaseController {
 		if (path.equals("/admin/profile")) {
 			if (!isAuthorized(user)) return;
 
-			req.getRequestDispatcher("/admin/admin_profile.jsp").forward(req, res);
+			forwardToPage(req, res, "/admin/admin_profile.jsp");
 			return;
 		}
 
 		if (path.equals("/user/profile")) {
-			req.getRequestDispatcher("/user/profile.jsp").forward(req, res);
+			forwardToPage(req, res, "/user/profile.jsp");
 			return;
 		}
 
@@ -77,7 +77,7 @@ public class ProfileController extends BaseController {
 			}
 
 			loadAddresses(req, user);
-			req.getRequestDispatcher("/user/address.jsp").forward(req, res);
+			forwardToPage(req, res, "/user/address.jsp");
 			return;
 		}
 
@@ -105,7 +105,7 @@ public class ProfileController extends BaseController {
 			}
 
 			loadCard(req, user);
-			req.getRequestDispatcher("/user/card.jsp").forward(req, res);
+			forwardToPage(req, res, "/user/card.jsp");
 			return;
 		}
 
@@ -145,279 +145,127 @@ public class ProfileController extends BaseController {
 					return;
 			}
 
-			res.sendRedirect(req.getContextPath() + "/admin/profile");
+			redirectToPage(req, res, "/admin/profile");
 			return;
 		}
 
 		if (path.equals("/user/profile")) {
 			updateProfile(req, res, user);
 
-			res.sendRedirect(req.getContextPath() + "/user/profile");
+			redirectToPage(req, res, "/user/profile");
 			return;
 		}
 
 		String id = req.getParameter("id");
 
 		if (path.equals("/user/address")) {
-			String name = req.getParameter("name") != null ? req.getParameter("name").trim() : "";
-			String phone = req.getParameter("phone") != null ? req.getParameter("phone").trim() : "";
-			String line1 = req.getParameter("line1") != null ? req.getParameter("line1").trim() : "";
-			String line2 = req.getParameter("line2") != null ? req.getParameter("line2").trim() : "";
-			String postcode = req.getParameter("postcode") != null ? req.getParameter("postcode").trim() : "";
-			String city = req.getParameter("city") != null ? req.getParameter("city").trim() : "";
-			String state = req.getParameter("state") != null ? req.getParameter("state").trim() : "";
-
-			Boolean hasErrors = false;
-
-			if (!action.equals("delete")) {
-				if (name.isEmpty()) {
-					req.setAttribute("nameError", "Receiver name is required");
-					hasErrors = true;
-				}
-				if (phone.isEmpty()) {
-					req.setAttribute("phoneError", "Phone is required");
-					hasErrors = true;
-				}
-				if (line1.isEmpty()) {
-					req.setAttribute("line1Error", "Address Line 1 is required");
-					hasErrors = true;
-				}
-				if (postcode.isEmpty()) {
-					req.setAttribute("postcodeError", "Postcode is required");
-					hasErrors = true;
-				}
-				if (city.isEmpty()) {
-					req.setAttribute("cityError", "City is required");
-					hasErrors = true;
-				}
-				if (state.isEmpty()) {
-					req.setAttribute("stateError", "State is required");
-					hasErrors = true;
-				}
-			}
-
-			if (hasErrors) {
-				req.setAttribute("name", name);
-				req.setAttribute("phone", phone);
-				req.setAttribute("line1", line1);
-				req.setAttribute("line2", line2);
-				req.setAttribute("city", city);
-				req.setAttribute("state", state);
-				req.setAttribute("postcode", postcode);
-
-				loadAddresses(req, user);
-
-				req.getRequestDispatcher("/user/address.jsp").forward(req, res);
-				return;
-			}
 
 			switch (action) {
 				case "create":
-					try {
-						Addresses address = new Addresses(user, name, phone, line1, line2, city, state, postcode);
-
-						utx.begin();
-						em.persist(address);
-						utx.commit();
-
-						setSuccessMessage(req, "Address added successfully!");
-					} catch (Exception e) {
-						try {
-							if (utx != null) {
-								utx.rollback();
-							}
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-
-						setErrorMessage(req, "Error adding address: " + e.getMessage());
-					}
+					createAddress(req, res, user);
 					break;
 				case "update":
 				case "delete":
-					int addressId = Integer.parseInt(id);
-					Addresses address = em.find(Addresses.class, addressId);
+					try {
+						int addressId = Integer.parseInt(id);
+						Addresses address = em.find(Addresses.class, addressId);
 
-					if (address == null || address.getUserId().getId() != user.getId()) {
-						res.sendError(HttpServletResponse.SC_FORBIDDEN);
-						return;
-					}
-
-					if (action.equals("update")) {
-						address.setReceiverName(name);
-						address.setContactNumber(phone);
-						address.setAddress1(line1);
-						address.setAddress2(line2);
-						address.setCity(city);
-						address.setPostalCode(postcode);
-						address.setState(state);
-
-						try {
-							utx.begin();
-							em.merge(address);
-							utx.commit();
-
-							setSuccessMessage(req, "Address updated successfully!");
-						} catch (Exception e) {
-							try {
-								if (utx != null) {
-									utx.rollback();
-								}
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-
-							setErrorMessage(req, "Error updating address: " + e.getMessage());
+						if (address == null || address.getUserId().getId() != user.getId()) {
+							setErrorMessage(req, "Address not found");
+							redirectToPage(req, res, "/user/address");
+							return;
 						}
-					}
 
-					if (action.equals("delete")) {
-						deleteAddress(req, address);
+						if (action.equals("update")) {
+							updateAddress(req, res, user, address);
+						}
+
+						if (action.equals("delete")) {
+							deleteAddress(req, address);
+						}
+					} catch (NumberFormatException e) {
+						setErrorMessage(req, "Address not found");
 					}
-					break;
-				default:
-					res.sendError(HttpServletResponse.SC_BAD_REQUEST);
-					return;
 			}
 
-			res.sendRedirect(req.getContextPath() + "/user/address");
+			redirectToPage(req, res, "/user/address");
 			return;
 		}
 
 		if (path.equals("/user/card")) {
-			String number = req.getParameter("number") != null ? req.getParameter("number").trim() : "";
-			String name = req.getParameter("name") != null ? req.getParameter("name").trim() : "";
-			String expDate = req.getParameter("expiryDate") != null ? req.getParameter("expiryDate").trim() : "";
-
-			Short expMonth = 0;
-			Short expYear = 0;
-			Boolean hasErrors = false;
-
-			if (!action.equals("delete")) {
-				if (expDate.isEmpty()) {
-					req.setAttribute("expiryDateError", "Expiry date is required");
-					hasErrors = true;
-				} else {
-					try {
-						String[] parts = expDate.split("/");
-						if (parts.length != 2) {
-							throw new IllegalArgumentException("Invalid format");
-						}
-						expMonth = Short.parseShort(parts[0]);
-						expYear = Short.parseShort(parts[1]);
-
-						if (expMonth < 1 || expMonth > 12) {
-							req.setAttribute("expiryDateError", "Invalid month (01-12)");
-							hasErrors = true;
-						}
-						int currentYear = java.time.Year.now().getValue() % 100;
-						if (expYear < currentYear) {
-							req.setAttribute("expiryDateError", "Card has expired");
-							hasErrors = true;
-						}
-					} catch (Exception e) {
-						req.setAttribute("expiryDateError", "Invalid format (MM/YY)");
-						hasErrors = true;
-					}
-				}
-
-				if (number.isEmpty()) {
-					req.setAttribute("numberError", "Card number is required");
-					hasErrors = true;
-				} else if (!number.matches("\\d{12}")) {
-					req.setAttribute("numberError", "Card number must be 12 digits");
-					hasErrors = true;
-				}
-
-				if (name.isEmpty()) {
-					req.setAttribute("nameError", "Cardholder name is required");
-					hasErrors = true;
-				}
-			}
-
-			if (hasErrors) {
-				req.setAttribute("number", number);
-				req.setAttribute("name", name);
-				req.setAttribute("expiryDate", expDate);
-
-				loadCard(req, user);
-
-				req.getRequestDispatcher("/user/card.jsp").forward(req, res);
-				return;
-			}
-
 			switch (action) {
 				case "create":
-					try {
-						Cardinfo card = new Cardinfo(user, number, name, expMonth, expYear);
-
-						utx.begin();
-						em.persist(card);
-						utx.commit();
-
-						setSuccessMessage(req, "Card added successfully!");
-					} catch (Exception e) {
-						try {
-							if (utx != null) {
-								utx.rollback();
-							}
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-
-						setErrorMessage(req, "Error adding card: " + e.getMessage());
-					}
+					createCard(req, res, user);
 					break;
 				case "update":
 				case "delete":
-					int cardId = Integer.parseInt(id);
-					Cardinfo card = em.find(Cardinfo.class, cardId);
+					try {
+						int cardId = Integer.parseInt(id);
+						Cardinfo card = em.find(Cardinfo.class, cardId);
 
-					if (card == null || card.getUserId().getId() != user.getId()) {
-						res.sendError(HttpServletResponse.SC_FORBIDDEN);
-						return;
-					}
-
-					if (action.equals("update")) {
-						card.setCardNumber(number);
-						card.setCardName(name);
-						card.setExpMonth(expMonth);
-						card.setExpYear(expYear);
-
-						try {
-							utx.begin();
-							em.merge(card);
-							utx.commit();
-
-							setSuccessMessage(req, "Card updated successfully!");
-						} catch (Exception e) {
-							try {
-								if (utx != null) {
-									utx.rollback();
-								}
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-
-							setErrorMessage(req, "Error updating card: " + e.getMessage());
+						if (card == null || card.getUserId().getId() != user.getId()) {
+							setErrorMessage(req, "Card not found");
+							redirectToPage(req, res, "/user/card");
+							return;
 						}
-					}
 
-					if (action.equals("delete")) {
-						deleteCard(req, card);
+						if (action.equals("update")) {
+							updateCard(req, res, user, card);
+						}
+
+						if (action.equals("delete")) {
+							deleteCard(req, card);
+						}
+					} catch (NumberFormatException e) {
+						setErrorMessage(req, "Card not found");
 					}
-					break;
-				default:
-					res.sendError(HttpServletResponse.SC_BAD_REQUEST);
-					return;
 			}
 
-			res.sendRedirect(req.getContextPath() + "/user/card");
+			redirectToPage(req, res, "/user/card");
 		}
 	}
 
 	private void updateProfile(HttpServletRequest req, HttpServletResponse res, Users user) throws ServletException, IOException {
 		String path = req.getServletPath();
+		boolean success = processProfileData(req, user);
+
+		if (!success) {
+			if (path.equals("/admin/profile")) {
+				forwardToPage(req, res, "/admin/admin_profile.jsp");
+			} else {
+				forwardToPage(req, res, "/user/profile.jsp");
+			}
+			return;
+		}
+
+		handleTransaction(() -> {
+			em.merge(user);
+			req.getSession().setAttribute("user", user);
+		}, req, "Profile updated successfully", "Error updating profile");
+	}
+
+	private void changePassword(HttpServletRequest req, Users user) throws ServletException {
+		String currentPassword = req.getParameter("currentPassword");
+		String newPassword = req.getParameter("newPassword");
+		String confirmPassword = req.getParameter("confirmPassword");
+
+		if (!user.getPassword().equals(hashPassword(currentPassword))) {
+			setErrorMessage(req, "Current password is incorrect");
+			return;
+		}
+
+		if (!newPassword.equals(confirmPassword)) {
+			setErrorMessage(req, "New password and confirm password do not match");
+			return;
+		}
+
+		handleTransaction(() -> {
+			user.setPassword(hashPassword(newPassword));
+			em.merge(user);
+		}, req, "Password updated successfully!", "Error updating password");
+	}
+
+	private boolean processProfileData(HttpServletRequest req, Users user) throws IOException, ServletException {
 		String username = req.getParameter("username").trim();
 		String name = req.getParameter("name").trim();
 		String email = req.getParameter("email").trim();
@@ -478,7 +326,9 @@ public class ProfileController extends BaseController {
 
 		String avatar = user.getAvatarPath();
 		try {
-			avatar = FileManager.uploadAvatar(filePart, getServletContext(), user.getAvatarPath());
+			if (filePart != null && filePart.getSize() > 0) {
+				avatar = FileManager.uploadAvatar(filePart, getServletContext(), user.getAvatarPath());
+			}
 		} catch (Exception e) {
 			req.setAttribute("avatarError", "Upload failed: " + e.getMessage());
 			hasErrors = true;
@@ -489,120 +339,215 @@ public class ProfileController extends BaseController {
 			req.setAttribute("name", name);
 			req.setAttribute("email", email);
 			req.setAttribute("phone", contact);
-
-			if (path.equals("/admin/profile")) {
-				req.getRequestDispatcher("/admin/admin_profile.jsp").forward(req, res);
-			} else {
-				req.getRequestDispatcher("/user/profile.jsp").forward(req, res);
-			}
-			return;
+			return false;
 		}
 
-		try {
-			utx.begin();
-
-			user.setUsername(username);
-			user.setName(name);
-			user.setEmail(email);
-			user.setContact(contact);
-			user.setAvatarPath(avatar);
-
-			em.merge(user);
-			utx.commit();
-
-			req.getSession().setAttribute("user", user);
-			setSuccessMessage(req, "Profile updated successfully!");
-		} catch (Exception e) {
-			try {
-				if (utx != null) {
-					utx.rollback();
-				}
-			} catch (Exception ex) {
-			}
-
-			throw new ServletException(e);
-		}
+		user.setUsername(username);
+		user.setName(name);
+		user.setEmail(email);
+		user.setContact(contact);
+		user.setAvatarPath(avatar);
+		return true;
 	}
 
-	private void changePassword(HttpServletRequest req, Users user) throws ServletException {
-		String currentPassword = req.getParameter("currentPassword");
-		String newPassword = req.getParameter("newPassword");
-		String confirmPassword = req.getParameter("confirmPassword");
+	private void createAddress(HttpServletRequest req, HttpServletResponse res, Users user) throws ServletException, IOException {
+		Addresses address = new Addresses();
+		boolean success = processAddressData(req, address);
 
-		if (!user.getPassword().equals(hashPassword(currentPassword))) {
-			setErrorMessage(req, "Current password is incorrect");
+		if (!success) {
+			loadAddresses(req, user);
+			forwardToPage(req, res, "/user/address.jsp");
 			return;
 		}
 
-		if (!newPassword.equals(confirmPassword)) {
-			setErrorMessage(req, "New password and confirm password do not match");
+		handleTransaction(() -> {
+			address.setUserId(user);
+			em.persist(address);
+		}, req, "Address added successfully!", "Error adding address");
+	}
+
+	private void updateAddress(HttpServletRequest req, HttpServletResponse res, Users user, Addresses address) throws ServletException, IOException {
+		boolean success = processAddressData(req, address);
+
+		if (!success) {
+			loadAddresses(req, user);
+			forwardToPage(req, res, "/user/address.jsp");
 			return;
 		}
 
-		try {
-			utx.begin();
-			user.setPassword(hashPassword(newPassword));
-			em.merge(user);
-			utx.commit();
-
-			setSuccessMessage(req, "Password updated successfully!");
-		} catch (Exception e) {
-			try {
-				if (utx != null) {
-					utx.rollback();
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Error updating password: " + e.getMessage());
-		}
+		handleTransaction(() -> {
+			em.merge(address);
+		}, req, "Address updated successfully!", "Error updating address");
 	}
 
 	private void deleteAddress(HttpServletRequest req, Addresses address) {
-		try {
-			utx.begin();
-
+		handleTransaction(() -> {
 			address.setIsArchived(true);
 			em.merge(address);
+		}, req, "Address deleted successfully!", "Error deleting address");
+	}
 
-			utx.commit();
+	private boolean processAddressData(HttpServletRequest req, Addresses address) {
+		String name = req.getParameter("name").trim();
+		String phone = req.getParameter("phone").trim();
+		String line1 = req.getParameter("line1").trim();
+		String line2 = req.getParameter("line2") != null ? req.getParameter("line2").trim() : "";
+		String postcode = req.getParameter("postcode").trim();
+		String city = req.getParameter("city").trim();
+		String state = req.getParameter("state").trim();
 
-			setSuccessMessage(req, "Address successfully deleted!");
-		} catch (Exception e) {
-			try {
-				if (utx != null) {
-					utx.rollback();
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+		Boolean hasErrors = false;
 
-			setErrorMessage(req, "Error deleting address: " + e.getMessage());
+		if (name.isEmpty()) {
+			req.setAttribute("nameError", "Receiver name is required");
+			hasErrors = true;
 		}
+
+		if (phone.isEmpty()) {
+			req.setAttribute("phoneError", "Phone is required");
+			hasErrors = true;
+		}
+
+		if (line1.isEmpty()) {
+			req.setAttribute("line1Error", "Address Line 1 is required");
+			hasErrors = true;
+		}
+
+		if (postcode.isEmpty()) {
+			req.setAttribute("postcodeError", "Postcode is required");
+			hasErrors = true;
+		}
+
+		if (city.isEmpty()) {
+			req.setAttribute("cityError", "City is required");
+			hasErrors = true;
+		}
+
+		if (state.isEmpty()) {
+			req.setAttribute("stateError", "State is required");
+			hasErrors = true;
+		}
+
+		if (hasErrors) {
+			req.setAttribute("name", name);
+			req.setAttribute("phone", phone);
+			req.setAttribute("line1", line1);
+			req.setAttribute("line2", line2);
+			req.setAttribute("city", city);
+			req.setAttribute("state", state);
+			req.setAttribute("postcode", postcode);
+			return false;
+		}
+
+		address.setReceiverName(name);
+		address.setContactNumber(phone);
+		address.setAddress1(line1);
+		address.setAddress2(line2);
+		address.setCity(city);
+		address.setPostalCode(postcode);
+		address.setState(state);
+		return true;
+	}
+
+	private void createCard(HttpServletRequest req, HttpServletResponse res, Users user) throws ServletException, IOException {
+		Cardinfo card = new Cardinfo();
+		boolean success = processCardData(req, card);
+
+		if (!success) {
+			loadCard(req, user);
+			forwardToPage(req, res, "/user/card.jsp");
+			return;
+		}
+
+		handleTransaction(() -> {
+			card.setUserId(user);
+			em.persist(card);
+		}, req, "Card added successfully!", "Error adding card");
+	}
+
+	private void updateCard(HttpServletRequest req, HttpServletResponse res, Users user, Cardinfo card) throws ServletException, IOException {
+		boolean success = processCardData(req, card);
+
+		if (!success) {
+			loadCard(req, user);
+			forwardToPage(req, res, "/user/card.jsp");
+			return;
+		}
+
+		handleTransaction(() -> {
+			em.merge(card);
+		}, req, "Card updated successfully!", "Error updating card");
 	}
 
 	private void deleteCard(HttpServletRequest req, Cardinfo card) {
-		try {
-			utx.begin();
-
+		handleTransaction(() -> {
 			card.setIsArchived(true);
 			em.merge(card);
+		}, req, "Card deleted successfully!", "Error deleting card");
+	}
 
-			utx.commit();
+	private boolean processCardData(HttpServletRequest req, Cardinfo card) {
+		String number = req.getParameter("number").trim();
+		String name = req.getParameter("name").trim();
+		String expDate = req.getParameter("expiryDate").trim();
 
-			setSuccessMessage(req, "Card successfully deleted!");
-		} catch (Exception e) {
+		Short expMonth = 0;
+		Short expYear = 0;
+		Boolean hasErrors = false;
+
+		if (expDate.isEmpty()) {
+			req.setAttribute("expiryDateError", "Expiry date is required");
+			hasErrors = true;
+		} else {
 			try {
-				if (utx != null) {
-					utx.rollback();
+				String[] parts = expDate.split("/");
+				if (parts.length != 2) {
+					throw new IllegalArgumentException("Invalid format");
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+				expMonth = Short.parseShort(parts[0]);
+				expYear = Short.parseShort(parts[1]);
 
-			setErrorMessage(req, "Error deleting card: " + e.getMessage());
+				if (expMonth < 1 || expMonth > 12) {
+					req.setAttribute("expiryDateError", "Invalid month (01-12)");
+					hasErrors = true;
+				}
+				int currentYear = java.time.Year.now().getValue() % 100;
+				if (expYear < currentYear) {
+					req.setAttribute("expiryDateError", "Card has expired");
+					hasErrors = true;
+				}
+			} catch (Exception e) {
+				req.setAttribute("expiryDateError", "Invalid format (MM/YY)");
+				hasErrors = true;
+			}
 		}
+
+		if (number.isEmpty()) {
+			req.setAttribute("numberError", "Card number is required");
+			hasErrors = true;
+		} else if (!number.matches("\\d{12}")) {
+			req.setAttribute("numberError", "Card number must be 12 digits");
+			hasErrors = true;
+		}
+
+		if (name.isEmpty()) {
+			req.setAttribute("nameError", "Cardholder name is required");
+			hasErrors = true;
+		}
+
+		if (hasErrors) {
+			req.setAttribute("number", number);
+			req.setAttribute("name", name);
+			req.setAttribute("expiryDate", expDate);
+
+			return false;
+		}
+
+		card.setCardNumber(number);
+		card.setCardName(name);
+		card.setExpMonth(expMonth);
+		card.setExpYear(expYear);
+		return true;
 	}
 
 	private void loadAddresses(HttpServletRequest req, Users user) {

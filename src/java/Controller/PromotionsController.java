@@ -37,7 +37,7 @@ public class PromotionsController extends BaseController {
 						.getResultList();
 
 				req.setAttribute("promotions", promotionsList);
-				req.getRequestDispatcher("/index.jsp").forward(req, res);
+				forwardToPage(req, res, "/index.jsp");
 				return;
 			} catch (Exception e) {
 				throw new ServletException(e);
@@ -53,7 +53,7 @@ public class PromotionsController extends BaseController {
 						.getResultList();
 
 				req.setAttribute("promotions", promotionsList);
-				req.getRequestDispatcher("/admin/admin_promotions.jsp").forward(req, res);
+				forwardToPage(req, res, "/admin/admin_promotions.jsp");
 				return;
 			} catch (Exception e) {
 				throw new ServletException(e);
@@ -90,20 +90,58 @@ public class PromotionsController extends BaseController {
 				createPromotion(req);
 				break;
 			case "update":
-				updatePromotion(req);
-				break;
 			case "delete":
-				deletePromotion(req);
-				break;
-			default:
-				res.sendError(HttpServletResponse.SC_BAD_REQUEST);
-				return;
+				try {
+					int promoId = Integer.parseInt(req.getParameter("promoId"));
+					Promotions promotion = em.find(Promotions.class, promoId);
+
+					if (promotion == null) {
+						setErrorMessage(req, "Promotion not found");
+						break;
+					}
+
+					if (action.equals("update")) {
+						updatePromotion(req, promotion);
+					}
+
+					if (action.equals("delete")) {
+						deletePromotion(req, promotion);
+					}
+
+				} catch (NumberFormatException e) {
+					setErrorMessage(req, "Promotion not found");
+				}
 		}
 
-		res.sendRedirect(req.getContextPath() + "/admin/promotions");
+		redirectToPage(req, res, "/admin/promotions");
 	}
 
 	private void createPromotion(HttpServletRequest req) throws IOException {
+		handleTransaction(() -> {
+			Promotions promo = new Promotions();
+
+			if (processPromotionData(req, promo)) {
+				em.persist(promo);
+			}
+		}, req, "Promotion added successfully!", "Failed to add promotion");
+	}
+
+	private void updatePromotion(HttpServletRequest req, Promotions promotion) throws IOException {
+		handleTransaction(() -> {
+			if (processPromotionData(req, promotion)) {
+				em.merge(promotion);
+			}
+		}, req, "Promotion successfully updated!", "Failed to update promotion");
+	}
+
+	private void deletePromotion(HttpServletRequest req, Promotions promotion) throws IOException {
+		handleTransaction(() -> {
+			promotion.setIsActive(false);
+			em.merge(promotion);
+		}, req, "Promotion deleted successfully!", "Failed to delete promotion");
+	}
+
+	private boolean processPromotionData(HttpServletRequest req, Promotions promotion) {
 		try {
 			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
 			BigDecimal discount = new BigDecimal(req.getParameter("discount")).divide(new BigDecimal(100));
@@ -112,82 +150,23 @@ public class PromotionsController extends BaseController {
 			Date validFrom = dateFormat.parse(req.getParameter("validFrom"));
 			Date validTo = dateFormat.parse(req.getParameter("validTo"));
 
-			Promotions newPromo = new Promotions();
-			newPromo.setPromoCode(promoCode);
-			newPromo.setDiscount(discount);
-			newPromo.setValidFrom(validFrom);
-			newPromo.setValidTo(validTo);
+			if (promoCode.isEmpty()) {
+				return false;
+			}
 
-			utx.begin();
-			em.persist(newPromo);
-			utx.commit();
+			if (validFrom.after(validTo)) {
+				return false;
+			}
 
-			setSuccessMessage(req, "Promotion added successfully!");
+			promotion.setPromoCode(promoCode);
+			promotion.setDiscount(discount);
+			promotion.setValidFrom(validFrom);
+			promotion.setValidTo(validTo);
+
+			return true;
 		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Failed to add promotion: " + e.getMessage());
-		}
-	}
-
-	private void updatePromotion(HttpServletRequest req) throws IOException {
-		try {
-			int promoId = Integer.parseInt(req.getParameter("promoId"));
-			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
-			BigDecimal discount = new BigDecimal(req.getParameter("discount")).divide(new BigDecimal(100));
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date validFrom = dateFormat.parse(req.getParameter("validFrom"));
-			Date validTo = dateFormat.parse(req.getParameter("validTo"));
-
-			utx.begin();
-			Promotions promo = em.find(Promotions.class, promoId);
-			if (promo != null) {
-				promo.setPromoCode(promoCode);
-				promo.setDiscount(discount);
-				promo.setValidFrom(validFrom);
-				promo.setValidTo(validTo);
-				em.merge(promo);
-			}
-			utx.commit();
-
-			setSuccessMessage(req, "Promotion updated successfully!");
-		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Failed to update promotion: " + e.getMessage());
-		}
-	}
-
-	private void deletePromotion(HttpServletRequest req) throws IOException {
-		try {
-			int promoId = Integer.parseInt(req.getParameter("promoId"));
-
-			utx.begin();
-			Promotions promo = em.find(Promotions.class, promoId);
-			if (promo != null) {
-				promo.setIsActive(false);
-				em.merge(promo);
-			}
-			utx.commit();
-
-			setSuccessMessage(req, "Promotion deleted successfully!");
-		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setErrorMessage(req, "Failed to delete promotion: " + e.getMessage());
+			setErrorMessage(req, "Error processing promotion data: " + e.getMessage());
+			return false;
 		}
 	}
 }
