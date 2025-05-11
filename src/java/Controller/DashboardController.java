@@ -24,175 +24,161 @@ public class DashboardController extends BaseController {
 
 	/**
 	 *
-	 * @param request servlet request
-	 * @param response servlet response
+	 * @param req servlet request
+	 * @param res servlet response
 	 * @throws ServletException if a servlet-specific error occurs
 	 * @throws IOException      if an I/O error occurs
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Users user = getCurrentUser(request);
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		Users user = getCurrentUser(req);
 
-            if (!isLoggedInAndAuthorized(request, response, user, null)) return;
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
-            String action = request.getParameter("action");
+		try {
+			int totalUsers = ((Number) em.createQuery(
+					"SELECT COUNT(u) FROM Users u WHERE u.isArchived = :archived AND u.role = :role")
+					.setParameter("archived", false)
+					.setParameter("role", "customer")
+					.getSingleResult()).intValue();
 
-            if ("generate".equals(action)) {
-                generateReport(request, response);
-                return;
-            }
+			int totalProducts = ((Number) em.createQuery(
+					"SELECT COUNT(p) FROM Products p WHERE p.isArchived = :archived")
+					.setParameter("archived", false)
+					.getSingleResult()).intValue();
 
-            utx.begin();
+			int totalOrders = ((Number) em.createQuery(
+					"SELECT COUNT(DISTINCT o.id) FROM Orders o WHERE o.status IN :statuses")
+					.setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
+					.getSingleResult()).intValue();
 
-            int totalUsers = ((Number) em.createQuery(
-                    "SELECT COUNT(u) FROM Users u WHERE u.isArchived = :archived AND u.role = :role")
-                    .setParameter("archived", false)
-                    .setParameter("role", "customer")
-                    .getSingleResult()).intValue();
+			BigDecimal totalRevenue = (BigDecimal) em.createQuery(
+					"SELECT COALESCE(SUM(DISTINCT o.totalPrice), 0) FROM Orders o WHERE o.status IN :statuses")
+					.setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
+					.getSingleResult();
 
-            int totalProducts = ((Number) em.createQuery(
-                    "SELECT COUNT(p) FROM Products p WHERE p.isArchived = :archived")
-                    .setParameter("archived", false)
-                    .getSingleResult()).intValue();
+			List<Reports> recentReports = em.createQuery(
+					"SELECT r FROM Reports r ORDER BY r.generatedDate DESC", Reports.class)
+					.setMaxResults(5)
+					.getResultList();
 
-            int totalOrders = ((Number) em.createQuery(
-                    "SELECT COUNT(DISTINCT o.id) FROM Orders o WHERE o.status IN :statuses")
-                    .setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
-                    .getSingleResult()).intValue();
+			req.setAttribute("totalUsers", totalUsers);
+			req.setAttribute("totalProducts", totalProducts);
+			req.setAttribute("totalOrders", totalOrders);
+			req.setAttribute("totalRevenue", totalRevenue);
+			req.setAttribute("recentReports", recentReports);
 
-            BigDecimal totalRevenue = (BigDecimal) em.createQuery(
-                    "SELECT COALESCE(SUM(DISTINCT o.totalPrice), 0) FROM Orders o WHERE o.status IN :statuses")
-                    .setParameter("statuses", Arrays.asList("packaging", "shipping", "delivery"))
-                    .getSingleResult();
+			forwardToPage(req, res, "/admin/admin_dashboard.jsp");
+		} catch (Exception e) {
+			setErrorMessage(req, "Error loading dashboard data: " + e.getMessage());
+			redirectToPage(req, res, "/admin/dashboard");
+		}
+	}
 
-            List<Reports> recentReports = em.createQuery(
-                    "SELECT r FROM Reports r ORDER BY r.generatedDate DESC", Reports.class)
-                    .setMaxResults(5)
-                    .getResultList();
+	/**
+	 *
+	 * @param req servlet request
+	 * @param res servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException      if an I/O error occurs
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		Users user = getCurrentUser(req);
 
-            request.setAttribute("totalUsers", totalUsers);
-            request.setAttribute("totalProducts", totalProducts);
-            request.setAttribute("totalOrders", totalOrders);
-            request.setAttribute("totalRevenue", totalRevenue);
-            request.setAttribute("recentReports", recentReports);
+		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
-            utx.commit();
+		String startDateStr = req.getParameter("startDate");
+		String endDateStr = req.getParameter("endDate");
 
-            request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
+		if (startDateStr == null || startDateStr.isEmpty()) {
+			setErrorMessage(req, "Start date is required.");
+			redirectToPage(req, res, "/admin/dashboard");
+			return;
+		}
 
-        } catch (Exception e) {
-            try {
-                if (utx != null) {
-                    utx.rollback();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            System.out.println("Error in AdminDashboard: " + e.getMessage());
-            e.printStackTrace();
-            setErrorMessage(request, "Error loading dashboard data: " + e.getMessage());
-            request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
-        }
-    }
+		if (endDateStr == null || endDateStr.isEmpty()) {
+			setErrorMessage(req, "End date is required.");
+			redirectToPage(req, res, "/admin/dashboard");
+			return;
+		}
 
-    private void generateReport(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            utx.begin();
-            Users user = (Users) request.getSession().getAttribute("user");
+		Date startDate = null, endDate = null;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			startDate = dateFormat.parse(startDateStr);
+			endDate = dateFormat.parse(endDateStr);
+		} catch (Exception e) {
+			setErrorMessage(req, "Error parsing dates: " + e.getMessage());
+			redirectToPage(req, res, "/admin/dashboard");
+			return;
+		}
 
-            String startDateStr = request.getParameter("startDate");
-            String endDateStr = request.getParameter("endDate");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = dateFormat.parse(startDateStr);
-            Date endDate = dateFormat.parse(endDateStr);
+		List<Orders> orders = em.createQuery(
+        "SELECT DISTINCT o FROM Orders o " +
+                "LEFT JOIN FETCH o.orderdetailsList " +
+                "WHERE o.orderDate BETWEEN :startDate AND :endDate",
+        Orders.class)
+        .setParameter("startDate", startDate)
+        .setParameter("endDate", endDate)
+        .getResultList();
 
-            List<Orders> orders = em.createQuery(
-                    "SELECT DISTINCT o FROM Orders o " +
-                            "WHERE o.orderDate BETWEEN :startDate AND :endDate",
-                    Orders.class)
-                    .setParameter("startDate", startDate)
-                    .setParameter("endDate", endDate)
-                    .getResultList();
+		BigDecimal totalRevenue = BigDecimal.ZERO;
+		BigDecimal totalDiscounts = BigDecimal.ZERO;
+		Set<Integer> uniqueCustomers = new HashSet<>();
+		int totalProducts = 0;
 
-            for (Orders order : orders) {
-                em.refresh(order);
-                if (order.getOrderdetailsList() != null) {
-                    order.getOrderdetailsList().size();
-                }
-            }
+		for (Orders order : orders) {
+			totalRevenue = totalRevenue.add(order.getTotalPrice());
+			if (order.getDiscount() != null) {
+				totalDiscounts = totalDiscounts.add(order.getDiscount());
+			}
+			uniqueCustomers.add(order.getUserId().getId());
 
-            BigDecimal totalRevenue = BigDecimal.ZERO;
-            BigDecimal totalDiscounts = BigDecimal.ZERO;
-            Set<Integer> uniqueCustomers = new HashSet<>();
-            int totalProducts = 0;
+			for (Orderdetails detail : order.getOrderdetailsList()) {
+				totalProducts += detail.getQuantity();
+			}
+		}
 
-            for (Orders order : orders) {
-                totalRevenue = totalRevenue.add(order.getTotalPrice());
-                if (order.getDiscount() != null) {
-                    totalDiscounts = totalDiscounts.add(order.getDiscount());
-                }
-                uniqueCustomers.add(order.getUserId().getId());
+		final Date startDateFinal = startDate;
+		final Date endDateFinal = endDate;
+		final BigDecimal totalRevenueFinal = totalRevenue;
+		final BigDecimal totalDiscountsFinal = totalDiscounts;
+		final int totalProductsFinal = totalProducts;
 
-                for (Orderdetails detail : order.getOrderdetailsList()) {
-                    totalProducts += detail.getQuantity();
-                }
-            }
+		BigDecimal averageOrderValue = orders.isEmpty() ? BigDecimal.ZERO
+				: totalRevenue.divide(new BigDecimal(orders.size()), 2, RoundingMode.HALF_UP);
 
-            BigDecimal averageOrderValue = orders.isEmpty() ? BigDecimal.ZERO
-                    : totalRevenue.divide(new BigDecimal(orders.size()), 2, RoundingMode.HALF_UP);
+		handleTransaction(() -> {
+			Reports report = new Reports();
+			report.setReportType("Sales Report");
+			report.setGeneratedById(user);
+			report.setDetails(formatReportDetails(
+					startDateFinal, endDateFinal, orders.size(),
+					totalRevenueFinal, averageOrderValue,
+					totalDiscountsFinal, totalProductsFinal,
+					uniqueCustomers.size()));
 
-            Reports report = new Reports();
-            report.setReportType("Sales Report");
-            report.setGeneratedDate(new Date());
-            report.setGeneratedById(user);
-            report.setDetails(formatReportDetails(
-                    startDate, endDate, orders.size(),
-                    totalRevenue, averageOrderValue,
-                    totalDiscounts, totalProducts,
-                    uniqueCustomers.size()));
+			em.persist(report);
+		}, req, "Report generated successfully!", "Error generating report");
 
-            em.persist(report);
-            utx.commit();
+		redirectToPage(req, res, "/admin/dashboard");
+	}
 
-            setSuccessMessage(request, "Report generated successfully!");
-
-        } catch (Exception e) {
-            handleError(e, request, response);
-        }
-
-        response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-    }
-
-    private String formatReportDetails(Date startDate, Date endDate, int totalOrders,
-            BigDecimal totalRevenue, BigDecimal averageOrderValue,
-            BigDecimal totalDiscounts, int totalProducts, int uniqueCustomers) {
-        return String.format(
-                "Period: %s to %s\n" +
-                        "Total Orders: %d\n" +
-                        "Total Revenue: RM %.2f\n" +
-                        "Average Order Value: RM %.2f\n" +
-                        "Total Discounts: RM %.2f\n" +
-                        "Total Products Sold: %d\n" +
-                        "Unique Customers: %d",
-                new SimpleDateFormat("yyyy-MM-dd").format(startDate),
-                new SimpleDateFormat("yyyy-MM-dd").format(endDate),
-                totalOrders, totalRevenue, averageOrderValue,
-                totalDiscounts, totalProducts, uniqueCustomers);
-    }
-
-    private void handleError(Exception e, HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            if (utx != null) {
-                utx.rollback();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        e.printStackTrace();
-        setErrorMessage(request, "Error: " + e.getMessage());
-        request.getRequestDispatcher("/admin/admin_dashboard.jsp").forward(request, response);
-    }
+	private String formatReportDetails(Date startDate, Date endDate, int totalOrders,
+			BigDecimal totalRevenue, BigDecimal averageOrderValue,
+			BigDecimal totalDiscounts, int totalProducts, int uniqueCustomers) {
+		return String.format(
+				"Period: %s to %s\n" +
+						"Total Orders: %d\n" +
+						"Total Revenue: RM %.2f\n" +
+						"Average Order Value: RM %.2f\n" +
+						"Total Discounts: RM %.2f\n" +
+						"Total Products Sold: %d\n" +
+						"Unique Customers: %d",
+				new SimpleDateFormat("yyyy-MM-dd").format(startDate),
+				new SimpleDateFormat("yyyy-MM-dd").format(endDate),
+				totalOrders, totalRevenue, averageOrderValue,
+				totalDiscounts, totalProducts, uniqueCustomers);
+	}
 }

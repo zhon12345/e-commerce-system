@@ -111,8 +111,7 @@
             </div>
             <div class="collapse" id="reportForm">
                 <div class="card-body border-bottom">
-                    <form class="row g-3" method="GET" action="${pageContext.request.contextPath}/admin/dashboard">
-                        <input type="hidden" name="action" value="generate">
+                    <form class="row g-3" method="POST" action="${pageContext.request.contextPath}/admin/dashboard">
                         <div class="col-md-4">
                             <label class="form-label">Start Date</label>
                             <input type="date" class="form-control" name="startDate" required>

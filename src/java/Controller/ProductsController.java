@@ -104,7 +104,7 @@ public class ProductsController extends BaseController {
 
 				if (product == null) {
 					setErrorMessage(req, "Product not found.");
-					res.sendRedirect(req.getContextPath() + "/admin/products");
+					redirectToPage(req, res, "/admin/products");
 					return;
 				}
 
@@ -117,7 +117,7 @@ public class ProductsController extends BaseController {
 				}
 		}
 
-		res.sendRedirect(req.getContextPath() + "/admin/products");
+		redirectToPage(req, res, "/admin/products");
 	}
 
 	private void fetchSingleProduct(HttpServletRequest req, HttpServletResponse res)
@@ -171,8 +171,7 @@ public class ProductsController extends BaseController {
 		req.setAttribute("product", product);
 		req.setAttribute("averageRating", averageRating);
 		req.setAttribute("reviewList", reviews);
-		req.getRequestDispatcher("/product.jsp").forward(req, res);
-
+		forwardToPage(req, res, "/product.jsp");
 	}
 
 	private void fetchProductsList(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -265,7 +264,7 @@ public class ProductsController extends BaseController {
 		req.setAttribute("products", productsList);
 		req.setAttribute("categories", categoriesList);
 		req.setAttribute("averageRatings", averageRatings);
-		req.getRequestDispatcher("/products.jsp").forward(req, res);
+		forwardToPage(req, res, "/products.jsp");
 	}
 
 	private void fetchAdminProductsList(HttpServletRequest req, HttpServletResponse res)
@@ -281,58 +280,36 @@ public class ProductsController extends BaseController {
 
 		req.setAttribute("productList", productList);
 		req.setAttribute("categoryList", categoryList);
-		req.getRequestDispatcher("/admin/admin_products.jsp").forward(req, res);
+		forwardToPage(req, res, "/admin/admin_products.jsp");
 	}
 
 	private void createProduct(HttpServletRequest req) {
-		try {
+		handleTransaction(() -> {
 			Products product = new Products();
-			product.setName(req.getParameter("name"));
-			product.setDescription(req.getParameter("description"));
+			boolean success = processProductData(req, product, null);
 
-			String priceStr = req.getParameter("price");
-			BigDecimal price = new BigDecimal(priceStr);
-			product.setPrice(price);
-
-			String stockStr = req.getParameter("stock");
-			int stock = Integer.parseInt(stockStr);
-			product.setStock(stock);
-
-			String categoryIdStr = req.getParameter("categoryId");
-			if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
-				int categoryId = Integer.parseInt(categoryIdStr);
-				Categories category = em.find(Categories.class, categoryId);
-				if (category != null) {
-					product.setCategoryId(category);
-				}
-			}
-
-			Part filePart = req.getPart("productImage");
-			String imagePath = null;
-			try {
-				if (filePart != null && filePart.getSize() > 0) {
-					imagePath = FileManager.uploadProductImage(filePart, getServletContext(), null);
-					product.setImagePath(imagePath);
-
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			utx.begin();
-			em.persist(product);
-			utx.commit();
-
-			setSuccessMessage(req, "Product created successfully.");
-		} catch (Exception e) {
-			setErrorMessage(req, "Error creating product: " + e.getMessage());
-		}
+			if (success) em.persist(product);
+		}, req, "Product added successfully!", "Error adding product");
 	}
 
 	private void updateProduct(HttpServletRequest req, Products product) {
-		try {
+		handleTransaction(() -> {
 			String oldImagePath = product.getImagePath();
+			boolean success = processProductData(req, product, oldImagePath);
 
+			if (success) em.merge(product);
+		}, req, "Product updated successfully!", "Error updating product");
+	}
+
+	private void deleteProduct(HttpServletRequest req, Products product) {
+		handleTransaction(() -> {
+			product.setIsArchived(true);
+			em.merge(product);
+		}, req, "Product deleted successfully!", "Error deleting product");
+	}
+
+	private boolean processProductData(HttpServletRequest req, Products product, String oldImagePath) {
+		try {
 			product.setName(req.getParameter("name"));
 			product.setDescription(req.getParameter("description"));
 
@@ -345,50 +322,42 @@ public class ProductsController extends BaseController {
 			product.setStock(stock);
 
 			String categoryIdStr = req.getParameter("categoryId");
-			if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
+			if (categoryIdStr == null || categoryIdStr.isEmpty()) {
+				setErrorMessage(req, "Category is required.");
+				return false;
+			}
+
+			try {
 				int categoryId = Integer.parseInt(categoryIdStr);
 				Categories category = em.find(Categories.class, categoryId);
-				if (category != null) {
-					product.setCategoryId(category);
-				} else {
-					product.setCategoryId(null);
+
+				if (category == null) {
+					setErrorMessage(req, "Selected category not found.");
+					return false;
 				}
-			} else {
-				product.setCategoryId(null);
+
+				product.setCategoryId(category);
+			} catch (NumberFormatException e) {
+				setErrorMessage(req, "Invalid category selected.");
+				return false;
 			}
 
 			Part filePart = req.getPart("productImage");
 			if (filePart != null && filePart.getSize() > 0) {
 				try {
 					String imagePath = FileManager.uploadProductImage(filePart, getServletContext(), oldImagePath);
-					if (imagePath != null) {
-						product.setImagePath(imagePath);
-					}
+
+					if (imagePath != null) product.setImagePath(imagePath);
 				} catch (Exception e) {
-					e.printStackTrace();
+					setErrorMessage(req, "Error uploading image: " + e.getMessage());
+					return false;
 				}
 			}
 
-			utx.begin();
-			em.merge(product);
-			utx.commit();
-
-			setSuccessMessage(req, "Product updated successfully.");
+			return true;
 		} catch (Exception e) {
-			setErrorMessage(req, "Error updating product: " + e.getMessage());
-		}
-	}
-
-	private void deleteProduct(HttpServletRequest req, Products product) {
-		try {
-			product.setIsArchived(true);
-
-			utx.begin();
-			em.merge(product);
-			utx.commit();
-			setSuccessMessage(req, "Product deleted successfully.");
-		} catch (Exception e) {
-			setErrorMessage(req, "Error deleting product: " + e.getMessage());
+			setErrorMessage(req, "Error processing product: " + e.getMessage());
+			return false;
 		}
 	}
 

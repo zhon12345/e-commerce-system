@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,32 +32,18 @@ public class CheckoutController extends BaseController {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		HttpSession session = req.getSession();
 		Users user = getCurrentUser(req);
 
 		if (!isLoggedIn(req, res, user, "checkout")) return;
 
-		String promoCode = req.getParameter("promoCode");
-		String removePromo = req.getParameter("removePromo");
-		Promotions appliedPromo = (Promotions) session.getAttribute("appliedPromo");
-
 		try {
-			utx.begin();
-
-			Users fullUser = em.find(Users.class, user.getId());
-			em.refresh(fullUser);
-			fullUser.getAddressesList().size();
-			fullUser.getCardinfoList().size();
-
-			utx.commit();
-
-			session.setAttribute("user", fullUser);
-
-			List<Cart> cartList = fullUser.getCartList();
+			List<Cart> cartList = getCartList(user);
 			if (cartList == null || cartList.isEmpty()) {
-				res.sendRedirect(req.getContextPath() + "/products");
+				redirectToPage(req, res, "/products");
 				return;
 			}
+
+			processPromoCode(req);
 
 			List<Addresses> addressList = em.createQuery(
 					"SELECT c FROM Addresses c WHERE c.userId = :user AND c.isArchived = :isArchived",
@@ -71,37 +58,13 @@ public class CheckoutController extends BaseController {
 					.setParameter("isArchived", false)
 					.getResultList();
 
-			if (removePromo != null && appliedPromo != null && removePromo.equals(appliedPromo.getPromoCode())) {
-				session.removeAttribute("appliedPromo");
-			}
-
-			if (promoCode != null && !promoCode.isEmpty()) {
-				try {
-					Promotions promo = em.createQuery(
-							"SELECT p FROM Promotions p WHERE p.promoCode = :code AND p.isActive = :isActive AND CURRENT_DATE BETWEEN p.validFrom AND p.validTo",
-							Promotions.class)
-							.setParameter("code", promoCode)
-							.setParameter("isActive", true)
-							.getSingleResult();
-					session.setAttribute("appliedPromo", promo);
-				} catch (Exception e) {
-					req.setAttribute("promoCodeError", "Invalid or expired promo code.");
-					session.removeAttribute("appliedPromo");
-				}
-			}
-
 			CartController.calculateOrderSummary(cartList, req);
 
 			req.setAttribute("addressList", addressList);
 			req.setAttribute("cardList", cardList);
 
-			req.getRequestDispatcher("/checkout.jsp").forward(req, res);
+			forwardToPage(req, res, "/checkout.jsp");
 		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-			}
-
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -120,139 +83,166 @@ public class CheckoutController extends BaseController {
 
 		if (!isLoggedIn(req, res, user, "checkout")) return;
 
-		try {
-			String addressId = req.getParameter("addressId");
-			String paymentMethod = req.getParameter("paymentMethod");
-			String cardId = null;
-			String cvv = null;
+		String addressId = req.getParameter("addressId");
+		String paymentMethod = req.getParameter("paymentMethod");
+		String cardId = null;
+		String cvv = null;
 
-			Boolean hasErrors = false;
+		Boolean hasErrors = false;
 
-			if (addressId == null || addressId.isEmpty()) {
-				req.setAttribute("addressSelectorError", "Please select a delivery address.");
+		if (addressId == null || addressId.isEmpty()) {
+			req.setAttribute("addressSelectorError", "Please select a delivery address.");
+			hasErrors = true;
+		}
+
+		if (paymentMethod.equals("card")) {
+			cardId = req.getParameter("cardId");
+			cvv = req.getParameter("cvv");
+
+			if (cardId == null || cardId.isEmpty()) {
+				req.setAttribute("cardSelectorError", "Please select a card.");
+				hasErrors = true;
+			} else if (cvv == null) {
+				req.setAttribute("cvvError", "CVV is required.");
+				hasErrors = true;
+			} else if (cvv.length() != 3) {
+				req.setAttribute("cvvError", "CVV must be at least 3 digits long.");
 				hasErrors = true;
 			}
+		}
 
-			if (paymentMethod.equals("card")) {
-				cardId = req.getParameter("cardId");
-				cvv = req.getParameter("cvv");
+		if (hasErrors) {
+			req.setAttribute("selectedAddressId", addressId);
+			req.setAttribute("selectedPaymentMethod", paymentMethod);
+			req.setAttribute("selectedCardId", cardId);
+			req.setAttribute("enteredCvv", cvv);
 
-				if (cardId == null || cardId.isEmpty()) {
-					req.setAttribute("cardSelectorError", "Please select a card.");
-					hasErrors = true;
-				} else if (cvv == null) {
-					req.setAttribute("cvvError", "CVV is required.");
-					hasErrors = true;
-				} else if (cvv.length() != 3) {
-					req.setAttribute("cvvError", "CVV must be at least 3 digits long.");
-					hasErrors = true;
-				}
-			}
+			doGet(req, res);
+			return;
+		}
 
-			if (hasErrors) {
-				req.setAttribute("selectedAddressId", addressId);
-				req.setAttribute("selectedPaymentMethod", paymentMethod);
-				req.setAttribute("selectedCardId", cardId);
-				req.setAttribute("enteredCvv", cvv);
+		Addresses address = em.find(Addresses.class, Integer.parseInt(addressId));
+		if (address == null || address.getUserId().getId() != user.getId()) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
 
-				doGet(req, res);
-				return;
-			}
+		Cardinfo card = paymentMethod.equals("card") ? em.find(Cardinfo.class, Integer.parseInt(cardId)) : null;
+		if (paymentMethod.equals("card") && (card == null || card.getUserId().getId() != user.getId())) {
+			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
 
-			Users fullUser = em.find(Users.class, user.getId());
+		List<Cart> cartList = getCartList(user);
+		if (cartList.isEmpty()) {
+			redirectToPage(req, res, "/products");
+			return;
+		}
 
-			Addresses address = em.find(Addresses.class, Integer.parseInt(addressId));
-			if (address == null || address.getUserId().getId() != fullUser.getId()) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+		double subtotal = cartList.stream()
+				.mapToDouble(item -> item.getProductId().getPrice().doubleValue() * item.getQuantity())
+				.sum();
 
-			Cardinfo card = paymentMethod.equals("card") ? em.find(Cardinfo.class, Integer.parseInt(cardId)) : null;
-			if (paymentMethod.equals("card") && (card == null || card.getUserId().getId() != fullUser.getId())) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
+		Promotions appliedPromo = (Promotions) session.getAttribute("appliedPromo");
 
-			List<Cart> cartList = fullUser.getCartList();
-			if (cartList == null || cartList.isEmpty()) {
-				res.sendRedirect(req.getContextPath() + "/products");
-				return;
-			}
+		if (appliedPromo != null) {
+			try {
+				appliedPromo = em.find(Promotions.class, appliedPromo.getId());
 
-			double subtotal = cartList.stream()
-					.mapToDouble(item -> item.getProductId().getPrice().doubleValue() * item.getQuantity())
-					.sum();
-
-			Promotions appliedPromo = (Promotions) session.getAttribute("appliedPromo");
-
-			if (appliedPromo != null) {
-				try {
-					appliedPromo = em.find(Promotions.class, appliedPromo.getId());
-
-					if (!appliedPromo.getIsActive() || new Date().after(appliedPromo.getValidTo())) {
-						session.removeAttribute("appliedPromo");
-						appliedPromo = null;
-					}
-				} catch (Exception e) {
+				if (!appliedPromo.getIsActive() || new Date().after(appliedPromo.getValidTo())) {
+					session.removeAttribute("appliedPromo");
 					appliedPromo = null;
 				}
+			} catch (Exception e) {
+				appliedPromo = null;
 			}
+		}
 
-			double discount = appliedPromo != null ? subtotal * appliedPromo.getDiscount().doubleValue() : 0;
-			double tax = subtotal * 0.06;
-			double shipping = subtotal > 1000 ? 0 : 25.00;
-			double total = subtotal - discount + tax + shipping;
+		final Promotions promoCode = appliedPromo;
+		double discount = appliedPromo != null ? subtotal * appliedPromo.getDiscount().doubleValue() : 0;
+		double tax = subtotal * 0.06;
+		double shipping = subtotal > 1000 ? 0 : 25.00;
+		double total = subtotal - discount + tax + shipping;
 
-			utx.begin();
-
+		handleTransaction(() -> {
 			Orders order = new Orders();
-			order.setUserId(fullUser);
+			order.setUserId(user);
 			order.setAddressId(address);
 			order.setPaymentMethod(paymentMethod);
 			order.setCardId(card);
 			order.setStatus("packaging");
 			order.setTotalPrice(BigDecimal.valueOf(total));
 			order.setDeliveryCost(BigDecimal.valueOf(shipping));
-			order.setPromoId(appliedPromo);
+			order.setPromoId(promoCode);
 			order.setDiscount(BigDecimal.valueOf(discount));
 			order.setOrderDate(new Date());
+			order.setOrderdetailsList(new ArrayList<>());
 			em.persist(order);
 
 			for (Cart item : cartList) {
+				Products product = em.find(Products.class, item.getProductId().getId());
+
 				Orderdetails orderDetail = new Orderdetails();
 				orderDetail.setOrderId(order);
-				orderDetail.setProductId(item.getProductId());
+				orderDetail.setProductId(product);
 				orderDetail.setQuantity(item.getQuantity());
-				orderDetail.setPrice(item.getProductId().getPrice());
+				orderDetail.setPrice(product.getPrice());
 				em.persist(orderDetail);
 
-				Products product = item.getProductId();
-				int newQuantity = product.getStock() - item.getQuantity();
+				order.getOrderdetailsList().add(orderDetail);
 
+				int newQuantity = product.getStock() - item.getQuantity();
 				product.setStock(newQuantity);
 				em.merge(product);
+
+				em.remove(em.merge(item));
 			}
 
-			List<Cart> cartItems = em.createQuery("SELECT c FROM Cart c WHERE c.userId = :user", Cart.class)
-					.setParameter("user", fullUser)
-					.getResultList();
+			em.flush();
+			em.merge(order);
+			em.refresh(order);
 
-			cartItems.forEach(em::remove);
+		}, req, "Your order has been placed successfully!", "Failed to place order.");
 
-			utx.commit();
+		session.removeAttribute("appliedPromo");
 
-			session.removeAttribute("appliedPromo");
-			setSuccessMessage(req, "Your order has been placed successfully!");
-
-			res.sendRedirect(req.getContextPath() + "/user/history");
-		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-			}
-
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		if (session.getAttribute("error") != null) {
+			redirectToPage(req, res, "/cart");
+			return;
 		}
+
+		redirectToPage(req, res, "/user/history");
 	}
 
+	private List<Cart> getCartList(Users user) {
+		return em.createQuery("SELECT c FROM Cart c JOIN FETCH c.productId WHERE c.userId = :user", Cart.class)
+				.setParameter("user", user)
+				.getResultList();
+	}
+
+	private void processPromoCode(HttpServletRequest req) {
+		String promoCode = req.getParameter("promoCode");
+		String removePromo = req.getParameter("removePromo");
+		Promotions appliedPromo = (Promotions) req.getSession().getAttribute("appliedPromo");
+
+		if (removePromo != null && appliedPromo != null && removePromo.equals(appliedPromo.getPromoCode())) {
+			req.getSession().removeAttribute("appliedPromo");
+		}
+
+		if (promoCode != null && !promoCode.isEmpty()) {
+			try {
+				Promotions promo = em.createQuery(
+						"SELECT p FROM Promotions p WHERE p.promoCode = :code AND p.isActive = :isActive AND CURRENT_DATE BETWEEN p.validFrom AND p.validTo",
+						Promotions.class)
+						.setParameter("code", promoCode)
+						.setParameter("isActive", true)
+						.getSingleResult();
+
+				req.getSession().setAttribute("appliedPromo", promo);
+			} catch (Exception e) {
+				req.setAttribute("promoCodeError", "Invalid or expired promo code.");
+				req.getSession().removeAttribute("appliedPromo");
+			}
+		}
+	}
 }

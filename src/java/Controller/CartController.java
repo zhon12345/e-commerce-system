@@ -38,7 +38,7 @@ public class CartController extends BaseController {
 
 			calculateOrderSummary(cartList, req);
 
-			req.getRequestDispatcher("/cart.jsp").forward(req, res);
+			forwardToPage(req, res, "/cart.jsp");
 		} catch (Exception e) {
 			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -65,94 +65,81 @@ public class CartController extends BaseController {
 
 			Products product = em.find(Products.class, productId);
 			if (product == null) {
-				res.sendRedirect(req.getContextPath() + "/products");
+				redirectToPage(req, res, "/products");
 				return;
 			}
 
 			switch (action) {
 				case "decrease":
 				case "increase":
-					updateCart(user, product, action);
+					updateCart(req, user, product, action);
 					break;
 				case "remove":
-					removeFromCart(user, product);
+					removeFromCart(req, user, product);
 					break;
 				case "add":
-					addToCart(user, product, quantity);
-					break;
-				default:
+					addToCart(req, user, product, quantity);
 					break;
 			}
 
-			res.sendRedirect(req.getContextPath() + "/cart");
+			redirectToPage(req, res, "/cart");
 		} catch (NumberFormatException e) {
-			res.sendRedirect(req.getContextPath() + "/products");
+			redirectToPage(req, res, "/products");
 		} catch (Exception e) {
-			try {
-				utx.rollback();
-			} catch (Exception ex) {
-			}
-
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			throw new ServletException(e);
 		}
 	}
 
-	private void addToCart(Users user, Products product, int quantity) throws Exception {
-		utx.begin();
+	private void addToCart(HttpServletRequest req, Users user, Products product, int quantity) throws Exception {
+		handleTransaction(() -> {
+			List<Cart> existingCartItem = fetchCartItems(user, product);
 
-		List<Cart> existingCartItem = fetchCartItems(user, product);
-
-		if (!existingCartItem.isEmpty()) {
-			Cart cartItem = existingCartItem.get(0);
-			cartItem.setQuantity(cartItem.getQuantity() + quantity);
-			em.merge(cartItem);
-		} else {
-			Cart cartItem = new Cart();
-			cartItem.setUserId(user);
-			cartItem.setProductId(product);
-			cartItem.setQuantity(quantity);
-			em.persist(cartItem);
-		}
-
-		utx.commit();
-	}
-
-	private void removeFromCart(Users user, Products product) throws Exception {
-		utx.begin();
-
-		List<Cart> cartItems = fetchCartItems(user, product);
-
-		if (!cartItems.isEmpty()) {
-			Cart cartItem = cartItems.get(0);
-			em.remove(cartItem);
-		}
-
-		utx.commit();
-	}
-
-	private void updateCart(Users user, Products product, String action) throws Exception {
-		utx.begin();
-
-		List<Cart> cartItems = fetchCartItems(user, product);
-
-		if (!cartItems.isEmpty()) {
-			Cart cartItem = cartItems.get(0);
-			int currentQuantity = cartItem.getQuantity();
-
-			if ("increase".equals(action)) {
-				cartItem.setQuantity(currentQuantity + 1);
+			if (!existingCartItem.isEmpty()) {
+				Cart cartItem = existingCartItem.get(0);
+				cartItem.setQuantity(cartItem.getQuantity() + quantity);
 				em.merge(cartItem);
-			} else if ("decrease".equals(action)) {
-				if (currentQuantity > 1) {
-					cartItem.setQuantity(currentQuantity - 1);
+			} else {
+				Cart cartItem = new Cart();
+				cartItem.setUserId(user);
+				cartItem.setProductId(product);
+				cartItem.setQuantity(quantity);
+				em.persist(cartItem);
+			}
+		}, req, null, "Failed to add product to cart");
+	}
+
+	private void removeFromCart(HttpServletRequest req, Users user, Products product) throws Exception {
+		handleTransaction(() -> {
+			List<Cart> cartItems = fetchCartItems(user, product);
+
+			if (!cartItems.isEmpty()) {
+				Cart cartItem = cartItems.get(0);
+				em.remove(cartItem);
+			}
+		}, req, null, "Failed to remove product from cart");
+	}
+
+	private void updateCart(HttpServletRequest req, Users user, Products product, String action) throws Exception {
+		handleTransaction(() -> {
+			List<Cart> cartItems = fetchCartItems(user, product);
+
+			if (!cartItems.isEmpty()) {
+				Cart cartItem = cartItems.get(0);
+				int currentQuantity = cartItem.getQuantity();
+
+				if ("increase".equals(action)) {
+					cartItem.setQuantity(currentQuantity + 1);
 					em.merge(cartItem);
-				} else {
-					em.remove(cartItem);
+				} else if ("decrease".equals(action)) {
+					if (currentQuantity > 1) {
+						cartItem.setQuantity(currentQuantity - 1);
+						em.merge(cartItem);
+					} else {
+						em.remove(cartItem);
+					}
 				}
 			}
-		}
-
-		utx.commit();
+		}, req, null, "Failed to update cart");
 	}
 
 	private List<Cart> fetchCartItems(Users user, Products product) {

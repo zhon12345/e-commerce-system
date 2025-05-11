@@ -37,7 +37,7 @@ public class Reports implements Serializable {
 	@Basic(optional = false)
   @Column(name = "REPORT_TYPE")
 	private String reportType;
-	@Column(name = "GENERATED_DATE")
+	@Column(name = "GENERATED_DATE", insertable = false, updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
 	private Date generatedDate;
 	@Column(name = "DETAILS")

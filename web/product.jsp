@@ -81,7 +81,7 @@
 			<div id="description-content" class="content-section">
 				<div class="product-description">
 					<h3>Product Description</h3>
-					<p>${product.description.isEmpty() ? "No description available." : product.description}</p>
+					<p>${product.description != null && !product.description.isEmpty() ? product.description : "No description available."}</p>
 				</div>
 			</div>
 
@@ -94,7 +94,7 @@
 
 						<div class="rating">
 							<div class="stars">
-								<span class="rating-label" >Rating:</span>
+								<span class="rating-label">Rating:</span>
 								<div class="star-rating">
 									<% for (int i=1; i<=5; i++) { %>
 									<i class="fa-regular fa-star star" data-value="<%= i %>"></i>

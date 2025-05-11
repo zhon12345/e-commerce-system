@@ -37,13 +37,15 @@
 				</button>
 			</div>
 
+			<%
+				List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("card");
+					if (cards != null && !cards.isEmpty()) {
+			%>
 			<div class="list">
 				<%
-					List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("card");
-					if (cards != null && !cards.isEmpty()) {
-						for (Cardinfo card : cards) {
-							String cardNumber = "•••• •••• •••• " + card.getCardNumber().substring(card.getCardNumber().length() - 4);
-							String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear());
+					for (Cardinfo card : cards) {
+						String cardNumber = "•••• •••• •••• " + card.getCardNumber().substring(card.getCardNumber().length() - 4);
+						String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear());
 				%>
 				<div class="card">
 					<div class="number">
@@ -71,17 +73,15 @@
 						<button class="delete" onclick="confirmDelete(<%= card.getId()%>)">Delete</button>
 					</div>
 				</div>
-				<%
-						}
-					} else {
-				%>
-				<div class="empty-status">
-					<i class="far fa-credit-card"></i>
-					<h3>No Saved Cards</h3>
-					<p>You haven't added any credit or debit cards yet. Add your first card to get started.</p>
-				</div>
 				<% } %>
 			</div>
+			<% } else { %>
+			<div class="empty-status">
+				<i class="far fa-credit-card"></i>
+				<h3>No Saved Cards</h3>
+				<p>You haven't added any credit or debit cards yet. Add your first card to get started.</p>
+			</div>
+			<% } %>
 		</div>
 	</div>
 

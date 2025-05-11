@@ -1,7 +1,6 @@
 package Utils;
 
 import Model.Users;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class Authentication {
 		return isLoggedIn(req, res, user, redirect, true);
 	}
 
-	public static String hashPassword(String password) throws ServletException {
+	public static String hashPassword(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			byte[] hashedBytes = md.digest(password.getBytes());
@@ -59,7 +58,8 @@ public class Authentication {
 			}
 			return sb.toString();
 		} catch (NoSuchAlgorithmException e) {
-			throw new ServletException(e);
+			e.printStackTrace();
+			return "";
 		}
 	}
 
