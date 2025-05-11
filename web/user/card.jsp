@@ -91,12 +91,12 @@
 			<h2>
 				<%= request.getAttribute("updateCard") !=null ? "Edit Card" : "Add New Card" %>
 			</h2>
-			<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/card" method="POST">
+			<form onsubmit="return validateForm()" action="${pageContext.request.contextPath}/user/cards" method="POST">
 				<%
 					if (request.getAttribute("updateCard") !=null) {
 						Cardinfo updateCard = (Cardinfo)request.getAttribute("updateCard");
 				%>
-				<input type="hidden" name="id" value="<%= updateCard.getId() %>">
+				<input type="hidden" name="cardId" value="<%= updateCard.getId() %>">
 				<% } %>
 				<input type="hidden" name="action" value="<%= request.getAttribute("updateCard") !=null ? "update" : "create" %>">
 
@@ -123,9 +123,9 @@
 		</div>
 	</div>
 
-	<form id="deleteForm" method="POST" action="${pageContext.request.contextPath}/user/card" style="display:none;">
+	<form id="deleteForm" method="POST" action="${pageContext.request.contextPath}/user/cards" style="display:none;">
 		<input type="hidden" name="action" value="delete">
-		<input type="hidden" id="deleteId" name="id">
+		<input type="hidden" id="deleteId" name="cardId">
 	</form>
 
 	<script>
