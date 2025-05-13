@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,7 @@ public class PromotionsController extends BaseController {
 				forwardToPage(req, res, "/index.jsp");
 				return;
 			} catch (Exception e) {
-				throw new ServletException(e);
+				handleException(req, res, e);
 			}
 		}
 
@@ -56,11 +57,11 @@ public class PromotionsController extends BaseController {
 				forwardToPage(req, res, "/admin/admin_promotions.jsp");
 				return;
 			} catch (Exception e) {
-				throw new ServletException(e);
+				handleException(req, res, e);
 			}
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class PromotionsController extends BaseController {
 		String path = req.getServletPath();
 
 		if (!path.equals("/admin/promotions")) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND);
+			sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
@@ -84,6 +85,11 @@ public class PromotionsController extends BaseController {
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
 		String action = req.getParameter("action");
+
+		if (action == null || action.isEmpty()) {
+			sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 
 		switch (action) {
 			case "create":
@@ -107,30 +113,40 @@ public class PromotionsController extends BaseController {
 					if (action.equals("delete")) {
 						deletePromotion(req, promotion);
 					}
-
 				} catch (NumberFormatException e) {
-					setErrorMessage(req, "Promotion not found");
+					handleException(req, e, "Invalid promotion ID.");
 				}
+				break;
+			default:
+				sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+				return;
 		}
 
 		redirectToPage(req, res, "/admin/promotions");
 	}
 
 	private void createPromotion(HttpServletRequest req) throws IOException {
-		handleTransaction(() -> {
-			Promotions promo = new Promotions();
+		Promotions promotion = new Promotions();
+		boolean success = processPromotionData(req, promotion);
 
-			if (processPromotionData(req, promo)) {
-				em.persist(promo);
-			}
+		if (!success) {
+			return;
+		}
+
+		handleTransaction(() -> {
+			em.persist(promotion);
 		}, req, "Promotion added successfully!", "Failed to add promotion");
 	}
 
 	private void updatePromotion(HttpServletRequest req, Promotions promotion) throws IOException {
+		boolean success = processPromotionData(req, promotion);
+
+		if (!success) {
+			return;
+		}
+
 		handleTransaction(() -> {
-			if (processPromotionData(req, promotion)) {
-				em.merge(promotion);
-			}
+			em.merge(promotion);
 		}, req, "Promotion successfully updated!", "Failed to update promotion");
 	}
 
@@ -142,31 +158,66 @@ public class PromotionsController extends BaseController {
 	}
 
 	private boolean processPromotionData(HttpServletRequest req, Promotions promotion) {
-		try {
-			String promoCode = req.getParameter("promoCode").trim().toUpperCase();
-			BigDecimal discount = new BigDecimal(req.getParameter("discount")).divide(new BigDecimal(100));
+		String promoCode = req.getParameter("promoCode") != null ? req.getParameter("promoCode").trim().toUpperCase() : "";
+		String discountParam = req.getParameter("discount");
+		String validFromParam = req.getParameter("validFrom");
+		String validToParam = req.getParameter("validTo");
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date validFrom = dateFormat.parse(req.getParameter("validFrom"));
-			Date validTo = dateFormat.parse(req.getParameter("validTo"));
-
-			if (promoCode.isEmpty()) {
-				return false;
-			}
-
-			if (validFrom.after(validTo)) {
-				return false;
-			}
-
-			promotion.setPromoCode(promoCode);
-			promotion.setDiscount(discount);
-			promotion.setValidFrom(validFrom);
-			promotion.setValidTo(validTo);
-
-			return true;
-		} catch (Exception e) {
-			setErrorMessage(req, "Error processing promotion data: " + e.getMessage());
+		if (promoCode.isEmpty()) {
+			setErrorMessage(req, "Promotion code is required");
 			return false;
 		}
+
+		if (discountParam == null || discountParam.isEmpty()) {
+			setErrorMessage(req, "Discount is required");
+			return false;
+		}
+
+		if (validFromParam == null || validFromParam.isEmpty()) {
+			setErrorMessage(req, "Valid from date is required");
+			return false;
+		}
+
+		if (validToParam == null || validToParam.isEmpty()) {
+			setErrorMessage(req, "Valid to date is required");
+			return false;
+		}
+
+		BigDecimal discount;
+		try {
+			BigDecimal discountValue = new BigDecimal(discountParam);
+
+			if (discountValue.compareTo(BigDecimal.ZERO) <= 0 || discountValue.compareTo(new BigDecimal(100)) > 0) {
+				setErrorMessage(req, "Discount must be between 1 and 100");
+				return false;
+			}
+
+			discount = discountValue.divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+		} catch (NumberFormatException e) {
+			setErrorMessage(req, "Invalid discount value");
+			return false;
+		}
+
+		Date validFrom, validTo;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			validFrom = dateFormat.parse(validFromParam);
+			validTo = dateFormat.parse(validToParam);
+		} catch (Exception e) {
+			setErrorMessage(req, "Invalid date format");
+			return false;
+		}
+
+		if (validFrom.after(validTo)) {
+			setErrorMessage(req, "Valid from date cannot be after valid to date");
+			return false;
+		}
+
+		promotion.setPromoCode(promoCode);
+		promotion.setDiscount(discount);
+		promotion.setValidFrom(validFrom);
+		promotion.setValidTo(validTo);
+
+		return true;
 	}
 }

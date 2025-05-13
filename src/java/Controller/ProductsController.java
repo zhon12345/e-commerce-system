@@ -6,6 +6,7 @@ import Model.Reviews;
 import Model.Users;
 import static Utils.Authentication.isLoggedInAndAuthorized;
 import Utils.FileManager;
+import jakarta.persistence.NoResultException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -53,9 +54,9 @@ public class ProductsController extends BaseController {
 				fetchAdminProductsList(req, res);
 			}
 
-			res.sendError(HttpServletResponse.SC_NOT_FOUND);
+			sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 		} catch (Exception e) {
-			throw new ServletException(e);
+			handleException(req, res, e);
 		}
 	}
 
@@ -82,7 +83,7 @@ public class ProductsController extends BaseController {
 		String path = req.getServletPath();
 
 		if (!path.equals("/admin/products")) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND);
+			sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
@@ -92,39 +93,54 @@ public class ProductsController extends BaseController {
 
 		String action = req.getParameter("action");
 
+		if (action == null || action.isEmpty()) {
+			sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
 		switch (action) {
 			case "create":
 				createProduct(req);
 				break;
 			case "update":
 			case "delete":
-				String productId = req.getParameter("productId");
+				try {
+					String productId = req.getParameter("productId");
+					Products product = em.find(Products.class, Integer.parseInt(productId));
 
-				Products product = em.find(Products.class, Integer.parseInt(productId));
+					if (product == null) {
+						setErrorMessage(req, "Product not found.");
+						break;
+					}
 
-				if (product == null) {
-					setErrorMessage(req, "Product not found.");
-					redirectToPage(req, res, "/admin/products");
-					return;
+					if (action.equals("update")) {
+						updateProduct(req, product);
+					}
+
+					if (action.equals("delete")) {
+						deleteProduct(req, product);
+					}
+				} catch (NumberFormatException e) {
+					handleException(req, e, "Invalid product ID.");
 				}
-
-				if (action.equals("update")) {
-					updateProduct(req, product);
-				}
-
-				if (action.equals("delete")) {
-					deleteProduct(req, product);
-				}
+				break;
+			default:
+				sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+				return;
 		}
 
 		redirectToPage(req, res, "/admin/products");
 	}
 
-	private void fetchSingleProduct(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	private void fetchSingleProduct(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 
 		String productId = req.getParameter("id");
+
+		if (productId == null || productId.isEmpty()) {
+			redirectToPage(req, res, "/products");
+			return;
+		}
 
 		String ratingError = (String) session.getAttribute("ratingError");
 		String reviewError = (String) session.getAttribute("reviewError");
@@ -149,29 +165,33 @@ public class ProductsController extends BaseController {
 			req.setAttribute("reviewText", reviewText);
 		}
 
-		Products product = em.createNamedQuery("Products.findById", Products.class)
-				.setParameter("id", Integer.parseInt(productId))
-				.getSingleResult();
+		try {
+			Products product = em.createNamedQuery("Products.findById", Products.class)
+					.setParameter("id", Integer.parseInt(productId))
+					.getSingleResult();
 
-		Double averageRating = em.createQuery(
-				"SELECT AVG(CAST(r.rating AS float)) FROM Reviews r WHERE r.productId.id = :productId",
-				Double.class).setParameter("productId", Integer.parseInt(productId))
-				.getSingleResult();
+			Double averageRating = em.createQuery(
+					"SELECT AVG(CAST(r.rating AS float)) FROM Reviews r WHERE r.productId.id = :productId",
+					Double.class).setParameter("productId", Integer.parseInt(productId))
+					.getSingleResult();
 
-		List<Reviews> reviews = em.createQuery(
-				"SELECT r FROM Reviews r LEFT JOIN FETCH r.userId WHERE r.productId.id = :productId AND r.isArchived = :isArchived ORDER BY r.reviewDate DESC",
-				Reviews.class)
-				.setParameter("productId", Integer.parseInt(productId))
-				.setParameter("isArchived", false)
-				.getResultList();
+			List<Reviews> reviews = em.createQuery(
+					"SELECT r FROM Reviews r LEFT JOIN FETCH r.userId WHERE r.productId.id = :productId AND r.isArchived = :isArchived ORDER BY r.reviewDate DESC",
+					Reviews.class)
+					.setParameter("productId", Integer.parseInt(productId))
+					.setParameter("isArchived", false)
+					.getResultList();
 
-		if (averageRating == null)
-			averageRating = 0.0;
+			if (averageRating == null)
+				averageRating = 0.0;
 
-		req.setAttribute("product", product);
-		req.setAttribute("averageRating", averageRating);
-		req.setAttribute("reviewList", reviews);
-		forwardToPage(req, res, "/product.jsp");
+			req.setAttribute("product", product);
+			req.setAttribute("averageRating", averageRating);
+			req.setAttribute("reviewList", reviews);
+			forwardToPage(req, res, "/product.jsp");
+		} catch (NumberFormatException | NoResultException e) {
+			redirectToPage(req, res, "/products");
+		}
 	}
 
 	private void fetchProductsList(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -283,21 +303,29 @@ public class ProductsController extends BaseController {
 		forwardToPage(req, res, "/admin/admin_products.jsp");
 	}
 
-	private void createProduct(HttpServletRequest req) {
-		handleTransaction(() -> {
-			Products product = new Products();
-			boolean success = processProductData(req, product, null);
+	private void createProduct(HttpServletRequest req) throws IOException, ServletException {
+		Products product = new Products();
+		boolean success = processProductData(req, product, null);
 
-			if (success) em.persist(product);
+		if (!success) {
+			return;
+		}
+
+		handleTransaction(() -> {
+			em.persist(product);
 		}, req, "Product added successfully!", "Error adding product");
 	}
 
-	private void updateProduct(HttpServletRequest req, Products product) {
-		handleTransaction(() -> {
-			String oldImagePath = product.getImagePath();
-			boolean success = processProductData(req, product, oldImagePath);
+	private void updateProduct(HttpServletRequest req, Products product) throws IOException, ServletException {
+		String oldImagePath = product.getImagePath();
+		boolean success = processProductData(req, product, oldImagePath);
 
-			if (success) em.merge(product);
+		if (!success) {
+			return;
+		}
+
+		handleTransaction(() -> {
+			em.merge(product);
 		}, req, "Product updated successfully!", "Error updating product");
 	}
 
@@ -308,57 +336,101 @@ public class ProductsController extends BaseController {
 		}, req, "Product deleted successfully!", "Error deleting product");
 	}
 
-	private boolean processProductData(HttpServletRequest req, Products product, String oldImagePath) {
-		try {
-			product.setName(req.getParameter("name"));
-			product.setDescription(req.getParameter("description"));
+	private boolean processProductData(HttpServletRequest req, Products product, String oldImagePath) throws IOException, ServletException {
+		String name = req.getParameter("name") != null ? req.getParameter("name").trim() : "";
+		String description = req.getParameter("description") != null ? req.getParameter("description").trim() : "";
+		String priceParam = req.getParameter("price");
+		String stockParam = req.getParameter("stock");
+		String categoryParam = req.getParameter("categoryId");
+		Part filePart = req.getPart("productImage");
 
-			String priceStr = req.getParameter("price");
-			BigDecimal price = new BigDecimal(priceStr);
-			product.setPrice(price);
-
-			String stockStr = req.getParameter("stock");
-			int stock = Integer.parseInt(stockStr);
-			product.setStock(stock);
-
-			String categoryIdStr = req.getParameter("categoryId");
-			if (categoryIdStr == null || categoryIdStr.isEmpty()) {
-				setErrorMessage(req, "Category is required.");
-				return false;
-			}
-
-			try {
-				int categoryId = Integer.parseInt(categoryIdStr);
-				Categories category = em.find(Categories.class, categoryId);
-
-				if (category == null) {
-					setErrorMessage(req, "Selected category not found.");
-					return false;
-				}
-
-				product.setCategoryId(category);
-			} catch (NumberFormatException e) {
-				setErrorMessage(req, "Invalid category selected.");
-				return false;
-			}
-
-			Part filePart = req.getPart("productImage");
-			if (filePart != null && filePart.getSize() > 0) {
-				try {
-					String imagePath = FileManager.uploadProductImage(filePart, getServletContext(), oldImagePath);
-
-					if (imagePath != null) product.setImagePath(imagePath);
-				} catch (Exception e) {
-					setErrorMessage(req, "Error uploading image: " + e.getMessage());
-					return false;
-				}
-			}
-
-			return true;
-		} catch (Exception e) {
-			setErrorMessage(req, "Error processing product: " + e.getMessage());
+		if (name.isEmpty()) {
+			setErrorMessage(req, "Product name is required.");
 			return false;
 		}
+
+		if (description.isEmpty()) {
+			setErrorMessage(req, "Product description is required.");
+			return false;
+		}
+
+		if (priceParam == null || priceParam.isEmpty()) {
+			setErrorMessage(req, "Price is required.");
+			return false;
+		}
+
+		if (stockParam == null || stockParam.isEmpty()) {
+			setErrorMessage(req, "Stock is required.");
+			return false;
+		}
+
+		if (categoryParam == null || categoryParam.isEmpty()) {
+			setErrorMessage(req, "Category is required.");
+			return false;
+		}
+
+		if (description.length() > 255) {
+			setErrorMessage(req, "Product description cannot exceed 255 characters.");
+			return false;
+		}
+
+		BigDecimal price;
+		try {
+			price = new BigDecimal(priceParam);
+
+			if (price.compareTo(BigDecimal.ZERO) <= 0) {
+				setErrorMessage(req, "Price must be greater than zero.");
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			handleException(req, e, "Invalid price format.");
+			return false;
+		}
+
+		int stock;
+		try {
+			stock = Integer.parseInt(stockParam);
+
+			if (stock <= 0) {
+				setErrorMessage(req, "Stock cannot be less than 1.");
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			handleException(req, e, "Invalid stock format.");
+			return false;
+		}
+
+		Categories category;
+		try {
+			int categoryId = Integer.parseInt(categoryParam);
+			category = em.find(Categories.class, categoryId);
+
+			if (category == null) {
+				setErrorMessage(req, "Selected category not found.");
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			handleException(req, e, "Invalid category selected.");
+			return false;
+		}
+
+		String imagePath = oldImagePath;
+		if (filePart != null && filePart.getSize() > 0) {
+			try {
+				imagePath = FileManager.uploadProductImage(filePart, req.getServletContext(), oldImagePath);
+			} catch (Exception e) {
+				handleException(req, e, "Error uploading image");
+				return false;
+			}
+		}
+
+		product.setName(name);
+		product.setDescription(description);
+		product.setPrice(price);
+		product.setStock(stock);
+		product.setCategoryId(category);
+		product.setImagePath(imagePath);
+		return true;
 	}
 
 }

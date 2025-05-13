@@ -3,6 +3,7 @@ package Utils;
 import Model.Users;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,7 +29,7 @@ public class Authentication {
 		}
 
 		if (checkAuth && !isAuthorized(user)) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			Logger.sendError(req, res, HttpServletResponse.SC_FORBIDDEN);
 			return false;
 		}
 
@@ -47,6 +48,13 @@ public class Authentication {
 		return isLoggedIn(req, res, user, redirect, true);
 	}
 
+	public static void logoutUser(HttpServletRequest req) {
+		HttpSession session = req.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+	}
+
 	public static String hashPassword(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -58,7 +66,7 @@ public class Authentication {
 			}
 			return sb.toString();
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Logger.error("Error hashing password", e);
 			return "";
 		}
 	}

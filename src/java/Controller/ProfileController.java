@@ -45,7 +45,7 @@ public class ProfileController extends BaseController {
 			return;
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -64,10 +64,16 @@ public class ProfileController extends BaseController {
 
 		if (!isLoggedIn(req, res, user, redirect)) return;
 
-		String action = req.getParameter("action");
-
+		
 		if (path.equals("/admin/profile")) {
 			if (!isAuthorized(user)) return;
+
+			String action = req.getParameter("action");
+
+			if (action == null || action.isEmpty()) {
+				sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+				return;
+			}
 
 			switch (action) {
 				case "change_password":
@@ -77,7 +83,7 @@ public class ProfileController extends BaseController {
 					updateProfile(req, res, user);
 					break;
 				default:
-					res.sendError(HttpServletResponse.SC_BAD_REQUEST);
+					sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
 					return;
 			}
 
@@ -97,11 +103,7 @@ public class ProfileController extends BaseController {
 		boolean success = processProfileData(req, user);
 
 		if (!success) {
-			if (path.equals("/admin/profile")) {
-				forwardToPage(req, res, "/admin/admin_profile.jsp");
-			} else {
-				forwardToPage(req, res, "/user/profile.jsp");
-			}
+			doGet(req, res);
 			return;
 		}
 
@@ -133,10 +135,10 @@ public class ProfileController extends BaseController {
 	}
 
 	private boolean processProfileData(HttpServletRequest req, Users user) throws IOException, ServletException {
-		String username = req.getParameter("username").trim();
-		String name = req.getParameter("name").trim();
-		String email = req.getParameter("email").trim();
-		String contact = req.getParameter("phone").trim();
+		String username = req.getParameter("username") != null ? req.getParameter("username").trim() : "";
+		String name = req.getParameter("name") != null ? req.getParameter("name").trim() : "";
+		String email = req.getParameter("email") != null ? req.getParameter("email").trim() : "";
+		String contact = req.getParameter("phone") != null ? req.getParameter("phone").trim() : "";
 		Part filePart = req.getPart("avatar");
 
 		Boolean hasErrors = false;
@@ -194,7 +196,7 @@ public class ProfileController extends BaseController {
 		String avatar = user.getAvatarPath();
 		try {
 			if (filePart != null && filePart.getSize() > 0) {
-				avatar = FileManager.uploadAvatar(filePart, getServletContext(), user.getAvatarPath());
+				avatar = FileManager.uploadAvatar(filePart, req.getServletContext(), user.getAvatarPath());
 			}
 		} catch (Exception e) {
 			req.setAttribute("avatarError", "Upload failed: " + e.getMessage());

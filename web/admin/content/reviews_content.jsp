@@ -17,7 +17,7 @@
 		<tbody>
 			<%
 				List<Reviews> reviews = (List<Reviews>) request.getAttribute("reviews");
-				if (reviews != null) {
+				if (reviews != null && !reviews.isEmpty()) {
 					for (Reviews review : reviews) {
 			%>
 			<tr>

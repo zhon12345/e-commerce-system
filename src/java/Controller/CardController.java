@@ -28,26 +28,24 @@ public class CardController extends BaseController {
 
 		String action = req.getParameter("action");
 
+		if (action != null && !action.equals("update")) {
+			sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
 		if ("update".equals(action)) {
-			try {
-				int cardId = Integer.parseInt(req.getParameter("cardId"));
-				Cardinfo card = em.find(Cardinfo.class, cardId);
+			Cardinfo card = validateOwnership(req, res, user);
 
-				if (card == null || card.getUserId().getId() != user.getId()) {
-					res.sendError(HttpServletResponse.SC_FORBIDDEN);
-					return;
-				}
-
-				String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear() % 100);
-
-				req.setAttribute("updateCard", card);
-				req.setAttribute("number", card.getCardNumber());
-				req.setAttribute("name", card.getCardName());
-				req.setAttribute("expiryDate", expDate);
-
-			} catch (Exception e) {
-				throw new ServletException(e);
+			if (card == null) {
+				return;
 			}
+
+			String expDate = String.format("%02d/%02d", card.getExpMonth(), card.getExpYear() % 100);
+
+			req.setAttribute("updateCard", card);
+			req.setAttribute("number", card.getCardNumber());
+			req.setAttribute("name", card.getCardName());
+			req.setAttribute("expiryDate", expDate);
 		}
 
 		loadCard(req, user);
@@ -69,36 +67,69 @@ public class CardController extends BaseController {
 
 		String action = req.getParameter("action");
 
+		if (action == null || action.isEmpty()) {
+			sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
 		switch (action) {
 			case "create":
 				createCard(req, res, user);
 				break;
 			case "update":
 			case "delete":
-				try {
-					int cardId = Integer.parseInt(req.getParameter("cardId"));
-					Cardinfo card = em.find(Cardinfo.class, cardId);
+				Cardinfo card = validateOwnership(req, res, user);
 
-					if (card == null || card.getUserId().getId() != user.getId()) {
-						setErrorMessage(req, "Card not found");
-						redirectToPage(req, res, "/user/cards");
-						return;
-					}
-
-					if (action.equals("update")) {
-						updateCard(req, res, user, card);
-					}
-
-					if (action.equals("delete")) {
-						deleteCard(req, card);
-					}
-				} catch (NumberFormatException e) {
-					setErrorMessage(req, "Card not found");
+				if (card == null) {
+					return;
 				}
+
+				if (action.equals("update")) {
+					updateCard(req, res, card);
+				}
+
+				if (action.equals("delete")) {
+					deleteCard(req, card);
+				}
+				break;
+			default:
+				sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+				return;
 		}
 
 		redirectToPage(req, res, "/user/cards");
+	}
 
+	private Cardinfo validateOwnership(HttpServletRequest req, HttpServletResponse res, Users user) throws IOException {
+		try {
+			int cardId = Integer.parseInt(req.getParameter("id"));
+			Cardinfo card = em.find(Cardinfo.class, cardId);
+
+			if (card == null || card.getUserId().getId() != user.getId()) {
+				sendError(req, res, HttpServletResponse.SC_FORBIDDEN, true);
+				return null;
+			}
+
+			return card;
+		} catch (NumberFormatException e) {
+			handleException(req, e, "Invalid card ID");
+			return null;
+		}
+	}
+
+	private void loadCard(HttpServletRequest req, Users user) {
+		try {
+			List<Cardinfo> cards = em.createQuery(
+					"SELECT c FROM Cardinfo c WHERE c.userId = :user AND c.isArchived = :isArchived", Cardinfo.class)
+					.setParameter("user", user)
+					.setParameter("isArchived", false)
+					.getResultList();
+
+			req.setAttribute("cards", cards);
+		} catch (Exception e) {
+			handleException(req, e, "Error loading cards");
+			req.setAttribute("cards", List.of());
+		}
 	}
 
 	private void createCard(HttpServletRequest req, HttpServletResponse res, Users user) throws ServletException, IOException {
@@ -106,8 +137,7 @@ public class CardController extends BaseController {
 		boolean success = processCardData(req, card);
 
 		if (!success) {
-			loadCard(req, user);
-			forwardToPage(req, res, "/user/card.jsp");
+			doGet(req, res);
 			return;
 		}
 
@@ -117,12 +147,12 @@ public class CardController extends BaseController {
 		}, req, "Card added successfully!", "Error adding card");
 	}
 
-	private void updateCard(HttpServletRequest req, HttpServletResponse res, Users user, Cardinfo card) throws ServletException, IOException {
+	private void updateCard(HttpServletRequest req, HttpServletResponse res, Cardinfo card) throws ServletException, IOException {
 		boolean success = processCardData(req, card);
 
 		if (!success) {
-			loadCard(req, user);
-			forwardToPage(req, res, "/user/card.jsp");
+			req.setAttribute("updateCard", card);
+			doGet(req, res);
 			return;
 		}
 
@@ -139,9 +169,9 @@ public class CardController extends BaseController {
 	}
 
 	private boolean processCardData(HttpServletRequest req, Cardinfo card) {
-		String number = req.getParameter("number").trim();
-		String name = req.getParameter("name").trim();
-		String expDate = req.getParameter("expiryDate").trim();
+		String number = req.getParameter("number") != null ? req.getParameter("number").trim() : "";
+		String name = req.getParameter("name") != null ? req.getParameter("name").trim() : "";
+		String expDate = req.getParameter("expiryDate") != null ? req.getParameter("expiryDate").trim() : "";
 
 		Short expMonth = 0;
 		Short expYear = 0;
@@ -200,15 +230,5 @@ public class CardController extends BaseController {
 		card.setExpMonth(expMonth);
 		card.setExpYear(expYear);
 		return true;
-	}
-
-	private void loadCard(HttpServletRequest req, Users user) {
-		List<Cardinfo> cards = em.createQuery(
-				"SELECT c FROM Cardinfo c WHERE c.userId = :user AND c.isArchived = :isArchived", Cardinfo.class)
-				.setParameter("user", user)
-				.setParameter("isArchived", false)
-				.getResultList();
-
-		req.setAttribute("card", cards);
 	}
 }

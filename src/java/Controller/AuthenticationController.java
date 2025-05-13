@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Users;
 import static Utils.Authentication.hashPassword;
+import static Utils.Authentication.logoutUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,14 @@ public class AuthenticationController extends BaseController {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String path = req.getServletPath();
+		Users user = getCurrentUser(req);
+
+		if (path.equals("/register") || path.equals("/login")) {
+			if (user != null) {
+				redirectToPage(req, res, "/index");
+				return;
+			}
+		}
 
 		if (path.equals("/register")) {
 			forwardToPage(req, res, "/register.jsp");
@@ -40,7 +49,7 @@ public class AuthenticationController extends BaseController {
 			return;
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -69,12 +78,75 @@ public class AuthenticationController extends BaseController {
 			return;
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	private void handleRegister(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		String username = req.getParameter("username") != null ? req.getParameter("username").trim() : "";
+		String email = req.getParameter("email") != null ? req.getParameter("email").trim() : "";
+		String password = req.getParameter("password") != null ? req.getParameter("password").trim() : "";
+		String confirmPassword = req.getParameter("confirmPassword") != null ? req.getParameter("confirmPassword").trim() : "";
+
+		Boolean hasErrors = false;
+
+		if (username.isEmpty()) {
+			req.setAttribute("usernameError", "Username is required.");
+			hasErrors = true;
+		}
+
+		if (email.isEmpty()) {
+			req.setAttribute("emailError", "Email is required.");
+			hasErrors = true;
+		} else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+			req.setAttribute("emailError", "Invalid email format.");
+			hasErrors = true;
+		}
+
+		if (password.isEmpty()) {
+			req.setAttribute("passwordError", "Password is required.");
+			hasErrors = true;
+		} else if (password.length() < 8) {
+			req.setAttribute("passwordError", "Password must be at least 8 characters long.");
+			hasErrors = true;
+		}
+
+		if (confirmPassword.isEmpty()) {
+			req.setAttribute("confirmPasswordError", "Confirm Password is required.");
+			hasErrors = true;
+		} else if (!confirmPassword.equals(password)) {
+			req.setAttribute("confirmPasswordError", "Passwords do not match.");
+			hasErrors = true;
+		}
+
+		if (!hasErrors) {
+			hasErrors = checkExisting(req, res, "username", username, "usernameError");
+			hasErrors |= checkExisting(req, res, "email", email, "emailError");
+		}
+
+		if (hasErrors) {
+			req.setAttribute("username", username);
+			req.setAttribute("email", email);
+
+			forwardToPage(req, res, "/register.jsp");
+			return;
+		}
+
+		handleTransaction(() -> {
+			Users newUser = new Users(username, email, hashPassword(password), "customer");
+			em.persist(newUser);
+		}, req, "Registration Successful!", "Registration failed. Please try again.");
+
+		if (req.getSession().getAttribute("error") != null) {
+			forwardToPage(req, res, "/register.jsp");
+			return;
+		}
+
+		redirectToPage(req, res, "/login");
 	}
 
 	private void handleLogin(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		String input = req.getParameter("username").trim();
-		String password = req.getParameter("password").trim();
+		String input = req.getParameter("username") != null ? req.getParameter("username").trim() : "";
+		String password = req.getParameter("password") != null ? req.getParameter("password").trim() : "";
 		String redirect = req.getParameter("redirect");
 
 		req.setAttribute("username", input);
@@ -111,6 +183,8 @@ public class AuthenticationController extends BaseController {
 
 			if (!hasErrors) {
 				HttpSession session = req.getSession();
+				session.invalidate();
+				session = req.getSession(true);
 				session.setAttribute("user", user);
 
 				if (!user.getRole().equals("customer")) {
@@ -125,96 +199,26 @@ public class AuthenticationController extends BaseController {
 				return;
 			}
 		} catch (Exception e) {
-			req.setAttribute("usernameError", "Invalid username / email or password.");
-			req.setAttribute("passwordError", "Invalid username / email or password.");
-			hasErrors = true;
-		}
-
-		if (hasErrors) {
-			forwardToPage(req, res, "/login.jsp");
-		}
-	}
-
-	private void handleRegister(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		String username = req.getParameter("username").trim();
-		String email = req.getParameter("email").trim();
-		String password = req.getParameter("password").trim();
-		String confirmPassword = req.getParameter("confirmPassword").trim();
-
-		Boolean hasErrors = false;
-
-		if (username.isEmpty()) {
-			req.setAttribute("usernameError", "Username is required.");
-			hasErrors = true;
-		}
-
-		if (email.isEmpty()) {
-			req.setAttribute("emailError", "Email is required.");
-			hasErrors = true;
-		} else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-			req.setAttribute("emailError", "Invalid email format.");
-			hasErrors = true;
-		}
-
-		if (password.isEmpty()) {
-			req.setAttribute("passwordError", "Password is required.");
-			hasErrors = true;
-		} else if (password.length() < 8) {
-			req.setAttribute("passwordError", "Password must be at least 8 characters long.");
-			hasErrors = true;
-		}
-
-		if (confirmPassword.isEmpty()) {
-			req.setAttribute("confirmPasswordError", "Confirm Password is required.");
-			hasErrors = true;
-		} else if (!confirmPassword.equals(password)) {
-			req.setAttribute("confirmPasswordError", "Passwords do not match.");
-			hasErrors = true;
-		}
-
-		if (!hasErrors) {
-			hasErrors = checkExisting("username", username, "usernameError", req);
-			hasErrors |= checkExisting("email", email, "emailError", req);
-		}
-
-		if (hasErrors) {
-			req.setAttribute("username", username);
-			req.setAttribute("email", email);
-
-			forwardToPage(req, res, "/register.jsp");
+			handleException(req, res, e);
 			return;
 		}
 
-		handleTransaction(() -> {
-			Users newUser = new Users(username, email, hashPassword(password), "customer");
-			em.persist(newUser);
-		}, req, "Registration Successful!", "Registration failed. Please try again.");
-
-		if (req.getSession().getAttribute("error") != null) {
-			forwardToPage(req, res, "/register.jsp");
-			return;
-		}
-
-		redirectToPage(req, res, "/login");
+		forwardToPage(req, res, "/login.jsp");
 	}
 
 	private void handleLogout(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		HttpSession session = req.getSession(false);
+		logoutUser(req);
 
-		if (session != null) {
-			session.invalidate();
-		}
-
-		session = req.getSession(true);
+		req.getSession(true);
 		setSuccessMessage(req, "Logout successful!");
 		redirectToPage(req, res, "/index");
 	}
 
-	private boolean checkExisting(String field, String value, String attribute, HttpServletRequest req)
-			throws ServletException {
+	private boolean checkExisting(HttpServletRequest req, HttpServletResponse res, String field, String value, String attribute) throws ServletException, IOException {
 		try {
 			Long count = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u." + field + " = :value", Long.class)
-					.setParameter("value", value).getSingleResult();
+					.setParameter("value", value)
+					.getSingleResult();
 
 			if (count > 0) {
 				req.setAttribute(attribute, field.substring(0, 1).toUpperCase() + field.substring(1) + " already exists.");
@@ -223,11 +227,13 @@ public class AuthenticationController extends BaseController {
 
 			return false;
 		} catch (Exception e) {
-			throw new ServletException(e);
+			handleException(req, res, e);
+			return true;
 		}
 	}
 
 	private String validateRedirect(String redirect, HttpSession session) {
+		redirect = redirect != null ? redirect.trim() : "";
 		String cleanPath = redirect.replaceAll("[^a-zA-Z0-9-?=]", "");
 
 		if (cleanPath != null && !cleanPath.isEmpty()) {

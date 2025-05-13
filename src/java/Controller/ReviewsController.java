@@ -44,7 +44,7 @@ public class ReviewsController extends BaseController {
 				forwardToPage(req, res, "/user/reviews.jsp");
 				return;
 			} catch (Exception e) {
-				throw new ServletException(e);
+				handleException(req, res, e);
 			}
 		}
 
@@ -59,12 +59,14 @@ public class ReviewsController extends BaseController {
 						.getResultList();
 
 				req.setAttribute("reviews", reviewsList);
-				forwardToPage(req, res, "/admin/reviews.jsp");
+				forwardToPage(req, res, "/admin/admin_reviews.jsp");
+				return;
 			} catch (Exception e) {
-				throw new ServletException(e);
+				handleException(req, res, e);
 			}
 		}
 
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -79,12 +81,17 @@ public class ReviewsController extends BaseController {
 		String path = req.getServletPath();
 
 		if (!path.equals("/user/reviews")) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND);
+			sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
 		Users user = getCurrentUser(req);
 		String action = req.getParameter("action");
+
+		if (action == null || action.isEmpty()) {
+			sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
 
 		switch (action) {
 			case "create":
@@ -101,10 +108,12 @@ public class ReviewsController extends BaseController {
 
 					createReview(req, res, product, user);
 				} catch (NumberFormatException e) {
-					setErrorMessage(req, "Product not found.");
+					redirectToPage(req, res, "/products");
 				}
 				break;
 			case "delete":
+				if (!isLoggedIn(req, res, user, "reviews")) return;
+
 				try {
 					int reviewId = Integer.parseInt(req.getParameter("reviewId"));
 					Reviews review = em.find(Reviews.class, reviewId);
@@ -115,11 +124,13 @@ public class ReviewsController extends BaseController {
 					}
 
 					deleteReview(req, review);
-
 				} catch (NumberFormatException e) {
 					setErrorMessage(req, "Review not found.");
 				}
-
+				break;
+			default:
+				sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+				return;
 		}
 
 		redirectToPage(req, res, "/user/reviews");
@@ -127,8 +138,9 @@ public class ReviewsController extends BaseController {
 
 	private void createReview(HttpServletRequest req, HttpServletResponse res, Products product, Users user) throws ServletException, IOException {
 		Reviews review = new Reviews();
+		boolean success = processReviewData(req, review);
 
-		if (!processReviewData(req, review)) {
+		if (!success) {
 			redirectToPage(req, res, "/product?id=" + product.getId() + "&tab=reviews");
 			return;
 		}
@@ -140,9 +152,13 @@ public class ReviewsController extends BaseController {
 			em.persist(review);
 		}, req, null, "Error creating review.");
 
-		req.getSession().removeAttribute("selectedRating");
-		req.getSession().removeAttribute("reviewText");
+		HttpSession session = req.getSession();
+		session.removeAttribute("selectedRating");
+		session.removeAttribute("reviewText");
+		session.removeAttribute("ratingError");
+		session.removeAttribute("reviewError");
 	}
+
 
 	private void deleteReview(HttpServletRequest req, Reviews review) throws ServletException, IOException {
 		handleTransaction(() -> {
@@ -154,21 +170,26 @@ public class ReviewsController extends BaseController {
 	private boolean processReviewData(HttpServletRequest req, Reviews review) {
 		HttpSession session = req.getSession();
 		String rating = req.getParameter("rating");
-		String reviewText = req.getParameter("reviewText").trim();
+		String reviewText = req.getParameter("reviewText") != null ? req.getParameter("reviewText").trim() : "";
 
 		boolean hasError = false;
 
-		session.removeAttribute("selectedRatingError");
+		session.removeAttribute("ratingError");
 		session.removeAttribute("reviewError");
 
 		if (rating == null || rating.isEmpty()) {
 			session.setAttribute("ratingError", "Please select a rating");
 			hasError = true;
 		} else {
-			int ratingValue = Integer.parseInt(rating);
+			try {
+				int ratingValue = Integer.parseInt(rating);
 
-			if (ratingValue < 1 || ratingValue > 5) {
-				session.setAttribute("ratingError", "Rating must be between 1 and 5");
+				if (ratingValue < 1 || ratingValue > 5) {
+					session.setAttribute("ratingError", "Rating must be between 1 and 5");
+					hasError = true;
+				}
+			} catch (NumberFormatException e) {
+				session.setAttribute("ratingError", "Invalid rating value");
 				hasError = true;
 			}
 		}

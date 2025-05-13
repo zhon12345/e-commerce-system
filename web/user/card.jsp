@@ -38,7 +38,7 @@
 			</div>
 
 			<%
-				List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("card");
+				List<Cardinfo> cards = (List<Cardinfo>) request.getAttribute("cards");
 					if (cards != null && !cards.isEmpty()) {
 			%>
 			<div class="list">
@@ -68,7 +68,7 @@
 					</div>
 
 					<div class="actions">
-						<a href="${pageContext.request.contextPath}/user/card?action=update&id=<%= card.getId() %>"
+						<a href="${pageContext.request.contextPath}/user/cards?action=update&id=<%= card.getId() %>"
 							class="edit">Edit</a>
 						<button class="delete" onclick="confirmDelete(<%= card.getId()%>)">Delete</button>
 					</div>
@@ -96,7 +96,7 @@
 					if (request.getAttribute("updateCard") !=null) {
 						Cardinfo updateCard = (Cardinfo)request.getAttribute("updateCard");
 				%>
-				<input type="hidden" name="cardId" value="<%= updateCard.getId() %>">
+				<input type="hidden" name="id" value="<%= updateCard.getId() %>">
 				<% } %>
 				<input type="hidden" name="action" value="<%= request.getAttribute("updateCard") !=null ? "update" : "create" %>">
 
@@ -125,7 +125,7 @@
 
 	<form id="deleteForm" method="POST" action="${pageContext.request.contextPath}/user/cards" style="display:none;">
 		<input type="hidden" name="action" value="delete">
-		<input type="hidden" id="deleteId" name="cardId">
+		<input type="hidden" id="deleteId" name="id">
 	</form>
 
 	<script>
@@ -175,6 +175,17 @@
 				timer: 1500
 			});
 			<% session.removeAttribute("success"); %>
+		<% } %>
+
+		<% if (session.getAttribute("error") != null) { %>
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: '<%= session.getAttribute("error") %>',
+				showConfirmButton: false,
+				timer: 3000
+			});
+			<% session.removeAttribute("error"); %>
 		<% } %>
 	</script>
 </body>

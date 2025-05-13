@@ -59,7 +59,7 @@ public class OrdersController extends BaseController {
 				forwardToPage(req, res, "/user/history.jsp");
 				return;
 			} catch (Exception e) {
-				throw new ServletException(e);
+				handleException(req, res, e);
 			}
 		}
 
@@ -80,11 +80,11 @@ public class OrdersController extends BaseController {
 				forwardToPage(req, res, "/admin/admin_orders.jsp");
 				return;
 			} catch (Exception e) {
-				throw new ServletException(e);
+				handleException(req, res, e);
 			}
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class OrdersController extends BaseController {
 		String path = req.getServletPath();
 
 		if (!path.equals("/admin/orders")) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND);
+			sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
@@ -111,20 +111,25 @@ public class OrdersController extends BaseController {
 			int orderId = Integer.parseInt(req.getParameter("orderId"));
 			String status = req.getParameter("status");
 
+			Orders order = em.find(Orders.class, orderId);
+
+			if (order == null) {
+				setErrorMessage(req, "Order not found");
+				return;
+			}
+
 			handleTransaction(() -> {
-				Orders order = em.find(Orders.class, orderId);
-				if (order != null) {
-					order.setStatus(status);
-					em.merge(order);
-				}
+				order.setStatus(status);
+				em.merge(order);
 			}, req, "Order status updated successfully!", "Failed to update order");
 
-			redirectToPage(req, res, "/admin/orders");
 		} catch (NumberFormatException e) {
-			setErrorMessage(req, "Invalid order ID.");
-			redirectToPage(req, res, "/admin/orders");
+			handleException(req, e, "Invalid order ID.");
 		} catch (Exception e) {
-			throw new ServletException(e);
+			handleException(req, res, e);
+			return;
 		}
+
+		redirectToPage(req, res, "/admin/orders");
 	}
 }
