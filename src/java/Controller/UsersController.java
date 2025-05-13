@@ -43,7 +43,7 @@ public class UsersController extends BaseController {
 			return;
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -62,12 +62,17 @@ public class UsersController extends BaseController {
 
 		if (path.equals("/admin/users") || path.equals("/admin/staff")) {
 			if (!user.getRole().equalsIgnoreCase("manager")) {
-				res.sendError(HttpServletResponse.SC_FORBIDDEN);
+				sendError(req, res, HttpServletResponse.SC_FORBIDDEN);
 				return;
 			}
 
 			String userType = path.equals("/admin/users") ? "Users" : "Staff";
 			String action = req.getParameter("action");
+
+			if (action == null || action.isEmpty()) {
+				sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+				return;
+			}
 
 			switch (action) {
 				case "create":
@@ -92,49 +97,55 @@ public class UsersController extends BaseController {
 							deleteUser(req, selectedUser, userType);
 						}
 					} catch (NumberFormatException e) {
-						setErrorMessage(req, userType + " not found!");
-						break;
+						handleException(req, e, userType + " not found");
 					}
+					break;
+				default:
+					sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+					return;
 			}
 
 			redirectToPage(req, res, path);
 			return;
 		}
 
-		res.sendError(HttpServletResponse.SC_NOT_FOUND);
+		sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	private void fetchUsers(HttpServletRequest req, String role) throws ServletException, IOException {
-		try {
-			List<Users> userList = em.createQuery(
-					"SELECT u FROM Users u WHERE u.role = :role AND u.isArchived = :isArchived", Users.class)
-					.setParameter("role", role)
-					.setParameter("isArchived", false)
-					.getResultList();
+		List<Users> userList = em.createQuery(
+				"SELECT u FROM Users u WHERE u.role = :role AND u.isArchived = :isArchived", Users.class)
+				.setParameter("role", role)
+				.setParameter("isArchived", false)
+				.getResultList();
 
-			req.setAttribute("users", userList);
-		} catch (Exception e) {
-			throw new ServletException(e);
-		}
+		req.setAttribute("users", userList);
 	}
 
 	private void createUser(HttpServletRequest req, String userType) throws IOException, ServletException {
-		handleTransaction(() -> {
-			Users user = new Users();
+		Users user = new Users();
+		boolean success = processUserData(req, user);
 
-			if (processUserData(req, user)) {
-				em.persist(user);
-				em.flush();
-				em.refresh(user);
-			}
+		if (!success) {
+			return;
+		}
+
+		handleTransaction(() -> {
+			em.persist(user);
+			em.flush();
+			em.refresh(user);
 		}, req, userType + " created successfully", "Error creating " + userType);
 	}
 
 	private void updateUser(HttpServletRequest req, Users user, String userType) throws IOException, ServletException {
+		boolean success = processUserData(req, user);
+
+		if (!success) {
+			return;
+		}
+
 		handleTransaction(() -> {
-			if (processUserData(req, user)) {
-				em.merge(user);
-			}
+			em.merge(user);
 		}, req, userType + " updated successfully!", "Error updating " + userType);
 	}
 
@@ -146,47 +157,26 @@ public class UsersController extends BaseController {
 	}
 
 	private boolean processUserData(HttpServletRequest req, Users user) {
-		String username = req.getParameter("username");
-		String name = req.getParameter("name");
-		String email = req.getParameter("email");
-		String password = req.getParameter("password");
+		String username = req.getParameter("username") != null ? req.getParameter("username").trim() : null;
+		String name = req.getParameter("name") != null ? req.getParameter("name").trim() : null;
+		String email = req.getParameter("email") != null ? req.getParameter("email").trim() : null;
+		String password = req.getParameter("password") != null ? req.getParameter("password").trim() : null;
 		String role = req.getParameter("role");
 
 		boolean hasError = false;
 
-		if (username == null || username.trim().isEmpty()
-				|| email == null || email.trim().isEmpty()
-				|| role == null || role.trim().isEmpty()) {
-			setErrorMessage(req, "All fields are required");
-			hasError = true;
-		} else if (user.getId() == null && (password == null || password.trim().isEmpty())) {
-			setErrorMessage(req, "All fields are required");
+		if (username.isEmpty()) {
+			setErrorMessage(req, "Username is required");
 			hasError = true;
 		}
 
-		if (hasError) {
-			return false;
-		}
-
-		Long userId = user.getId() != null ? user.getId() : 0L;
-
-		Long usernameCount = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u.username = :username AND u.id != :userId", Long.class)
-				.setParameter("username", username)
-				.setParameter("userId", userId)
-				.getSingleResult();
-
-		if (usernameCount > 0) {
-			setErrorMessage(req, "Username is already taken");
+		if (email.isEmpty()) {
+			setErrorMessage(req, "Email is required");
 			hasError = true;
 		}
 
-		Long emailCount = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u.email = :email AND u.id != :userId", Long.class)
-				.setParameter("email", email)
-				.setParameter("userId", userId)
-				.getSingleResult();
-
-		if (emailCount > 0) {
-			setErrorMessage(req, "Email is already taken");
+		if (user.getId() == null && password.isEmpty()) {
+			setErrorMessage(req, "Password is required");
 			hasError = true;
 		}
 
@@ -194,16 +184,47 @@ public class UsersController extends BaseController {
 			return false;
 		}
 
-		user.setUsername(username.trim());
-		user.setEmail(email.trim());
-		user.setRole(role.trim());
+		try {
+			Long userId = user.getId() != null ? user.getId() : 0L;
 
-		if (name != null && !name.trim().isEmpty()) {
-			user.setName(name.trim());
+			Long usernameCount = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u.username = :username AND u.id != :userId", Long.class)
+					.setParameter("username", username)
+					.setParameter("userId", userId)
+					.getSingleResult();
+
+			if (usernameCount > 0) {
+				setErrorMessage(req, "Username is already taken");
+				hasError = true;
+			}
+
+			Long emailCount = em.createQuery("SELECT COUNT(u) FROM Users u WHERE u.email = :email AND u.id != :userId", Long.class)
+					.setParameter("email", email)
+					.setParameter("userId", userId)
+					.getSingleResult();
+
+			if (emailCount > 0) {
+				setErrorMessage(req, "Email is already taken");
+				hasError = true;
+			}
+		} catch (Exception e) {
+			handleException(req, e, "Error checking username/email");
+			return false;
 		}
 
-		if (password != null && !password.trim().isEmpty()) {
-			user.setPassword(hashPassword(password.trim()));
+		if (hasError) {
+			return false;
+		}
+
+		user.setUsername(username);
+		user.setEmail(email);
+		user.setRole(role);
+
+		if (name != null && !name.isEmpty()) {
+			user.setName(name);
+		}
+
+		if (password != null && !password.isEmpty()) {
+			user.setPassword(hashPassword(password));
 		}
 
 		return true;

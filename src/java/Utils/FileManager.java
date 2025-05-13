@@ -47,7 +47,7 @@ public class FileManager {
 				try {
 					Files.delete(oldFile.toPath());
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logger.error("Failed to delete old file: " + oldFile.getPath(), e);
 				}
 			}
 		}
@@ -55,6 +55,7 @@ public class FileManager {
 		File file = new File(uploadDir, fileName);
 		try (InputStream input = filePart.getInputStream()) {
 			Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Logger.info("File uploaded successfully: " + file.getPath());
 		}
 
 		return uploadSubdir + "/" + fileName;

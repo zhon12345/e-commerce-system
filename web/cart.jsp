@@ -107,6 +107,7 @@
 				icon: 'error',
 				title: 'Error',
 				text: '<%= session.getAttribute("error") %>',
+				showConfirmButton: false,
 				timer: 3000
 			});
 			<% session.removeAttribute("error"); %>

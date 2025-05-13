@@ -40,7 +40,7 @@ public class CartController extends BaseController {
 
 			forwardToPage(req, res, "/cart.jsp");
 		} catch (Exception e) {
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(req, res, e);
 		}
 	}
 
@@ -80,14 +80,26 @@ public class CartController extends BaseController {
 				case "add":
 					addToCart(req, user, product, quantity);
 					break;
+				default:
+					sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
+					return;
 			}
 
 			redirectToPage(req, res, "/cart");
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | NullPointerException e) {
+			handleException(req, e, "Invalid product ID or action");
 			redirectToPage(req, res, "/products");
 		} catch (Exception e) {
-			throw new ServletException(e);
+			handleException(req, res, e);
 		}
+	}
+
+	private List<Cart> fetchCartItems(Users user, Products product) {
+		return em
+				.createQuery("SELECT c FROM Cart c WHERE c.userId = :user AND c.productId = :product", Cart.class)
+				.setParameter("user", user)
+				.setParameter("product", product)
+				.getResultList();
 	}
 
 	private void addToCart(HttpServletRequest req, Users user, Products product, int quantity) throws Exception {
@@ -106,17 +118,6 @@ public class CartController extends BaseController {
 				em.persist(cartItem);
 			}
 		}, req, null, "Failed to add product to cart");
-	}
-
-	private void removeFromCart(HttpServletRequest req, Users user, Products product) throws Exception {
-		handleTransaction(() -> {
-			List<Cart> cartItems = fetchCartItems(user, product);
-
-			if (!cartItems.isEmpty()) {
-				Cart cartItem = cartItems.get(0);
-				em.remove(cartItem);
-			}
-		}, req, null, "Failed to remove product from cart");
 	}
 
 	private void updateCart(HttpServletRequest req, Users user, Products product, String action) throws Exception {
@@ -142,12 +143,15 @@ public class CartController extends BaseController {
 		}, req, null, "Failed to update cart");
 	}
 
-	private List<Cart> fetchCartItems(Users user, Products product) {
-		return em
-				.createQuery("SELECT c FROM Cart c WHERE c.userId = :user AND c.productId = :product", Cart.class)
-				.setParameter("user", user)
-				.setParameter("product", product)
-				.getResultList();
+	private void removeFromCart(HttpServletRequest req, Users user, Products product) throws Exception {
+		handleTransaction(() -> {
+			List<Cart> cartItems = fetchCartItems(user, product);
+
+			if (!cartItems.isEmpty()) {
+				Cart cartItem = cartItems.get(0);
+				em.remove(cartItem);
+			}
+		}, req, null, "Failed to remove product from cart");
 	}
 
 	public static void calculateOrderSummary(List<Cart> cartList, HttpServletRequest req) {

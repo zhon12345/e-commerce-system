@@ -22,31 +22,33 @@ public class UploadsController extends BaseController {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		String pathInfo = req.getPathInfo();
 		if (pathInfo == null || pathInfo.equals("/")) {
-			res.sendError(HttpServletResponse.SC_BAD_REQUEST, "File name is missing.");
+			sendError(req, res, HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 
 		String filePath = pathInfo.substring(1);
 		if (filePath.contains("..") || filePath.contains("://")) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid file path.");
+			sendError(req, res, HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
-		String webAppPath = getServletContext().getRealPath("/");
+		String webAppPath = req.getServletContext().getRealPath("/");
 		File webAppDir = new File(webAppPath);
 		File projectRootDir = webAppDir.getParentFile().getParentFile();
 		File uploadDir = new File(projectRootDir, "uploads");
 		File file = new File(uploadDir, filePath);
 
 		if (!file.exists() || !file.isFile()) {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found.");
+			sendError(req, res, HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
-		String contentType = getServletContext().getMimeType(file.getName());
+		String contentType = req.getServletContext().getMimeType(file.getName());
+
 		if (contentType == null) {
 			contentType = "application/octet-stream";
 		}
+
 		res.setContentType(contentType);
 
 		if (contentType.startsWith("image/")) {
@@ -56,8 +58,18 @@ public class UploadsController extends BaseController {
 		try {
 			Files.copy(file.toPath(), res.getOutputStream());
 		} catch (IOException e) {
-			e.printStackTrace();
-			throw new ServletException(e);
+			handleException(req, res, e);
 		}
+	}
+
+	/**
+	 *
+	 * @param req servlet request
+	 * @param res servlet response
+	 * @throws IOException if an I/O error occurs
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		sendError(req, res, HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 	}
 }

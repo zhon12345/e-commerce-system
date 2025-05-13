@@ -128,7 +128,7 @@
 				title: 'Error',
 				text: 'Something went wrong, please try again.',
 				showConfirmButton: false,
-				timer: 1500
+				timer: 3000
 			});
 			<% session.removeAttribute("error"); %>
 		<% } %>

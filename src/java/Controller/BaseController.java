@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Users;
+import Utils.Logger;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,13 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class BaseController extends HttpServlet {
-
-	private static final Logger logger = Logger.getLogger(BaseController.class.getName());
-
 	@PersistenceContext
 	protected EntityManager em;
 
@@ -30,11 +26,11 @@ public class BaseController extends HttpServlet {
 	}
 
 	protected void setSuccessMessage(HttpServletRequest req, String message) {
-		req.getSession().setAttribute("success", message);
+		Logger.setSuccessMessage(req, message);
 	}
 
 	protected void setErrorMessage(HttpServletRequest req, String message) {
-		req.getSession().setAttribute("error", message);
+		Logger.setErrorMessage(req, message);
 	}
 
 	protected void handleTransaction(Runnable action, HttpServletRequest req, String successMsg, String errorMsg) {
@@ -52,12 +48,27 @@ public class BaseController extends HttpServlet {
 					utx.rollback();
 				}
 			} catch (Exception ex) {
-				logger.log(Level.SEVERE, "Transaction rollback failed", ex);
+				Logger.error("Transaction rollback failed", ex);
 			}
 
-			logger.log(Level.SEVERE, errorMsg + ": " + e.getMessage(), e);
-			setErrorMessage(req, errorMsg + ": " + e.getMessage());
+			handleException(req, e, errorMsg);
 		}
+	}
+
+	protected void sendError(HttpServletRequest req, HttpServletResponse res, int statusCode, boolean logoutUser) throws IOException {
+		Logger.sendError(req, res, statusCode, logoutUser);
+	}
+
+	protected void sendError(HttpServletRequest req, HttpServletResponse res, int statusCode) throws IOException {
+		Logger.sendError(req, res, statusCode);
+	}
+
+	protected void handleException(HttpServletRequest req, HttpServletResponse res, Exception e) throws IOException {
+		Logger.handleException(req, res, e);
+	}
+
+	protected void handleException(HttpServletRequest req, Exception e, String errorMsg) {
+		Logger.handleException(req, e, errorMsg);
 	}
 
 	protected void forwardToPage(HttpServletRequest req, HttpServletResponse res, String page) throws ServletException, IOException {

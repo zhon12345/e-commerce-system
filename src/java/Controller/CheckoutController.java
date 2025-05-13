@@ -65,7 +65,7 @@ public class CheckoutController extends BaseController {
 
 			forwardToPage(req, res, "/checkout.jsp");
 		} catch (Exception e) {
-			res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			handleException(req, res, e);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class CheckoutController extends BaseController {
 		if (!isLoggedIn(req, res, user, "checkout")) return;
 
 		String addressId = req.getParameter("addressId");
-		String paymentMethod = req.getParameter("paymentMethod");
+		String payment = req.getParameter("paymentMethod");
 		String cardId = null;
 		String cvv = null;
 
@@ -95,7 +95,11 @@ public class CheckoutController extends BaseController {
 			hasErrors = true;
 		}
 
-		if (paymentMethod.equals("card")) {
+		if (payment == null || payment.isEmpty()) {
+			payment = "cash";
+		}
+
+		if ("card".equals(payment)) {
 			cardId = req.getParameter("cardId");
 			cvv = req.getParameter("cvv");
 
@@ -113,7 +117,7 @@ public class CheckoutController extends BaseController {
 
 		if (hasErrors) {
 			req.setAttribute("selectedAddressId", addressId);
-			req.setAttribute("selectedPaymentMethod", paymentMethod);
+			req.setAttribute("selectedPaymentMethod", payment);
 			req.setAttribute("selectedCardId", cardId);
 			req.setAttribute("enteredCvv", cvv);
 
@@ -121,15 +125,17 @@ public class CheckoutController extends BaseController {
 			return;
 		}
 
+		final String paymentMethod = payment;
+
 		Addresses address = em.find(Addresses.class, Integer.parseInt(addressId));
 		if (address == null || address.getUserId().getId() != user.getId()) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			sendError(req, res, HttpServletResponse.SC_FORBIDDEN, true);
 			return;
 		}
 
 		Cardinfo card = paymentMethod.equals("card") ? em.find(Cardinfo.class, Integer.parseInt(cardId)) : null;
 		if (paymentMethod.equals("card") && (card == null || card.getUserId().getId() != user.getId())) {
-			res.sendError(HttpServletResponse.SC_FORBIDDEN);
+			sendError(req, res, HttpServletResponse.SC_FORBIDDEN, true);
 			return;
 		}
 

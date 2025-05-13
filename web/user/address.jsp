@@ -91,7 +91,7 @@
 					if (request.getAttribute("updateAddress") !=null) {
 						Addresses updateAddress = (Addresses) request.getAttribute("updateAddress");
 				%>
-				<input type="hidden" name="addressId" value="<%= updateAddress.getId() %>">
+				<input type="hidden" name="id" value="<%= updateAddress.getId() %>">
 				<% } %>
 				<input type="hidden" name="action" value="<%= request.getAttribute("updateAddress") !=null ? "update" : "create" %>">
 
@@ -138,7 +138,7 @@
 
 	<form id="deleteForm" method="POST" action="${pageContext.request.contextPath}/user/address" style="display:none;">
 		<input type="hidden" name="action" value="delete">
-		<input type="hidden" id="deleteId" name="addressId">
+		<input type="hidden" id="deleteId" name="id">
 	</form>
 
 	<script>
@@ -188,6 +188,17 @@
 				timer: 1500
 			});
 			<% session.removeAttribute("success"); %>
+		<% } %>
+
+		<% if (session.getAttribute("error") != null) { %>
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: '<%= session.getAttribute("error") %>',
+				showConfirmButton: false,
+				timer: 3000
+			});
+			<% session.removeAttribute("error"); %>
 		<% } %>
 	</script>
 </body>

@@ -70,7 +70,7 @@ public class DashboardController extends BaseController {
 
 			forwardToPage(req, res, "/admin/admin_dashboard.jsp");
 		} catch (Exception e) {
-			setErrorMessage(req, "Error loading dashboard data: " + e.getMessage());
+			handleException(req, e, "Error loading dashboard data");
 			redirectToPage(req, res, "/admin/dashboard");
 		}
 	}
@@ -88,40 +88,22 @@ public class DashboardController extends BaseController {
 
 		if (!isLoggedInAndAuthorized(req, res, user, null)) return;
 
-		String startDateStr = req.getParameter("startDate");
-		String endDateStr = req.getParameter("endDate");
-
-		if (startDateStr == null || startDateStr.isEmpty()) {
-			setErrorMessage(req, "Start date is required.");
+		if (!processReportData(req)) {
 			redirectToPage(req, res, "/admin/dashboard");
 			return;
 		}
 
-		if (endDateStr == null || endDateStr.isEmpty()) {
-			setErrorMessage(req, "End date is required.");
-			redirectToPage(req, res, "/admin/dashboard");
-			return;
-		}
-
-		Date startDate = null, endDate = null;
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			startDate = dateFormat.parse(startDateStr);
-			endDate = dateFormat.parse(endDateStr);
-		} catch (Exception e) {
-			setErrorMessage(req, "Error parsing dates: " + e.getMessage());
-			redirectToPage(req, res, "/admin/dashboard");
-			return;
-		}
+		Date startDate = (Date) req.getAttribute("startDate");
+		Date endDate = (Date) req.getAttribute("endDate");
 
 		List<Orders> orders = em.createQuery(
-        "SELECT DISTINCT o FROM Orders o " +
-                "LEFT JOIN FETCH o.orderdetailsList " +
-                "WHERE o.orderDate BETWEEN :startDate AND :endDate",
-        Orders.class)
-        .setParameter("startDate", startDate)
-        .setParameter("endDate", endDate)
-        .getResultList();
+				"SELECT DISTINCT o FROM Orders o " +
+						"LEFT JOIN FETCH o.orderdetailsList " +
+						"WHERE o.orderDate BETWEEN :startDate AND :endDate",
+				Orders.class)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate)
+				.getResultList();
 
 		BigDecimal totalRevenue = BigDecimal.ZERO;
 		BigDecimal totalDiscounts = BigDecimal.ZERO;
@@ -163,6 +145,40 @@ public class DashboardController extends BaseController {
 		}, req, "Report generated successfully!", "Error generating report");
 
 		redirectToPage(req, res, "/admin/dashboard");
+	}
+
+	private boolean processReportData(HttpServletRequest req) {
+		String startDateStr = req.getParameter("startDate");
+		String endDateStr = req.getParameter("endDate");
+
+		if (startDateStr == null || startDateStr.isEmpty()) {
+			setErrorMessage(req, "Start date is required.");
+			return false;
+		}
+
+		if (endDateStr == null || endDateStr.isEmpty()) {
+			setErrorMessage(req, "End date is required.");
+			return false;
+		}
+
+		Date startDate, endDate;
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			startDate = dateFormat.parse(startDateStr);
+			endDate = dateFormat.parse(endDateStr);
+		} catch (Exception e) {
+			handleException(req, e, "Error parsing dates");
+			return false;
+		}
+
+		if (endDate.before(startDate)) {
+			setErrorMessage(req, "End date must be after start date.");
+			return false;
+		}
+
+		req.setAttribute("startDate", startDate);
+    req.setAttribute("endDate", endDate);
+		return true;
 	}
 
 	private String formatReportDetails(Date startDate, Date endDate, int totalOrders,
